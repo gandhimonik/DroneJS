@@ -1,0 +1,30 @@
+{
+  "name": "dronejs",
+  "version": "1.0.0",
+  "description": "A Node.js based library for controlling a Parrot Rolling Spider drone",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gandhimonik/DroneJS.git"
+  },
+  "keywords": [
+    "dronejs",
+    "nodejs",
+    "parrot",
+    "rolling",
+    "spider",
+    "javascript"
+  ],
+  "author": "Monik Gandhi, Sudhir Sundararam",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/gandhimonik/DroneJS/issues"
+  },
+  "homepage": "https://github.com/gandhimonik/DroneJS#readme",
+  "devDependencies": {
+    "noble": "^1.8.0"
+  }
+}
