@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "A Node.js based library for controlling a Parrot Rolling Spider drone",
   "main": "index.js",
+  "debugging": true,
   "scripts": {
-    "test": "npm test"
+    "test": "mocha --compilers js:babel-register --require babel-polyfill --recursive ./test --timeout 10000"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,10 @@
   },
   "homepage": "https://github.com/gandhimonik/DroneJS#readme",
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.24.1",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "noble": "^1.8.0"
