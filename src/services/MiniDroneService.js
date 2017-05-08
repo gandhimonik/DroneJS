@@ -1,6 +1,6 @@
 import { debug }        from '../utils/debug';
 import { EventEmitter } from 'events';
-import { Observable }   from 'rxjs';
+import { Observable }   from 'rxjs/Observable';
 
 export class MiniDroneService extends EventEmitter {
 
@@ -116,16 +116,25 @@ export class MiniDroneService extends EventEmitter {
         });
     }
 
-    discoverCharacteristics(service) {
+    discoverCharacteristics(services) {
         return new Promise((resolve, reject) => {
-            let self = this;
             try {
-                service.on('characteristicsDiscover', function(characteristics) {
-                    debug('characteristics found: ' + characteristics);
-                    self.identifyCharacteristics(characteristics);
-                    resolve("success");
-                });
-                service.discoverCharacteristics();
+                let ids = [],
+                    chars = [];
+                services.forEach((service, idx, array) => {
+                    service.on('characteristicsDiscover', function(characteristics) {
+                        debug('characteristics found: ' + characteristics);
+                        chars = chars.concat(characteristics);
+                        ids.push(idx);
+
+                        if (ids.length === array.length) {
+                            resolve(chars);
+                        }
+                    });
+                    service.discoverCharacteristics();
+                })
+
+
             } catch (e) {
                 reject(e);
             }
@@ -133,37 +142,67 @@ export class MiniDroneService extends EventEmitter {
     }
 
     identifyCharacteristics(characteristics) {
-        let cmdChars = characteristics.filter((char) => char.uuid.indexOf("fa") >= 0),
-            notifyChars = characteristics.filter((char) => char.uuid.indexOf("fb") >= 0),
-            ftpChars = characteristics.filter((char) => char.uuid.indexOf("fd21") >= 0);
+        return new Promise((resolve, reject) => {
+            try {
+                let cmdChars = characteristics.filter((char) => char.uuid.indexOf("fa") >= 0),
+                    notifyChars = characteristics.filter((char) => char.uuid.indexOf("fb") >= 0),
+                    ftpChars = characteristics.filter((char) => char.uuid.indexOf("fd2") >= 0);
 
-        if (cmdChars.length > 0) {
-            this.cmdService = cmdChars[10];
-        }
+                this.cmdService = cmdChars[10];
+                this.cmdObservable = this.createObservable(notifyChars);
+                this.ftpGetService = ftpChars[1];
+                this.ftpHandlingService = ftpChars[2];
+                this.ftpObservable = this.createObservable(ftpChars);
 
-        if (notifyChars.length > 0) {
-            this.cmdObservable = this.createObservable(notifyChars);
-        }
+                this.subscribeToNotify(notifyChars).then(() => {
+                    this.subscribeToNotify(ftpChars).then(() => {
+                        resolve('success');
+                    }).catch(e => {
+                        reject(e);
+                    });
+                }).catch(e => {
+                    reject(e);
+                });
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
 
-        if (ftpChars.length > 0) {
-            this.ftpGetService = ftpChars[1];
-            this.ftpHandlingService = ftpChars[2];
+    subscribeToNotify(characteristics) {
+        return new Promise((resolve, reject) => {
+            try {
+                let ids = [];
+                characteristics.forEach((char, idx, array) => {
+                    char.on('notify', function(state) {
+                        // debug('on -> notify: ' + this.uuid + ': ' + state);
 
-            this.ftpObservable = this.createObservable(ftpChars);
-        }
+                        ids.push(idx);
+                        if (ids.length === array.length) {
+                            debug('subscribed to characteristics...');
+                            resolve('success');
+                        }
+                    });
+
+                    char.notify(true);
+                });
+            } catch (e) {
+                reject(e);
+            }
+        });
     }
 
     createObservable(characteristics) {
-        return Observable.create(function (observer) {
-
+        return Observable.create(observer => {
+            debug('Creating observable...');
             characteristics.forEach((char) => {
-                char.on('data', function (data, isNotification) {
+                char.on('data', function (data) {
                     observer.next(data);
                 });
             });
 
             return function () {
-                debug('observable unsubscribed');
+                debug('observable disposed');
             }
         });
     }
@@ -171,6 +210,7 @@ export class MiniDroneService extends EventEmitter {
     sendDroneCommand(buffer) {
         return new Promise((resolve, reject) => {
             try {
+                debug('Sending Command...');
                 this.cmdService.write(buffer, false);
                 resolve("success");
             } catch (e) {
