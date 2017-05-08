@@ -1,6 +1,6 @@
-import { debug }        from '../utils/debug';
-import { EventEmitter } from 'events';
-import { Observable }   from 'rxjs/Observable';
+import { debug }                from '../utils/debug';
+import { EventEmitter }         from 'events';
+import { Observable }           from 'rxjs/Observable';
 
 export class MiniDroneService extends EventEmitter {
 
@@ -193,18 +193,21 @@ export class MiniDroneService extends EventEmitter {
     }
 
     createObservable(characteristics) {
-        return Observable.create(observer => {
-            debug('Creating observable...');
-            characteristics.forEach((char) => {
-                char.on('data', function (data) {
-                    observer.next(data);
-                });
-            });
+        return Observable
+                .create(observer => {
+                    debug('Creating observable...');
+                    characteristics.forEach((char) => {
+                        char.on('data', function (data) {
+                            let arr = Array.prototype.slice.call(data, 0);
+                            observer.next(arr.join('+'));
+                        });
+                    });
 
-            return function () {
-                debug('observable disposed');
-            }
-        });
+                    return function () {
+                        debug('observable disposed');
+                    }
+                });
+
     }
 
     sendDroneCommand(buffer) {

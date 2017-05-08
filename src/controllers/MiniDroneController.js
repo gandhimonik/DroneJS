@@ -1,6 +1,7 @@
 import { MiniDroneService }     from '../services/MiniDroneService';
 import { debug }                from '../utils/debug';
-import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
+
+import 'rxjs/add/operator/distinctUntilChanged';
 
 export class MiniDroneController {
 
@@ -77,17 +78,19 @@ export class MiniDroneController {
 
     addListeners() {
         this.cmdSubscription = this.droneService.cmdObservable
-                                .subscribe((data) => {
-                                        let dataStr = '';
+                                    .distinctUntilChanged()
+                                    .subscribe((data) => {
+                                            data = data.split('+');
+                                            let dataStr = '';
 
-                                        for(let j = 0; j < data.length; j++) {
-                                            dataStr += data[j] + ' ';
-                                        }
-                                        debug('on -> data ');
-                                        debug(dataStr);
-                                },
-                                err => debug(err),
-                                () => debug('complete'));
+                                            for(let j = 0; j < data.length; j++) {
+                                                dataStr += data[j] + ' ';
+                                            }
+                                            debug('on -> data ');
+                                            debug(dataStr);
+                                    },
+                                    err => debug(err),
+                                    () => debug('complete'));
     }
 
     genCommonCmds(cmdName) {
