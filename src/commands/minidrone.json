@@ -984,11 +984,7 @@
               {
                 "name": "listFlags",
                 "type": "u8",
-                "description": "List entry attribute Bit field. \
-                              0x01: First: indicate it's the first element of the list. \
-                              0x02: Last: indicate it's the last element of the list. \
-                              0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. \
-                              0x08: Remove: This value should be removed from the existing list."
+                "description": "List entry attribute Bit field. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. 0x08: Remove: This value should be removed from the existing list."
               }
             ]
           },
@@ -1033,11 +1029,7 @@
               {
                 "name": "listFlags",
                 "type": "u8",
-                "description": "List entry attribute Bitfield. \
-                                0x01: First: indicate it's the first element of the list. \
-                                0x02: Last: indicate it's the last element of the list. \
-                                0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. \
-                                0x08: Remove: This value should be removed from the existing list."
+                "description": "List entry attribute Bitfield. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. 0x08: Remove: This value should be removed from the existing list."
               }
             ]
           },
@@ -1072,11 +1064,7 @@
               {
                 "name": "listFlags",
                 "type": "u8",
-                "description": "List entry attribute Bitfield. \
-                                0x01: First: indicate it's the first element of the list. \
-                                0x02: Last: indicate it's the last element of the list. \
-                                0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. \
-                                0x08: Remove: This value should be removed from the existing list."
+                "description": "List entry attribute Bitfield. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. 0x08: Remove: This value should be removed from the existing list."
               }
             ]
           }

@@ -1,16 +1,16 @@
 {
   "project": {
     "name": "common",
-    "id": "0",
+    "id": 0,
     "description": "All common commands shared between all projects",
     "class": [
       {
         "name": "network",
-        "id": "0",
+        "id": 0,
         "description": "Network related commands",
         "cmd": {
           "name": "disconnect",
-          "id": "0",
+          "id": 0,
           "deprecated": "true",
           "comment": {
             "title": "Signals the remote that the host will disconnect",
@@ -22,11 +22,11 @@
       },
       {
         "name": "networkEvent",
-        "id": "1",
+        "id": 1,
         "description": "Network Event from product",
         "cmd": {
           "name": "disconnection",
-          "id": "0",
+          "id": 0,
           "content": "NOTIFICATION",
           "comment": {
             "title": "Drone will disconnect",
@@ -53,12 +53,12 @@
       },
       {
         "name": "settings",
-        "id": "2",
+        "id": 2,
         "description": "Settings commands",
         "cmd": [
           {
             "name": "allSettings",
-            "id": "0",
+            "id": 0,
             "timeout": "RETRY",
             "comment": {
               "title": "Ask for all settings",
@@ -69,7 +69,7 @@
           },
           {
             "name": "reset",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Reset all settings",
               "desc": "Reset all settings.",
@@ -79,7 +79,7 @@
           },
           {
             "name": "productName",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Set product name",
               "desc": "Set the product name. It also sets the name of the SSID for Wifi products and advertisement name for BLE products (changed after a reboot of the product).",
@@ -94,7 +94,7 @@
           },
           {
             "name": "country",
-            "id": "3",
+            "id": 3,
             "comment": {
               "title": "Set the country",
               "desc": "Set the country for Wifi products. This can modify Wifi band and/or channel. Please note that you might be disconnected from the product after changing the country as it changes Wifi parameters.",
@@ -109,7 +109,7 @@
           },
           {
             "name": "autoCountry",
-            "id": "4",
+            "id": 4,
             "comment": {
               "title": "Enable auto-country",
               "desc": "Enable auto-country. If auto-country is set, the drone will guess its Wifi country by itself by checking other Wifi country around it. Please note that you might be disconnected from the product after changing the country as it changes Wifi parameters.",
@@ -126,12 +126,12 @@
       },
       {
         "name": "settingsState",
-        "id": "3",
+        "id": 3,
         "description": "Settings state from product",
         "cmd": [
           {
             "name": "allSettingsChanged",
-            "id": "0",
+            "id": 0,
             "timeout": "RETRY",
             "comment": {
               "title": "All settings have been sent",
@@ -142,7 +142,7 @@
           },
           {
             "name": "resetChanged",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "All settings have been reset",
               "desc": "All settings have been reset.",
@@ -152,7 +152,7 @@
           },
           {
             "name": "productNameChanged",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Product name changed",
               "desc": "Product name changed.",
@@ -167,7 +167,7 @@
           },
           {
             "name": "productVersionChanged",
-            "id": "3",
+            "id": 3,
             "comment": {
               "title": "Product version",
               "desc": "Product version.",
@@ -189,7 +189,7 @@
           },
           {
             "name": "productSerialHighChanged",
-            "id": "4",
+            "id": 4,
             "comment": {
               "title": "Product serial (1st part)",
               "desc": "Product serial (1st part).",
@@ -204,7 +204,7 @@
           },
           {
             "name": "productSerialLowChanged",
-            "id": "5",
+            "id": 5,
             "comment": {
               "title": "Product serial (2nd part)",
               "desc": "Product serial (2nd part).",
@@ -219,7 +219,7 @@
           },
           {
             "name": "countryChanged",
-            "id": "6",
+            "id": 6,
             "-timeout": "RETRY",
             "comment": {
               "title": "Country changed",
@@ -235,7 +235,7 @@
           },
           {
             "name": "autoCountryChanged",
-            "id": "7",
+            "id": 7,
             "comment": {
               "title": "Auto-country changed",
               "desc": "Auto-country changed.",
@@ -252,13 +252,13 @@
       },
       {
         "name": "common",
-        "id": "4",
+        "id": 4,
         "description": "Common commands",
         "cmd": [
           {
             "name": "allStates",
-            "id": "0",
-            "-timeout": "RETRY",
+            "id": 0,
+            "timeout": "RETRY",
             "comment": {
               "title": "Ask for all states",
               "desc": "Ask for all states.",
@@ -268,7 +268,7 @@
           },
           {
             "name": "currentDate",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Set the date",
               "desc": "Set the date. This date is taken by the drone as its own date. So medias and other files will be dated from this date.",
@@ -283,7 +283,7 @@
           },
           {
             "name": "currentTime",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Set the time",
               "desc": "Set the time. This time is taken by the drone as its own time. So medias and other files will be dated from this time.",
@@ -298,7 +298,7 @@
           },
           {
             "name": "reboot",
-            "id": "3",
+            "id": 3,
             "comment": {
               "title": "Reboot",
               "desc": "Reboot the product. The product will accept this command only if is not flying.",
@@ -310,12 +310,12 @@
       },
       {
         "name": "commonState",
-        "id": "5",
+        "id": 5,
         "description": "Common state from product",
         "cmd": [
           {
             "name": "allStatesChanged",
-            "id": "0",
+            "id": 0,
             "timeout": "RETRY",
             "comment": {
               "title": "All states have been sent",
@@ -326,7 +326,7 @@
           },
           {
             "name": "batteryStateChanged",
-            "id": "1",
+            "id": 1,
             "buffer": "NON_ACK",
             "comment": {
               "title": "Battery state",
@@ -342,7 +342,7 @@
           },
           {
             "name": "massStorageStateListChanged",
-            "id": "2",
+            "id": 2,
             "type": "MAP_ITEM",
             "comment": {
               "title": "Mass storage state list",
@@ -365,7 +365,7 @@
           },
           {
             "name": "massStorageInfoStateListChanged",
-            "id": "3",
+            "id": 3,
             "type": "MAP_ITEM",
             "comment": {
               "title": "Mass storage info state list",
@@ -408,7 +408,7 @@
           },
           {
             "name": "currentDateChanged",
-            "id": "4",
+            "id": 4,
             "comment": {
               "title": "Date changed",
               "desc": "Date changed. Corresponds to the latest date set on the drone.",
@@ -423,7 +423,7 @@
           },
           {
             "name": "currentTimeChanged",
-            "id": "5",
+            "id": 5,
             "comment": {
               "title": "Time changed",
               "desc": "Time changed. Corresponds to the latest time set on the drone.",
@@ -438,7 +438,7 @@
           },
           {
             "name": "massStorageInfoRemainingListChanged",
-            "id": "6",
+            "id": 6,
             "type": "LIST_ITEM",
             "deprecated": "true",
             "comment": {
@@ -465,7 +465,7 @@
           },
           {
             "name": "wifiSignalChanged",
-            "id": "7",
+            "id": 7,
             "-buffer": "NON_ACK",
             "comment": {
               "title": "Rssi changed",
@@ -481,7 +481,7 @@
           },
           {
             "name": "sensorsStatesListChanged",
-            "id": "8",
+            "id": 8,
             "type": "MAP_ITEM",
             "comment": {
               "title": "Sensors state list",
@@ -530,7 +530,7 @@
           },
           {
             "name": "productModel",
-            "id": "9",
+            "id": 9,
             "comment": {
               "title": "Product sub-model",
               "desc": "Product sub-model.     This can be used to customize the UI depending on the product.",
@@ -765,12 +765,12 @@
       },
       {
         "name": "overHeat",
-        "id": "6",
+        "id": 6,
         "description": "Over heat commands",
         "cmd": [
           {
             "name": "switchOff",
-            "id": "0",
+            "id": 0,
             "deprecated": "true",
             "comment": {
               "title": "Switch off after an overheat",
@@ -781,7 +781,7 @@
           },
           {
             "name": "ventilate",
-            "id": "1",
+            "id": 1,
             "deprecated": "true",
             "comment": {
               "title": "Ventilate after an overheat",
@@ -794,12 +794,12 @@
       },
       {
         "name": "overHeatState",
-        "id": "7",
+        "id": 7,
         "description": "Overheat state from product",
         "cmd": [
           {
             "name": "overHeatChanged",
-            "id": "0",
+            "id": 0,
             "deprecated": "true",
             "comment": {
               "title": "Overheat",
@@ -808,7 +808,7 @@
           },
           {
             "name": "overHeatRegulationChanged",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Overheat regulation type",
               "desc": "Overheat regulation type."
@@ -823,11 +823,11 @@
       },
       {
         "name": "controller",
-        "id": "8",
+        "id": 8,
         "description": "Notify the device about the state of the controller application.",
         "cmd": {
           "name": "isPiloting",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Inform about hud entering",
             "desc": "Inform about hud entering. Tell the drone that the controller enters/leaves the piloting hud. On a non-flying products it is used to know when a run begins.",
@@ -843,11 +843,11 @@
       },
       {
         "name": "wifiSettings",
-        "id": "9",
+        "id": 9,
         "description": "Wifi settings commands",
         "cmd": {
           "name": "outdoorSetting",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Set wifi outdoor mode",
             "desc": "Set wifi indoor/outdoor mode. Please note that you might be disconnected from the product after changing the indoor/outdoor setting as it changes Wifi parameters.",
@@ -867,7 +867,7 @@
         "description": "Wifi settings state from product",
         "cmd": {
           "name": "outdoorSettingsChanged",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Wifi outdoor mode",
             "desc": "Wifi outdoor mode.",
@@ -888,7 +888,7 @@
         "cmd": [
           {
             "name": "start",
-            "id": "0",
+            "id": 0,
             "comment": {
               "title": "Start a FlightPlan",
               "desc": "Start a FlightPlan based on a mavlink file existing on the drone. Requirements are: * Product is calibrated * Product should be in outdoor mode * Product has fixed its GPS",
@@ -922,7 +922,7 @@
           },
           {
             "name": "pause",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Pause a FlightPlan",
               "desc": "Pause a FlightPlan that was playing. To unpause a FlightPlan, see [StartFlightPlan](#0-11-0)",
@@ -932,7 +932,7 @@
           },
           {
             "name": "stop",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Stop a FlightPlan",
               "desc": "Stop a FlightPlan that was playing.",
@@ -949,7 +949,7 @@
         "cmd": [
           {
             "name": "mavlinkFilePlayingStateChanged",
-            "id": "0",
+            "id": 0,
             "comment": {
               "title": "Playing state of a FlightPlan",
               "desc": "Playing state of a FlightPlan.",
@@ -1010,7 +1010,7 @@
           },
           {
             "name": "mavlinkPlayErrorStateChanged",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "FlightPlan error",
               "desc": "FlightPlan error.",
@@ -1047,7 +1047,7 @@
           },
           {
             "name": "missonItemExecuted",
-            "id": "2",
+            "id": 2,
             "content": "NOTIFICATION",
             "comment": {
               "title": "Mission item executed",
@@ -1070,7 +1070,7 @@
         "cmd": [
           {
             "name": "magnetoCalibration",
-            "id": "0",
+            "id": 0,
             "comment": {
               "title": "Start/Abort magnetometer calibration",
               "desc": "Start or abort magnetometer calibration process.",
@@ -1085,7 +1085,7 @@
           },
           {
             "name": "pitotCalibration",
-            "id": "1",
+            "id": 1,
             "description": "Sent when a calibration of the pitot is asked or is aborted",
             "arg": {
               "name": "calibrate",
@@ -1102,7 +1102,7 @@
         "cmd": [
           {
             "name": "magnetoCalibrationStateChanged",
-            "id": "0",
+            "id": 0,
             "comment": {
               "title": "Magneto calib process axis state",
               "desc": "Magneto calib process axis state.",
@@ -1134,7 +1134,7 @@
           },
           {
             "name": "magnetoCalibrationRequiredState",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Calibration required",
               "desc": "Calibration required.",
@@ -1149,7 +1149,7 @@
           },
           {
             "name": "magnetoCalibrationAxisToCalibrateChanged",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Axis to calibrate during calibration process",
               "desc": "Axis to calibrate during calibration process.",
@@ -1186,7 +1186,7 @@
           },
           {
             "name": "magnetoCalibrationStartedChanged",
-            "id": "3",
+            "id": 3,
             "comment": {
               "title": "Calibration process state",
               "desc": "Calibration process state.",
@@ -1202,7 +1202,7 @@
           },
           {
             "name": "pitotCalibrationStateChanged",
-            "id": "4",
+            "id": 4,
             "description": "Sent when the state of the pitot calibration has changed",
             "arg": [
               {
@@ -1247,7 +1247,7 @@
         "description": "Status of the camera settings",
         "cmd": {
           "name": "cameraSettingsChanged",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Camera info",
             "desc": "Camera info.",
@@ -1289,7 +1289,7 @@
         "description": "GPS related commands",
         "cmd": {
           "name": "controllerPositionForRun",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Set the position of a run",
             "desc": "Set the position of a run. This will let the product know the controller location for the flight/run. The location is typically used to geotag medias. Only used on products that have no gps. Watch out, this command is not used by BLE products.",
@@ -1317,7 +1317,7 @@
         "cmd": [
           {
             "name": "availabilityStateChanged",
-            "id": "0",
+            "id": 0,
             "comment": {
               "title": "FlightPlan availability",
               "desc": "FlightPlan availability. Availability is linked to GPS fix, magnetometer calibration, sensor states...",
@@ -1332,7 +1332,7 @@
           },
           {
             "name": "componentStateListChanged",
-            "id": "1",
+            "id": 1,
             "type": "MAP_ITEM",
             "comment": {
               "title": "FlightPlan components state list",
@@ -1377,7 +1377,7 @@
           },
           {
             "name": "lockStateChanged",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "FlightPlan lock state",
               "desc": "FlightPlan lock state. Represents the fact that the controller is able or not to stop or pause a playing FlightPlan",
@@ -1399,7 +1399,7 @@
         "cmd": [
           {
             "name": "startingErrorEvent",
-            "id": "0",
+            "id": 0,
             "content": "NOTIFICATION",
             "comment": {
               "title": "FlightPlan start error",
@@ -1410,7 +1410,7 @@
           },
           {
             "name": "speedBridleEvent",
-            "id": "1",
+            "id": 1,
             "content": "NOTIFICATION",
             "comment": {
               "title": "FlightPlan speed clamping",
@@ -1428,7 +1428,7 @@
         "cmd": [
           {
             "name": "controllerLibARCommandsVersion",
-            "id": "0",
+            "id": 0,
             "description": "Controller libARCommands version",
             "arg": {
               "name": "version",
@@ -1438,7 +1438,7 @@
           },
           {
             "name": "skyControllerLibARCommandsVersion",
-            "id": "1",
+            "id": 1,
             "description": "SkyController libARCommands version",
             "arg": {
               "name": "version",
@@ -1448,7 +1448,7 @@
           },
           {
             "name": "deviceLibARCommandsVersion",
-            "id": "2",
+            "id": 2,
             "description": "Device libARCommands version",
             "arg": {
               "name": "version",
@@ -1464,7 +1464,7 @@
         "description": "Audio-related commands.",
         "cmd": {
           "name": "controllerReadyForStreaming",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Set audio stream direction",
             "desc": "Set audio stream direction.",
@@ -1484,7 +1484,7 @@
         "description": "Audio-related state updates.",
         "cmd": {
           "name": "audioStreamingRunning",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Audio stream direction",
             "desc": "Audio stream direction.",
@@ -1504,7 +1504,7 @@
         "description": "Controls the headlight LEDs of the Evo variants.",
         "cmd": {
           "name": "intensity",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Set LEDs intensity",
             "desc": "Set lighting LEDs intensity.",
@@ -1531,7 +1531,7 @@
         "description": "Get information about the state of the Evo variants' LEDs.",
         "cmd": {
           "name": "intensityChanged",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "LEDs intensity",
             "desc": "Lighting LEDs intensity.",
@@ -1559,7 +1559,7 @@
         "cmd": [
           {
             "name": "startAnimation",
-            "id": "0",
+            "id": 0,
             "comment": {
               "title": "Start an animation",
               "desc": "Start a paramaterless animation. List of available animations can be retrieved from [AnimationsStateList](#0-25-0).",
@@ -1661,7 +1661,7 @@
           },
           {
             "name": "StopAnimation",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Stop an animation",
               "desc": "Stop a paramaterless animation.     List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
@@ -1746,7 +1746,7 @@
           },
           {
             "name": "StopAllAnimations",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Stop all animations",
               "desc": "Stop all running paramaterless animations.     List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
@@ -1763,7 +1763,7 @@
         "cmd": {
           "name": "list",
           "type": "MAP_ITEM",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Animation state list",
             "desc": "Paramaterless animations state list.",
@@ -1911,7 +1911,7 @@
         "description": "Accessories-related commands.",
         "cmd": {
           "name": "config",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Declare an accessory",
             "desc": "Declare an accessory. You can choose the accessory between all accessible for this product. You can get this list through event [SupportedAccessories](#0-27-0). You can only set the accessory when the modification is enabled. You can know if it possible with the event [AccessoryDeclarationAvailability](#0-27-2).",
@@ -1959,7 +1959,7 @@
         "cmd": [
           {
             "name": "supportedAccessoriesListChanged",
-            "id": "0",
+            "id": 0,
             "type": "MAP_ITEM",
             "comment": {
               "title": "Supported accessories list",
@@ -2002,7 +2002,7 @@
           },
           {
             "name": "accessoryConfigChanged",
-            "id": "1",
+            "id": 1,
             "comment": {
               "title": "Accessory config",
               "desc": "Accessory config.",
@@ -2079,7 +2079,7 @@
           },
           {
             "name": "accessoryConfigModificationEnabled",
-            "id": "2",
+            "id": 2,
             "comment": {
               "title": "Accessory declaration availability",
               "desc": "Availability to declare or not an accessory.",
@@ -2100,7 +2100,7 @@
         "description": "Commands sent by the controller to set charger parameters.",
         "cmd": {
           "name": "setMaxChargeRate",
-          "id": "0",
+          "id": 0,
           "deprecated": "true",
           "comment": {
             "title": "Set max charge rate",
@@ -2139,7 +2139,7 @@
         "cmd": [
           {
             "name": "maxChargeRateChanged",
-            "id": "0",
+            "id": 0,
             "deprecated": "true",
             "comment": {
               "title": "Max charge rate",
@@ -2170,7 +2170,7 @@
           },
           {
             "name": "currentChargeStateChanged",
-            "id": "1",
+            "id": 1,
             "deprecated": "true",
             "comment": {
               "title": "Current charge state",
@@ -2245,7 +2245,7 @@
           },
           {
             "name": "lastChargeRateChanged",
-            "id": "2",
+            "id": 2,
             "deprecated": "true",
             "comment": {
               "title": "Last charge rate",
@@ -2281,7 +2281,7 @@
           },
           {
             "name": "chargingInfo",
-            "id": "3",
+            "id": 3,
             "comment": {
               "title": "Charging information",
               "desc": "Charging information.",
@@ -2373,7 +2373,7 @@
         "description": "Commands sent by the drone to inform about the run or flight state",
         "cmd": {
           "name": "runIdChanged",
-          "id": "0",
+          "id": 0,
           "comment": {
             "title": "Current run id",
             "desc": "Current run id. A run id is uniquely identifying a run or a flight. For each run is generated on the drone a file which can be used by Academy to sum up the run. Also, each medias taken during a run has a filename containing the run id.",
