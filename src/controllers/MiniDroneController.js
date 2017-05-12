@@ -65,6 +65,19 @@ export class MiniDroneController {
         });
     }
 
+    sendPilotingCommand(categoryName, cmdName, args) {
+        return new Promise((resolve, reject) => {
+            args = args || [];
+            let addLength = (cmdName === 'maneuver') ? args.length + 3 : args.length;
+            let cmd = this.genMiniDroneCmds(categoryName, cmdName, args, addLength);
+            this.droneService.sendDroneCommand(cmd).then(() => {
+                resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
     disconnect() {
         return new Promise((resolve, reject) => {
             this.droneService.disconnect().then(() => {
@@ -93,6 +106,66 @@ export class MiniDroneController {
                                     () => debug('complete'));
     }
 
+    genMiniDroneCmds(categoryName, cmdName, args, addLength) {
+        let baseSize = 6,
+            totalSize = (args) ? baseSize + addLength : baseSize,
+            buffer = Buffer.alloc(totalSize),
+            offset = 0,
+            categoryId,
+            cmdId;
+
+        buffer.writeUInt8(2, offset++);
+        buffer.writeUInt8(++this.steps, offset++);
+        buffer.writeUInt8(this.droneCmds.project.id, offset++);
+
+        switch (cmdName) {
+            case "flatTrim":
+            case "takeOff":
+            case "landing":
+            case "emergency":
+            case "maneuver":
+            case "flip":
+            case "picture":
+                categoryId = this.droneCmds.project.categories
+                .filter(category => category.name === categoryName)
+                .pop().id;
+                cmdId = this.droneCmds.project.categories
+                    .filter(category => category.name === categoryName)
+                    .map(category => {
+                        return category.cmd.filter(cmdType => cmdType.name === cmdName);
+                    })
+                    .pop().pop().id;
+                buffer.writeUInt8(categoryId, offset++);
+                buffer.writeUInt16LE(cmdId, offset);
+                offset += 2;
+                break;
+
+            default:
+                break;
+        }
+
+        switch (cmdName) {
+            case "maneuver":
+                args.forEach((value, idx, array) => {
+                    if (idx === array.length - 1) {
+                        buffer.writeUInt32LE(value, offset);
+                    } else {
+                        buffer.writeInt8(value, offset++);
+                    }
+                });
+                break;
+
+            case "flip":
+            case "picture":
+                args.forEach(value => {
+                    buffer.writeUInt8(value, offset++);
+                });
+                break;
+        }
+
+        return buffer;
+    }
+
     genCommonCmds(cmdName) {
         let buffer = Buffer.alloc(6),
             offset = 0;
@@ -109,13 +182,15 @@ export class MiniDroneController {
                 let cmdId = this.commonCmds.project.class
                                 .filter(category => category.name === "common")
                                 .map(category => {
-                                    return category.cmd.filter(cmdType => cmdType.name === "allStates");
+                                    return category.cmd.filter(cmdType => cmdType.name === cmdName);
                                 })
                                 .pop().pop().id;
-                buffer.writeUInt16LE(categoryId, offset);
-                offset += 2;
-                buffer.writeInt8(cmdId, offset++);
+                buffer.writeInt8(categoryId, offset++);
+                buffer.writeUInt16LE(cmdId, offset);
+                break;
 
+            default:
+                break;
         }
 
         return buffer;
