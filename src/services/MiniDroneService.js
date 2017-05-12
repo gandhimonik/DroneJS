@@ -210,7 +210,7 @@ export class MiniDroneService extends EventEmitter {
 
     }
 
-    sendDroneCommand(buffer) {
+    sendNavCommand(buffer) {
         return new Promise((resolve, reject) => {
             try {
                 debug('Sending Command...');

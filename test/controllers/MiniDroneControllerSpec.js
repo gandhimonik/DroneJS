@@ -36,7 +36,7 @@ before(() => {
     discServicesStub = stub(miniDroneController.droneService, 'discoverServices').callsFake(() => fakePromise);
     discCharServiceStub = stub(miniDroneController.droneService, 'discoverCharacteristics').callsFake(() => fakePromise);
     identifyCharServiceStub = stub(miniDroneController.droneService, 'identifyCharacteristics').callsFake(() => fakePromise);
-    sendDroneCmdServiceStub = stub(miniDroneController.droneService, 'sendDroneCommand').callsFake(() => fakePromise);
+    sendDroneCmdServiceStub = stub(miniDroneController.droneService, 'sendNavCommand').callsFake(() => fakePromise);
     disconnectServiceStub = stub(miniDroneController.droneService, 'disconnect').callsFake(() => fakePromise);
 
     miniDroneController.droneService.cmdObservable = {
@@ -566,7 +566,7 @@ after(() => {
     miniDroneController.droneService.discoverServices.restore();
     miniDroneController.droneService.discoverCharacteristics.restore();
     miniDroneController.droneService.identifyCharacteristics.restore();
-    miniDroneController.droneService.sendDroneCommand.restore();
+    miniDroneController.droneService.sendNavCommand.restore();
     miniDroneController.droneService.disconnect.restore();
 
     miniDroneController = null;

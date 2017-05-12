@@ -57,7 +57,7 @@ export class MiniDroneController {
     checkAllStates() {
         return new Promise((resolve, reject) => {
             let cmd = this.genCommonCmds("allStates");
-            this.droneService.sendDroneCommand(cmd).then(() => {
+            this.droneService.sendNavCommand(cmd).then(() => {
                 resolve("success");
             }).catch((e) => {
                 reject(e);
@@ -70,7 +70,7 @@ export class MiniDroneController {
             args = args || [];
             let addLength = (cmdName === 'maneuver') ? args.length + 3 : args.length;
             let cmd = this.genMiniDroneCmds(categoryName, cmdName, args, addLength);
-            this.droneService.sendDroneCommand(cmd).then(() => {
+            this.droneService.sendNavCommand(cmd).then(() => {
                 resolve("success");
             }).catch((e) => {
                 reject(e);
