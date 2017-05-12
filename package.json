@@ -5,7 +5,7 @@
   "main": "index.js",
   "debugging": true,
   "scripts": {
-    "test": "mocha --compilers js:babel-register --require babel-polyfill --recursive ./test/controllers/MiniDroneControllerSpec.js --timeout 30000",
+    "test": "mocha --compilers js:babel-register --require babel-polyfill --recursive ./test/controllers/MiniDroneControllerSpec.js --timeout 10000",
     "start": "mocha --compilers js:babel-register --require babel-polyfill --reporter spec --inspect --debug-brk ./test/controllers/MiniDroneControllerSpec.js"
   },
   "repository": {
