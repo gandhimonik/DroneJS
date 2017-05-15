@@ -1,7 +1,6 @@
 import { MiniDroneController }     from '../controllers/MiniDroneController';
-import { debug }                from '../utils/debug';
 
-export class MiniDroneController {
+export class MiniDroneView {
 
     constructor() {
         this.droneController = new MiniDroneController();
@@ -21,6 +20,108 @@ export class MiniDroneController {
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'takeOff').then(() => {
                 resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    turnLeft(intensity, duration) {
+        return new Promise((resolve, reject) => {
+            if (!(intensity >= -100 && intensity <= 0)) {
+                reject('Error: Value for intensity should be between -100 and 0');
+            }
+
+            let args = [0, 0, 0, intensity, 0, duration];
+            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
+                setTimeout(() => {
+                    resolve("success");
+                }, duration);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    turnRight(intensity, duration) {
+        return new Promise((resolve, reject) => {
+            if (!(intensity >= 1 && intensity <= 100)) {
+                reject('Error: Value for intensity should be between 1 and 100');
+            }
+
+            let args = [0, 0, 0, intensity, 0, duration];
+            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
+                setTimeout(() => {
+                    resolve("success");
+                }, duration);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    goBackward(intensity, duration) {
+        return new Promise((resolve, reject) => {
+            if (!(intensity >= -100 && intensity <= 0)) {
+                reject('Error: Value for intensity should be between -100 and 0');
+            }
+
+            let args = [0, 0, intensity, 0, 0, duration];
+            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
+                setTimeout(() => {
+                    resolve("success");
+                }, duration);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    goForward(intensity, duration) {
+        return new Promise((resolve, reject) => {
+            if (!(intensity >= 1 && intensity <= 100)) {
+                reject('Error: Value for intensity should be between 1 and 100');
+            }
+
+            let args = [0, 0, intensity, 0, 0, duration];
+            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
+                setTimeout(() => {
+                    resolve("success");
+                }, duration);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    goLeft(intensity, duration) {
+        return new Promise((resolve, reject) => {
+            if (!(intensity >= -100 && intensity <= 0)) {
+                reject('Error: Value for intensity should be between -100 and 0');
+            }
+
+            let args = [0, intensity, 0, 0, 0, duration];
+            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
+                setTimeout(() => {
+                    resolve("success");
+                }, duration);
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    goRight(intensity, duration) {
+        return new Promise((resolve, reject) => {
+            if (!(intensity >= 1 && intensity <= 100)) {
+                reject('Error: Value for intensity should be between 1 and 100');
+            }
+
+            let args = [0, intensity, 0, 0, 0, duration];
+            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
+                setTimeout(() => {
+                    resolve("success");
+                }, duration);
             }).catch((e) => {
                 reject(e);
             });
@@ -66,6 +167,8 @@ export class MiniDroneController {
             });
         });
     }
+
+
 
     land() {
         return new Promise((resolve, reject) => {
