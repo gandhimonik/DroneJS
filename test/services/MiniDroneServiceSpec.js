@@ -8,10 +8,8 @@ import { MiniDroneService } from '../../src/services/MiniDroneService';
 let miniDroneService = null,
     noble = null,
     peripheral,
-    service,
-    charList1,
-    charList2,
-    charList3;
+    services,
+    charList;
 
 before(() => {
     miniDroneService = new MiniDroneService();
@@ -29,36 +27,42 @@ before(() => {
             return true;
         }
     };
-    service = {
-        on: function(str, fn) {
-            setTimeout(() => {
-                fn(charList2);
-            }, 100);
+    services = [
+        {
+            on: function(str, fn) {
+                setTimeout(() => {
+                    fn(charList);
+                }, 100);
+            },
+            discoverCharacteristics: function () {
+                return true;
+            }
         },
-        discoverCharacteristics: function () {
-            return true;
+        {
+            on: function(str, fn) {
+                setTimeout(() => {
+                    fn(charList);
+                }, 100);
+            },
+            discoverCharacteristics: function () {
+                return true;
+            }
         }
-    };
-
-    charList1 = [
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
-        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } }
     ];
 
-    charList2 = [
-        { uuid: "fb", on: function(str, fn) { fn(); }, notify: function() { return true; } }
-    ];
-
-    charList3 = [
+    charList = [
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fa", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
+        { uuid: "fb", on: function(str, fn) { fn(['data']); }, notify: function() { return true; } },
         { uuid: "fd21", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
         { uuid: "fd21", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } },
         { uuid: "fd21", on: function(str, fn) { fn(); }, write: function() { return true; }, notify: function() { return true; } }
@@ -390,19 +394,16 @@ describe("MiniDroneService", () => {
 
         it("test if method is called", (done) => {
             let serviceSpy = spy(miniDroneService, "discoverCharacteristics"),
-                identifySpy = spy(miniDroneService, "identifyCharacteristics"),
-                onSpy = spy(service, "on"),
-                discoverCharSpy = spy(service, "discoverCharacteristics");
+                onSpy = spy(services[0], "on"),
+                discoverCharSpy = spy(services[0], "discoverCharacteristics");
 
-            miniDroneService.discoverCharacteristics(service).then((value) => {
+            miniDroneService.discoverCharacteristics(services).then((value) => {
                 assert.calledOnce(serviceSpy);
-                assert.calledOnce(identifySpy);
                 assert.calledOnce(onSpy);
                 assert.calledOnce(discoverCharSpy);
                 miniDroneService.discoverCharacteristics.restore();
-                miniDroneService.identifyCharacteristics.restore();
-                service.on.restore();
-                service.discoverCharacteristics.restore();
+                services[0].on.restore();
+                services[0].discoverCharacteristics.restore();
                 done();
             }).catch((e) => {
                 assert.fail(e);
@@ -412,17 +413,15 @@ describe("MiniDroneService", () => {
 
         it("test if service.discoverCharacteristics method fails", (done) => {
             let serviceSpy = spy(miniDroneService, "discoverCharacteristics"),
-                identifySpy = spy(miniDroneService, "identifyCharacteristics"),
-                onSpy = spy(service, "on"),
-                discoverCharStub = stub(service, "discoverCharacteristics").callsFake(() => {
+                onSpy = spy(services[0], "on"),
+                discoverCharStub = stub(services[0], "discoverCharacteristics").callsFake(() => {
                     throw new Error("failed");
                 });
 
-            miniDroneService.discoverCharacteristics(service).then((value) => {
+            miniDroneService.discoverCharacteristics(services).then((value) => {
                 done();
             }).catch((e) => {
                 assert.calledOnce(serviceSpy);
-                assert.notCalled(identifySpy);
                 assert.calledOnce(onSpy);
                 assert.calledOnce(discoverCharStub);
                 expect(e).to.exist;
@@ -430,24 +429,21 @@ describe("MiniDroneService", () => {
             });
 
             miniDroneService.discoverCharacteristics.restore();
-            miniDroneService.identifyCharacteristics.restore();
-            service.on.restore();
-            service.discoverCharacteristics.restore();
+            services[0].on.restore();
+            services[0].discoverCharacteristics.restore();
         });
 
         it("test if service.on method fails", (done) => {
             let serviceSpy = spy(miniDroneService, "discoverCharacteristics"),
-                identifySpy = spy(miniDroneService, "identifyCharacteristics"),
-                onSpy = stub(service, "on").callsFake(() => {
+                onSpy = stub(services[0], "on").callsFake(() => {
                     throw new Error("failed");
                 }),
-                discoverCharSpy = spy(service, "discoverCharacteristics");
+                discoverCharSpy = spy(services[0], "discoverCharacteristics");
 
-            miniDroneService.discoverCharacteristics(service).then((value) => {
+            miniDroneService.discoverCharacteristics(services).then((value) => {
                 done();
             }).catch((e) => {
                 assert.calledOnce(serviceSpy);
-                assert.notCalled(identifySpy);
                 assert.calledOnce(onSpy);
                 assert.notCalled(discoverCharSpy);
                 expect(e).to.exist;
@@ -455,9 +451,8 @@ describe("MiniDroneService", () => {
             });
 
             miniDroneService.discoverCharacteristics.restore();
-            miniDroneService.identifyCharacteristics.restore();
-            service.on.restore();
-            service.discoverCharacteristics.restore();
+            services[0].on.restore();
+            services[0].discoverCharacteristics.restore();
         });
     });
 
@@ -469,7 +464,7 @@ describe("MiniDroneService", () => {
         it("test if method initializes cmdService", (done) => {
             let serviceSpy = spy(miniDroneService, "identifyCharacteristics");
 
-            miniDroneService.identifyCharacteristics(charList1).then(value => {
+            miniDroneService.identifyCharacteristics(charList).then(value => {
                 assert.calledOnce(serviceSpy);
                 expect(miniDroneService.cmdService).to.exist;
                 expect(value).to.exist;
@@ -488,7 +483,7 @@ describe("MiniDroneService", () => {
             let serviceSpy = spy(miniDroneService, "identifyCharacteristics"),
                 notifySpy = spy(miniDroneService, "subscribeToNotify");
 
-            miniDroneService.identifyCharacteristics(charList2).then(value => {
+            miniDroneService.identifyCharacteristics(charList).then(value => {
                 assert.calledOnce(serviceSpy);
                 assert.calledOnce(notifySpy);
                 expect(miniDroneService.cmdObservable).to.exist;
@@ -508,7 +503,7 @@ describe("MiniDroneService", () => {
             let serviceSpy = spy(miniDroneService, "identifyCharacteristics"),
                 notifySpy = spy(miniDroneService, "subscribeToNotify");
 
-            miniDroneService.identifyCharacteristics(charList3).then(value => {
+            miniDroneService.identifyCharacteristics(charList).then(value => {
                 assert.calledOnce(serviceSpy);
                 assert.calledOnce(notifySpy);
                 expect(miniDroneService.ftpGetService).to.exist;
@@ -536,7 +531,7 @@ describe("MiniDroneService", () => {
             let serviceSpy = spy(miniDroneService, "createObservable"),
                 obsSpy  = spy(Observable, "create");
 
-            let observable = miniDroneService.createObservable(charList2)
+            let observable = miniDroneService.createObservable(charList.slice(11, 12))
             assert.calledOnce(serviceSpy);
             assert.calledOnce(obsSpy);
             expect(observable).to.exist;
@@ -551,7 +546,7 @@ describe("MiniDroneService", () => {
             let serviceSpy = spy(miniDroneService, "createObservable"),
                 obsSpy  = spy(Observable, "create");
 
-            let observable = miniDroneService.createObservable(charList2);
+            let observable = miniDroneService.createObservable(charList.slice(11, 12));
             let subscription = observable.subscribe(data => {
 
             },
@@ -570,21 +565,21 @@ describe("MiniDroneService", () => {
         });
     });
 
-    describe("test method: sendDroneCommand", () => {
+    describe("test method: sendNavCommand", () => {
         it("test if exists", () => {
-            expect(miniDroneService.sendDroneCommand).to.exist;
+            expect(miniDroneService.sendNavCommand).to.exist;
         });
 
         it("test if method is called", (done) => {
-            let serviceSpy = spy(miniDroneService, "sendDroneCommand");
+            let serviceSpy = spy(miniDroneService, "sendNavCommand");
 
-            miniDroneService.identifyCharacteristics(charList1);
+            miniDroneService.identifyCharacteristics(charList);
 
-            miniDroneService.sendDroneCommand().then((value) => {
+            miniDroneService.sendNavCommand().then((value) => {
                 assert.calledOnce(serviceSpy);
                 expect(value).to.exist;
                 expect(value).to.equal("success");
-                miniDroneService.sendDroneCommand.restore();
+                miniDroneService.sendNavCommand.restore();
                 done();
             }).catch((e) => {
                 assert.fail(e);
@@ -593,21 +588,21 @@ describe("MiniDroneService", () => {
         });
 
         it("test if method fails", (done) => {
-            let serviceSpy = spy(miniDroneService, "sendDroneCommand"),
-                serviceStub = stub(charList1[10], "write").callsFake(() => {
+            let serviceSpy = spy(miniDroneService, "sendNavCommand"),
+                serviceStub = stub(charList[10], "write").callsFake(() => {
                     throw new Error("failed");
                 });
 
-            miniDroneService.identifyCharacteristics(charList1);
+            miniDroneService.identifyCharacteristics(charList);
 
-            miniDroneService.sendDroneCommand().then((value) => {
+            miniDroneService.sendNavCommand().then((value) => {
                 done();
             }).catch((e) => {
                 assert.calledOnce(serviceSpy);
                 assert.calledOnce(serviceStub);
                 expect(e).to.exist;
-                miniDroneService.sendDroneCommand.restore();
-                charList1[10].write.restore();
+                miniDroneService.sendNavCommand.restore();
+                charList[10].write.restore();
                 done();
             });
         });
@@ -621,7 +616,7 @@ describe("MiniDroneService", () => {
         it("test if method is called", (done) => {
             let serviceSpy = spy(miniDroneService, "sendFTPCommand");
 
-            miniDroneService.identifyCharacteristics(charList3);
+            miniDroneService.identifyCharacteristics(charList);
 
             miniDroneService.sendFTPCommand().then((value) => {
                 assert.calledOnce(serviceSpy);
@@ -639,9 +634,9 @@ describe("MiniDroneService", () => {
 
         it("test if ftpGetService.write method gets called", (done) => {
             let serviceSpy = spy(miniDroneService, "sendFTPCommand"),
-                writeSpy = spy(charList3[1], "write");
+                writeSpy = spy(charList[13], "write");
 
-            miniDroneService.identifyCharacteristics(charList3);
+            miniDroneService.identifyCharacteristics(charList);
 
             miniDroneService.sendFTPCommand(null, true).then((value) => {
                 assert.calledOnce(serviceSpy);
@@ -649,7 +644,7 @@ describe("MiniDroneService", () => {
                 expect(value).to.exist;
                 expect(value).to.equal("success");
                 miniDroneService.sendFTPCommand.restore();
-                charList3[1].write.restore();
+                charList[13].write.restore();
                 done();
             }).catch((e) => {
                 assert.fail(e);
@@ -659,9 +654,9 @@ describe("MiniDroneService", () => {
 
         it("test if ftpHandlingService.write method gets called", (done) => {
             let serviceSpy = spy(miniDroneService, "sendFTPCommand"),
-                writeSpy = spy(charList3[2], "write");
+                writeSpy = spy(charList[14], "write");
 
-            miniDroneService.identifyCharacteristics(charList3);
+            miniDroneService.identifyCharacteristics(charList);
 
             miniDroneService.sendFTPCommand(null, false).then((value) => {
                 assert.calledOnce(serviceSpy);
@@ -669,7 +664,7 @@ describe("MiniDroneService", () => {
                 expect(value).to.exist;
                 expect(value).to.equal("success");
                 miniDroneService.sendFTPCommand.restore();
-                charList3[2].write.restore();
+                charList[14].write.restore();
                 done();
             }).catch((e) => {
                 assert.fail(e);
@@ -679,11 +674,11 @@ describe("MiniDroneService", () => {
 
         it("test if ftpGetService.write method fails", (done) => {
             let serviceSpy = spy(miniDroneService, "sendFTPCommand"),
-                writeStub = stub(charList3[1], "write").callsFake(() => {
+                writeStub = stub(charList[13], "write").callsFake(() => {
                     throw new Error("failed");
                 });
 
-            miniDroneService.identifyCharacteristics(charList3);
+            miniDroneService.identifyCharacteristics(charList);
 
             miniDroneService.sendFTPCommand(null, true).then((value) => {
                 done();
@@ -692,18 +687,18 @@ describe("MiniDroneService", () => {
                 assert.calledOnce(writeStub);
                 expect(e).to.exist;
                 miniDroneService.sendFTPCommand.restore();
-                charList3[1].write.restore();
+                charList[13].write.restore();
                 done();
             });
         });
 
         it("test if ftpHandlingService.write method fails", (done) => {
             let serviceSpy = spy(miniDroneService, "sendFTPCommand"),
-                writeStub = stub(charList3[2], "write").callsFake(() => {
+                writeStub = stub(charList[14], "write").callsFake(() => {
                     throw new Error("failed");
                 });
 
-            miniDroneService.identifyCharacteristics(charList3);
+            miniDroneService.identifyCharacteristics(charList);
 
             miniDroneService.sendFTPCommand(null, false).then((value) => {
                 done();
@@ -712,7 +707,7 @@ describe("MiniDroneService", () => {
                 assert.calledOnce(writeStub);
                 expect(e).to.exist;
                 miniDroneService.sendFTPCommand.restore();
-                charList3[2].write.restore();
+                charList[14].write.restore();
                 done();
             });
         });
