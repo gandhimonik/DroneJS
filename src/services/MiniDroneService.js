@@ -1,11 +1,9 @@
 import { debug }                from '../utils/debug';
-import { EventEmitter }         from 'events';
 import { Observable }           from 'rxjs/Observable';
 
-export class MiniDroneService extends EventEmitter {
+export class MiniDroneService {
 
     constructor() {
-        super();
         this.drone = null;
         this.cmdService = null;
         this.ftpGetService = null;
