@@ -5,7 +5,10 @@ import { MiniDroneView } from '../../src/views/MiniDroneView';
 
 let miniDroneView = null,
     fakePromise,
-    sendCmdStub;
+    sendCmdStub,
+    connectStub,
+    checkStateStub,
+    disconnectStub;
 
 before(() => {
     miniDroneView = new MiniDroneView();
@@ -20,9 +23,12 @@ before(() => {
     };
 
     sendCmdStub = stub(miniDroneView.droneController, 'sendPilotingCommand').callsFake(() => fakePromise);
+    connectStub = stub(miniDroneView.droneController, 'connect').callsFake(() => fakePromise);
+    checkStateStub = stub(miniDroneView.droneController, 'checkAllStates').callsFake(() => fakePromise);
+    disconnectStub = stub(miniDroneView.droneController, 'disconnect').callsFake(() => fakePromise);
 });
 
-describe("MiniDroneController", () => {
+describe("MiniDroneView", () => {
 
     it("test if exists", () => {
         expect(miniDroneView).to.exist;
@@ -30,6 +36,52 @@ describe("MiniDroneController", () => {
 
     it("test if all the properties are initialized", () => {
         expect(miniDroneView.droneController).to.exist;
+    });
+
+    describe("test method: connect", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.connect).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'connect');
+
+            miniDroneView.connect('RS_').then(value => {
+                assert.called(methodSpy);
+                assert.called(connectStub);
+                expect(value).to.exist;
+                expect(value).to.be.equal('success');
+                done();
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+
+            miniDroneView.connect.restore();
+        });
+    });
+
+    describe("test method: checkAllStates", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.checkAllStates).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'checkAllStates');
+
+            miniDroneView.checkAllStates().then(value => {
+                assert.called(methodSpy);
+                assert.called(checkStateStub);
+                expect(value).to.exist;
+                expect(value).to.be.equal('success');
+                done();
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+
+            miniDroneView.checkAllStates.restore();
+        });
     });
 
     describe("test method: flatTrim", () => {
@@ -420,10 +472,54 @@ describe("MiniDroneController", () => {
             miniDroneView.land.restore();
         });
     });
+
+    describe("test method: disconnect", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.disconnect).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'disconnect');
+
+            miniDroneView.disconnect().then(value => {
+                assert.called(methodSpy);
+                assert.called(disconnectStub);
+                expect(value).to.exist;
+                expect(value).to.be.equal('success');
+                done();
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+
+            miniDroneView.disconnect.restore();
+        });
+    });
+
+    // describe("test navdata stream", () => {
+    //     it("test data", (done) => {
+    //
+    //         miniDroneView.connect('RS_').then(value => {
+    //             if (value === 'success') {
+    //                 miniDroneView.checkAllStates().then(value => {
+    //                     setTimeout(() => {
+    //                         done();
+    //                     }, 10000);
+    //                 });
+    //             }
+    //         }).catch(e => {
+    //             assert.fail(e);
+    //             done();
+    //         });
+    //     });
+    // });
 });
 
 after(() => {
     miniDroneView.droneController.sendPilotingCommand.restore();
+    miniDroneView.droneController.connect.restore();
+    miniDroneView.droneController.checkAllStates.restore();
+    miniDroneView.droneController.disconnect.restore();
 
     miniDroneView.droneController = null;
     miniDroneView = null;

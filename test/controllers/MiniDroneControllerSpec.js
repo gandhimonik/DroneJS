@@ -1,5 +1,6 @@
 import { expect }               from 'chai';
 import { assert, spy, stub }    from 'sinon';
+import { debug }                from '../../src/utils/debug';
 
 import { MiniDroneController } from '../../src/controllers/MiniDroneController';
 
@@ -554,6 +555,24 @@ describe("MiniDroneController", () => {
             miniDroneController.genMiniDroneCmds.restore();
         });
     });
+
+    // describe("test navdata stream", () => {
+    //     it("test data", (done) => {
+    //
+    //         miniDroneController.connect('RS_').then(value => {
+    //             if (value === 'success') {
+    //                 miniDroneController.checkAllStates().then(value => {
+    //                     setTimeout(() => {
+    //                         done();
+    //                     }, 10000);
+    //                 });
+    //             }
+    //         }).catch(e => {
+    //             assert.fail(e);
+    //             done();
+    //         });
+    //     });
+    // });
 
 });
 

@@ -1,9 +1,33 @@
 import { MiniDroneController }     from '../controllers/MiniDroneController';
+import { debug }                   from '../utils/debug';
 
 export class MiniDroneView {
 
     constructor() {
         this.droneController = new MiniDroneController();
+        this.navdata = {};
+        this.addListeners();
+    }
+
+    connect(droneIdentifier) {
+        return new Promise((resolve, reject) => {
+            this.droneController.connect(droneIdentifier).then(() => {
+                debug('Drone connected successfully');
+                resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    checkAllStates() {
+        return new Promise((resolve, reject) => {
+            this.droneController.checkAllStates().then(() => {
+                resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
     }
 
     flatTrim() {
@@ -177,6 +201,27 @@ export class MiniDroneView {
             }).catch((e) => {
                 reject(e);
             });
+        });
+    }
+
+    disconnect() {
+        return new Promise((resolve, reject) => {
+            this.droneController.disconnect().then(() => {
+                debug('Drone disconnected successfully');
+                resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    addListeners() {
+        this.droneController.on('data', navInfo => {
+            this.navdata[navInfo.name] = {};
+            navInfo.args.forEach(arg => {
+               this.navdata[navInfo.name][arg.name] = arg.value;
+            });
+            debug(this.navdata);
         });
     }
 }

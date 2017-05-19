@@ -1,11 +1,13 @@
 import { MiniDroneService }     from '../services/MiniDroneService';
 import { debug }                from '../utils/debug';
+import { EventEmitter }         from 'events';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 
-export class MiniDroneController {
+export class MiniDroneController extends EventEmitter {
 
     constructor() {
+        super();
         this.droneService = new MiniDroneService();
         this.droneCmds = require('../commands/minidrone.json');
         this.commonCmds = require('../commands/common.json');
@@ -93,17 +95,120 @@ export class MiniDroneController {
         this.cmdSubscription = this.droneService.cmdObservable
                                     .distinctUntilChanged()
                                     .subscribe((data) => {
-                                            data = data.split('+');
-                                            let dataStr = '';
+                                            let navInfo;
 
-                                            for(let j = 0; j < data.length; j++) {
-                                                dataStr += data[j] + ' ';
-                                            }
-                                            debug('on -> data ');
-                                            debug(dataStr);
+                                            data = data.split('+');
+
+                                            navInfo = this.parseData(data);
+                                            this.emit('data', navInfo);
                                     },
                                     err => debug(err),
                                     () => debug('complete'));
+    }
+
+    parseData(data) {
+        let categoryName,
+            navInfo,
+            categoryId,
+            cmdId,
+            offset = 0,
+            cmds;
+
+        data = data || [];
+        data.shift();
+        data.shift();
+
+        data = Buffer.from(data);
+        cmds = (data.readUInt8(offset) === this.droneCmds.project.id) ? this.droneCmds : this.commonCmds;
+
+        offset++;
+
+        categoryId = data.readUInt8(offset);
+        offset++;
+        cmdId = data.readUInt16LE(offset);
+        offset += 2;
+
+        categoryName =  cmds.project.categories
+                            .filter(category => category.id === categoryId)
+                            .pop().name;
+        navInfo = cmds.project.categories
+                            .filter(category => category.name === categoryName)
+                            .map(category => {
+                                return category.cmd
+                                                .filter(cmdType => cmdType.id === cmdId)
+                                                .map(cmdType => {
+                                                    return { name: cmdType.name, args: cmdType.arg };
+                                                });
+                            })
+                            .pop().pop();
+
+        navInfo.args = this.getValuesByType(data, offset, navInfo.args);
+        // debug(navInfo);
+
+        return navInfo;
+    }
+
+    getValuesByType(buffer, offset, args) {
+        let values = [];
+
+        args = args || [];
+        args = (!Array.isArray(args)) ? [args] : args;
+
+        args.forEach(arg => {
+           let obj = {};
+           obj.name = arg.name;
+           switch (arg.type) {
+               case 'u8':
+                   obj.value = buffer.readUInt8(offset);
+                   offset++;
+                   break;
+
+               case 'u16':
+                   obj.value = buffer.readUInt16LE(offset);
+                   offset += 2;
+                   break;
+
+               case 'u32':
+                   obj.value = buffer.readUInt32LE(offset);
+                   offset += 4;
+                   break;
+
+               case 'i8':
+                   obj.value = buffer.readInt8(offset);
+                   offset++;
+                   break;
+
+               case 'i16':
+                   obj.value = buffer.readInt16LE(offset);
+                   offset += 2;
+                   break;
+
+               case 'i32':
+                   obj.value = buffer.readInt32LE(offset);
+                   offset += 4;
+                   break;
+
+               case 'float':
+                   obj.value = buffer.readFloatLE(offset);
+                   offset += 4;
+                   break;
+
+               case 'enum':
+                   let id = buffer.readUInt8(offset);
+                   obj.value = arg.values
+                                    .filter(obj => obj.value === id)
+                                    .pop().name;
+                   offset++;
+                   break;
+
+               case 'string':
+                   obj.value = buffer.toString('utf8', offset);
+                   break;
+           }
+           values.push(obj);
+        });
+
+        return values;
     }
 
     genMiniDroneCmds(categoryName, cmdName, args, addLength) {
@@ -176,10 +281,10 @@ export class MiniDroneController {
 
         switch (cmdName) {
             case "allStates" :
-                let categoryId = this.commonCmds.project.class
+                let categoryId = this.commonCmds.project.categories
                                 .filter(category => category.name === "common")
                                 .pop().id;
-                let cmdId = this.commonCmds.project.class
+                let cmdId = this.commonCmds.project.categories
                                 .filter(category => category.name === "common")
                                 .map(category => {
                                     return category.cmd.filter(cmdType => cmdType.name === cmdName);
