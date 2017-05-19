@@ -3,7 +3,7 @@
     "name": "common",
     "id": 0,
     "description": "All common commands shared between all projects",
-    "class": [
+    "categories": [
       {
         "name": "network",
         "id": 0,
