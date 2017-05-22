@@ -114,7 +114,10 @@ export class MiniDroneController extends EventEmitter {
             offset = 0,
             cmds;
 
-        data = data || [];
+        if (!data || !data.length) {
+            return;
+        }
+
         data.shift();
         data.shift();
 
@@ -196,7 +199,7 @@ export class MiniDroneController extends EventEmitter {
                case 'enum':
                    let id = buffer.readUInt8(offset);
                    obj.value = arg.values
-                                    .filter(obj => obj.value === id)
+                                    .filter(valObj => valObj.value === id)
                                     .pop().name;
                    offset++;
                    break;

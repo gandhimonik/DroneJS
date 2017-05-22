@@ -257,6 +257,292 @@ describe("MiniDroneController", () => {
         });
     });
 
+    describe("test method: parseData", () => {
+        it("test if exists", () => {
+            expect(miniDroneController.parseData).to.exist;
+        });
+
+        it("test if method is called with minidrone command", (done) => {
+            let methodSpy = spy(miniDroneController, 'parseData'),
+                data = [2, 1, 2, 3, 1, 0, 0];
+
+            let navInfo = miniDroneController.parseData(data);
+            assert.called(methodSpy);
+            expect(navInfo).to.exist;
+            expect(navInfo.name).to.be.equal('flyingStateChanged');
+            expect(navInfo.args).to.exist;
+            expect(navInfo.args.length).to.equal(1);
+            expect(navInfo.args[0].name).to.equal('state');
+            expect(navInfo.args[0].value).to.equal('landed');
+            done();
+
+            miniDroneController.parseData.restore();
+        });
+
+        it("test if method is called with common command", (done) => {
+            let methodSpy = spy(miniDroneController, 'parseData'),
+                data = [4, 1, 0, 5, 1, 0, 95];
+
+            let navInfo = miniDroneController.parseData(data);
+            assert.called(methodSpy);
+            expect(navInfo).to.exist;
+            expect(navInfo.name).to.be.equal('batteryStateChanged');
+            expect(navInfo.args).to.exist;
+            expect(navInfo.args.length).to.equal(1);
+            expect(navInfo.args[0].name).to.equal('percent');
+            expect(navInfo.args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.parseData.restore();
+        });
+
+        it("test if method is called with no data", (done) => {
+            let methodSpy = spy(miniDroneController, 'parseData'),
+                data = null;
+
+            let navInfo = miniDroneController.parseData(data);
+            assert.called(methodSpy);
+            expect(navInfo).to.not.exist;
+            done();
+
+            miniDroneController.parseData.restore();
+        });
+
+        it("test if method is called with data.length equal to 0", (done) => {
+            let methodSpy = spy(miniDroneController, 'parseData'),
+                data = [];
+
+            let navInfo = miniDroneController.parseData(data);
+            assert.called(methodSpy);
+            expect(navInfo).to.not.exist;
+            done();
+
+            miniDroneController.parseData.restore();
+        });
+    });
+
+    describe("test method: getValuesByType", () => {
+        it("test if exists", () => {
+            expect(miniDroneController.getValuesByType).to.exist;
+        });
+
+        it("test if method is called with u8 value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.from([95]),
+                arg = {
+                    name: 'percent',
+                    type: 'u8'
+                };
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with u16 value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(2),
+                arg = {
+                    name: 'percent',
+                    type: 'u16'
+                };
+
+            buffer.writeUInt16LE(95, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with u32 value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(4),
+                arg = {
+                    name: 'percent',
+                    type: 'u32'
+                };
+
+            buffer.writeUInt32LE(95, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with i8 value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(1),
+                arg = {
+                    name: 'percent',
+                    type: 'i8'
+                };
+
+            buffer.writeInt8(95, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with i16 value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(2),
+                arg = {
+                    name: 'percent',
+                    type: 'i16'
+                };
+
+            buffer.writeInt16LE(95, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with i32 value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(4),
+                arg = {
+                    name: 'percent',
+                    type: 'i32'
+                };
+
+            buffer.writeInt16LE(95, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with float value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(4),
+                arg = {
+                    name: 'percent',
+                    type: 'float'
+                };
+
+            buffer.writeFloatLE(95, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('percent');
+            expect(args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with enum value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.alloc(1),
+                arg = {
+                    name: 'sensorName',
+                    type: 'enum',
+                    values: [
+                        {
+                            "name": "IMU",
+                            "value": 1
+                        },
+                        {
+                            "name": "barometer",
+                            "value": 2
+                        },
+                        {
+                            "name": "ultrasound",
+                            "value": 3
+                        }
+                    ]
+                };
+
+            buffer.writeUInt8(3, 0);
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('sensorName');
+            expect(args[0].value).to.equal('ultrasound');
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with string value", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                str = 'internal',
+                buffer = Buffer.alloc(str.length),
+                arg = {
+                    name: 'mass_storage_name',
+                    type: 'string'
+                };
+
+            buffer.write(str, 0, str.length, 'utf8');
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(1);
+            expect(args[0].name).to.equal('mass_storage_name');
+            expect(args[0].value).to.equal('internal');
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+
+        it("test if method is called with no args", (done) => {
+            let methodSpy = spy(miniDroneController, 'getValuesByType'),
+                buffer = Buffer.from([]),
+                arg = null;
+
+            let args = miniDroneController.getValuesByType(buffer, 0, arg);
+            assert.called(methodSpy);
+            expect(args).to.exist;
+            expect(args.length).to.equal(0);
+            done();
+
+            miniDroneController.getValuesByType.restore();
+        });
+    });
+
     describe("test method: genCommonCmds", () => {
         it("test if exists", () => {
             expect(miniDroneController.genCommonCmds).to.exist;
