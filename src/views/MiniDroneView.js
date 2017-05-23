@@ -1,4 +1,5 @@
 import { MiniDroneController }     from '../controllers/MiniDroneController';
+import { Observable }              from 'rxjs/Observable';
 import { debug }                   from '../utils/debug';
 
 export class MiniDroneView {
@@ -6,7 +7,6 @@ export class MiniDroneView {
     constructor() {
         this.droneController = new MiniDroneController();
         this.navdata = {};
-        this.addListeners();
     }
 
     connect(droneIdentifier) {
@@ -215,13 +215,22 @@ export class MiniDroneView {
         });
     }
 
-    addListeners() {
-        this.droneController.on('data', navInfo => {
-            this.navdata[navInfo.name] = {};
-            navInfo.args.forEach(arg => {
-               this.navdata[navInfo.name][arg.name] = arg.value;
-            });
-            debug(this.navdata);
-        });
+    getNavDataStream() {
+        return Observable
+                .create(observer => {
+                    debug('Creating observer...');
+                    this.droneController.on('data', navInfo => {
+                        this.navdata[navInfo.name] = {};
+                        navInfo.args.forEach(arg => {
+                            this.navdata[navInfo.name][arg.name] = arg.value;
+                        });
+                        // debug(this.navdata);
+                        observer.next(this.navdata);
+                    });
+
+                    return function () {
+                        debug('ending the stream');
+                    }
+                });
     }
 }
