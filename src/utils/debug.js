@@ -1,7 +1,7 @@
 let pjson = require('../../package.json');
 
-export function debug(str) {
+export function debug() {
     if (pjson.debugging) {
-        console.log(str);
+        console.log.apply(null, Array.prototype.slice.call(arguments));
     }
 }
