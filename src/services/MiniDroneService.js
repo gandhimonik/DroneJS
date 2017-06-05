@@ -196,8 +196,9 @@ export class MiniDroneService {
                     debug('Creating observable...');
                     characteristics.forEach((char) => {
                         char.on('data', function (data) {
-                            let arr = Array.prototype.slice.call(data, 0);
-                            observer.next(arr.join('+'));
+                            let arr = (char.uuid.indexOf('fb') >= 0) ? Array.prototype.slice.call(data, 0).join('+')
+                                            : data;
+                            observer.next(arr);
                         });
                     });
 
@@ -223,6 +224,7 @@ export class MiniDroneService {
     sendFTPCommand(buffer, thruGetService) {
         return new Promise((resolve, reject) => {
             try {
+                debug('Sending FTP Command...');
                 if (thruGetService) {
                     this.ftpGetService.write(buffer, false);
                 } else {

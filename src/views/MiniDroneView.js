@@ -7,6 +7,8 @@ export class MiniDroneView {
     constructor() {
         this.droneController = new MiniDroneController();
         this.navdata = {};
+        this.fs = require('fs');
+        this.md5Length = 32;
     }
 
     connect(droneIdentifier) {
@@ -192,7 +194,126 @@ export class MiniDroneView {
         });
     }
 
+    takePicture() {
+        return new Promise((resolve, reject) => {
+            this.droneController.sendPilotingCommand('mediaRecord', 'picture', [0]).then(() => {
+                resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
 
+    listAllPictures() {
+        return new Promise((resolve, reject) => {
+            let imgArr = [],
+                str = '',
+                regex = /(Rolling_Spider_[A-Z0-9_+\-]*.jpg)/g;
+
+            let callback = mediaObj => {
+                if (mediaObj.state === 'LIS') {
+                    let buffer = Buffer.from(mediaObj.data);
+
+                    str += buffer.toString('utf8');
+                    str = str.replace('\u0000', '')
+                        .replace('\u0001', '')
+                        .replace('\u0002', '')
+                        .replace('\u0003', '');
+
+                    if (str.toLowerCase().indexOf('end of transfer') >= 0) {
+                        imgArr = str.match(regex);
+                        debug(imgArr);
+                        this.droneController.removeListener('media-data', callback);
+                        resolve(imgArr);
+                    }
+                }
+
+            };
+
+            this.droneController.on('media-data', callback);
+
+            this.droneController.sendMediaCommand('LIS', '/internal_000/Rolling_Spider/media').then(() => {
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    downloadPicture(name, downloadPath) {
+        return new Promise((resolve, reject) => {
+            let stream = this.fs.createWriteStream(downloadPath + '/' + name),
+                ignoreBytes = 0;
+
+            let callback = mediaObj => {
+                if (mediaObj.state === 'GET' || mediaObj.state === 'MD5 OK') {
+                    let dataStr = mediaObj.data.toString('utf8');
+
+                    if (dataStr.indexOf('End of Transfer') >= 0) {
+                        debug('Closing the stream');
+                        stream.end();
+                        this.droneController.removeListener('media-data', callback);
+                        resolve('success');
+                    } else if (dataStr.indexOf('MD5') >= 0) {
+                        debug('Packet ended');
+                        ignoreBytes = this.md5Length;
+                        ignoreBytes -= dataStr.length;
+                        this.droneController.sendMediaCommand('MD5 OK', '')
+                                            .then(() => {})
+                                            .catch((e) => {
+                                                reject(e);
+                                            });
+                    } else if (ignoreBytes) {
+                        ignoreBytes -= dataStr;
+                    } else {
+                        stream.write(mediaObj.data.slice(1));
+                    }
+                }
+
+            };
+
+            this.droneController.on('media-data', callback);
+
+            this.droneController.sendMediaCommand('GET', '/internal_000/Rolling_Spider/media/' + name).then(() => {
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+    deletePicture(name) {
+        return new Promise((resolve, reject) => {
+            let confirmArr = [];
+
+            let callback = mediaObj => {
+                if (mediaObj.state === 'DEL') {
+                    let str = mediaObj.data.toString('utf8');
+                    if (str.toLowerCase().indexOf('delete successful') >= 0) {
+                        debug(str);
+                        confirmArr.push(str);
+
+                        if (confirmArr.length === 2) {
+                            this.droneController.removeListener('media-data', callback);
+                            resolve('success');
+                        }
+                    }
+                }
+            };
+
+            this.droneController.on('media-data', callback);
+
+            this.droneController.sendMediaCommand('DEL', '/internal_000/Rolling_Spider/thumb/' + name)
+                                .then(() => {})
+                                .catch((e) => {
+                                    reject(e);
+                                });
+
+            this.droneController.sendMediaCommand('DEL', '/internal_000/Rolling_Spider/media/' + name)
+                                .then(() => {})
+                                .catch((e) => {
+                                    reject(e);
+                                });
+        });
+    }
 
     land() {
         return new Promise((resolve, reject) => {

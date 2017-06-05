@@ -14,6 +14,7 @@ export class MiniDroneController extends EventEmitter {
         this.steps = 0;
         this.cmdSubscription = null;
         this.ftpSubscription = null;
+        this.mediaState = '';
     }
 
     connect(droneIdentifier) {
@@ -80,10 +81,46 @@ export class MiniDroneController extends EventEmitter {
         });
     }
 
+    sendMediaCommand(cmdName, param) {
+        return new Promise((resolve, reject) => {
+            let thruGetService = false,
+                buffer = Buffer.alloc(cmdName.length + param.length + 2),
+                offset = 0;
+
+            if (cmdName.startsWith('MD5')) {
+                thruGetService = true;
+            }
+
+            if (!thruGetService) {
+                buffer.writeUInt8(3, offset++);
+            }
+
+            buffer.write(cmdName, offset, cmdName.length, 'utf8');
+            offset += cmdName.length;
+
+            if (param) {
+                buffer.write(param, offset, param.length, 'utf8');
+                offset += param.length;
+            }
+
+            if (!thruGetService) {
+                buffer.writeUInt8(0, offset);
+            }
+
+            this.droneService.sendFTPCommand(buffer, thruGetService).then(() => {
+                this.mediaState = cmdName;
+                resolve("success");
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
     disconnect() {
         return new Promise((resolve, reject) => {
             this.droneService.disconnect().then(() => {
                 this.cmdSubscription.unsubscribe();
+                this.ftpSubscription.unsubscribe();
                 resolve("success");
             }).catch((e) => {
                 reject(e);
@@ -101,6 +138,16 @@ export class MiniDroneController extends EventEmitter {
 
                                             navInfo = this.parseData(data);
                                             this.emit('data', navInfo);
+                                    },
+                                    err => debug(err),
+                                    () => debug('complete'));
+
+        this.ftpSubscription = this.droneService.ftpObservable
+                                    .subscribe((data) => {
+                                        this.emit('media-data', {
+                                            state: this.mediaState,
+                                            data: data
+                                        });
                                     },
                                     err => debug(err),
                                     () => debug('complete'));
