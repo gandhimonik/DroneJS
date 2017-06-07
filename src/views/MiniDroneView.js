@@ -212,13 +212,11 @@ export class MiniDroneView {
 
             let callback = mediaObj => {
                 if (mediaObj.state === 'LIS') {
-                    let buffer = Buffer.from(mediaObj.data);
-
-                    str += buffer.toString('utf8');
+                    str += mediaObj.data.toString('utf8');
                     str = str.replace('\u0000', '')
-                        .replace('\u0001', '')
-                        .replace('\u0002', '')
-                        .replace('\u0003', '');
+                             .replace('\u0001', '')
+                             .replace('\u0002', '')
+                             .replace('\u0003', '');
 
                     if (str.toLowerCase().indexOf('end of transfer') >= 0) {
                         imgArr = str.match(regex);
@@ -248,7 +246,7 @@ export class MiniDroneView {
                 if (mediaObj.state === 'GET' || mediaObj.state === 'MD5 OK') {
                     let dataStr = mediaObj.data.toString('utf8');
 
-                    if (dataStr.indexOf('End of Transfer') >= 0) {
+                    if (dataStr.toLowerCase().indexOf('end of transfer') >= 0) {
                         debug('Closing the stream');
                         stream.end();
                         this.droneController.removeListener('media-data', callback);
