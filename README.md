@@ -3,7 +3,7 @@ A Node.js based library for controlling a Parrot Rolling Spider drone. This libr
 
 ## Prerequisites
 
-* See[noble prerequisites](https://github.com/sandeepmistry/noble#prerequisites)for your platform
+* See [noble prerequisites](https://github.com/sandeepmistry/noble#prerequisites) for your platform
 * Node.js 6.5 or higher
 
 ## Install
