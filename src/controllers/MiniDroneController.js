@@ -138,6 +138,14 @@ export class MiniDroneController extends EventEmitter {
 
                                             navInfo = this.parseData(data);
                                             this.emit('data', navInfo);
+
+                                            if (navInfo.name === 'flyingStateChanged') {
+                                                let navObj = {};
+                                                navInfo.args.forEach(arg => {
+                                                    navObj[arg.name] = arg.value;
+                                                });
+                                                this.emit(navInfo.name, navObj);
+                                            }
                                     },
                                     err => debug(err),
                                     () => debug('complete'));

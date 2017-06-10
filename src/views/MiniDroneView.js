@@ -25,7 +25,7 @@ export class MiniDroneView {
     checkAllStates() {
         return new Promise((resolve, reject) => {
             this.droneController.checkAllStates().then(() => {
-                resolve("success");
+                resolve('success');
             }).catch((e) => {
                 reject(e);
             });
@@ -45,7 +45,16 @@ export class MiniDroneView {
     takeOff() {
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'takeOff').then(() => {
-                resolve("success");
+                let callback = navObj => {
+                    if (navObj.state === 'hovering') {
+                        debug('Drone has took off');
+                        this.droneController.removeListener('flyingStateChanged', callback);
+                        resolve('success');
+                    }
+
+                };
+
+                this.droneController.on('flyingStateChanged', callback);
             }).catch((e) => {
                 reject(e);
             });
@@ -316,7 +325,16 @@ export class MiniDroneView {
     land() {
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'landing').then(() => {
-                resolve("success");
+                let callback = navObj => {
+                    if (navObj.state === 'landed') {
+                        debug('Drone has landed');
+                        this.droneController.removeListener('flyingStateChanged', callback);
+                        resolve('success');
+                    }
+
+                };
+
+                this.droneController.on('flyingStateChanged', callback);
             }).catch((e) => {
                 reject(e);
             });
@@ -343,7 +361,6 @@ export class MiniDroneView {
                         navInfo.args.forEach(arg => {
                             this.navdata[navInfo.name][arg.name] = arg.value;
                         });
-                        // debug(this.navdata);
                         observer.next(this.navdata);
                     });
 
