@@ -87,6 +87,8 @@ export class MiniDroneController extends EventEmitter {
                 buffer = Buffer.alloc(cmdName.length + param.length + 2),
                 offset = 0;
 
+            this.mediaState = cmdName;
+
             if (cmdName.startsWith('MD5')) {
                 thruGetService = true;
             }
@@ -108,7 +110,6 @@ export class MiniDroneController extends EventEmitter {
             }
 
             this.droneService.sendFTPCommand(buffer, thruGetService).then(() => {
-                this.mediaState = cmdName;
                 resolve("success");
             }).catch((e) => {
                 reject(e);

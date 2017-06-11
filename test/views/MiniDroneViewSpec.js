@@ -11,7 +11,8 @@ let miniDroneView = null,
     sendMediaCmdStub,
     connectStub,
     checkStateStub,
-    disconnectStub;
+    disconnectStub,
+    execStub;
 
 before(() => {
     miniDroneView = new MiniDroneView();
@@ -29,6 +30,7 @@ before(() => {
     connectStub = stub(miniDroneView.droneController, 'connect').callsFake(() => fakePromise);
     checkStateStub = stub(miniDroneView.droneController, 'checkAllStates').callsFake(() => fakePromise);
     disconnectStub = stub(miniDroneView.droneController, 'disconnect').callsFake(() => fakePromise);
+    execStub = stub(miniDroneView, '_execManeuver').callsFake(() => fakePromise);
 });
 
 describe("MiniDroneView", () => {
@@ -129,6 +131,9 @@ describe("MiniDroneView", () => {
                 done();
             });
 
+            miniDroneView.droneController.emit('flyingStateChanged', {
+                state: 'hovering'
+            });
             miniDroneView.takeOff.restore();
         });
     });
@@ -141,9 +146,9 @@ describe("MiniDroneView", () => {
         it("test if method is called", (done) => {
             let methodSpy = spy(miniDroneView, 'turnLeft');
 
-            miniDroneView.turnLeft(-50, 500).then(value => {
+            miniDroneView.turnLeft(50, 500).then(value => {
                 assert.called(methodSpy);
-                assert.called(sendCmdStub);
+                assert.called(execStub);
                 expect(value).to.exist;
                 expect(value).to.be.equal('success');
                 done();
@@ -158,12 +163,12 @@ describe("MiniDroneView", () => {
         it("test if method is called with wrong intensity", (done) => {
             let methodSpy = spy(miniDroneView, 'turnLeft');
 
-            miniDroneView.turnLeft(10, 500).then(value => {
+            miniDroneView.turnLeft(-10, 500).then(value => {
                 done();
             }).catch(e => {
                 assert.called(methodSpy);
                 expect(e).to.exist;
-                expect(e).to.be.equal('Error: Value for intensity should be between -100 and 0');
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
                 done();
             });
 
@@ -181,7 +186,7 @@ describe("MiniDroneView", () => {
 
             miniDroneView.turnRight(50, 500).then(value => {
                 assert.called(methodSpy);
-                assert.called(sendCmdStub);
+                assert.called(execStub);
                 expect(value).to.exist;
                 expect(value).to.be.equal('success');
                 done();
@@ -201,7 +206,7 @@ describe("MiniDroneView", () => {
             }).catch(e => {
                 assert.called(methodSpy);
                 expect(e).to.exist;
-                expect(e).to.be.equal('Error: Value for intensity should be between 1 and 100');
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
                 done();
             });
 
@@ -209,17 +214,17 @@ describe("MiniDroneView", () => {
         });
     });
 
-    describe("test method: goBackward", () => {
+    describe("test method: backward", () => {
         it("test if exists", () => {
-            expect(miniDroneView.goBackward).to.exist;
+            expect(miniDroneView.backward).to.exist;
         });
 
         it("test if method is called", (done) => {
-            let methodSpy = spy(miniDroneView, 'goBackward');
+            let methodSpy = spy(miniDroneView, 'backward');
 
-            miniDroneView.goBackward(-50, 500).then(value => {
+            miniDroneView.backward(50, 500).then(value => {
                 assert.called(methodSpy);
-                assert.called(sendCmdStub);
+                assert.called(execStub);
                 expect(value).to.exist;
                 expect(value).to.be.equal('success');
                 done();
@@ -228,36 +233,36 @@ describe("MiniDroneView", () => {
                 done();
             });
 
-            miniDroneView.goBackward.restore();
+            miniDroneView.backward.restore();
         });
 
         it("test if method is called with wrong intensity", (done) => {
-            let methodSpy = spy(miniDroneView, 'goBackward');
+            let methodSpy = spy(miniDroneView, 'backward');
 
-            miniDroneView.goBackward(10, 500).then(value => {
+            miniDroneView.backward(-10, 500).then(value => {
                 done();
             }).catch(e => {
                 assert.called(methodSpy);
                 expect(e).to.exist;
-                expect(e).to.be.equal('Error: Value for intensity should be between -100 and 0');
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
                 done();
             });
 
-            miniDroneView.goBackward.restore();
+            miniDroneView.backward.restore();
         });
     });
 
-    describe("test method: goForward", () => {
+    describe("test method: forward", () => {
         it("test if exists", () => {
-            expect(miniDroneView.goForward).to.exist;
+            expect(miniDroneView.forward).to.exist;
         });
 
         it("test if method is called", (done) => {
-            let methodSpy = spy(miniDroneView, 'goForward');
+            let methodSpy = spy(miniDroneView, 'forward');
 
-            miniDroneView.goForward(50, 500).then(value => {
+            miniDroneView.forward(50, 500).then(value => {
                 assert.called(methodSpy);
-                assert.called(sendCmdStub);
+                assert.called(execStub);
                 expect(value).to.exist;
                 expect(value).to.be.equal('success');
                 done();
@@ -266,36 +271,36 @@ describe("MiniDroneView", () => {
                 done();
             });
 
-            miniDroneView.goForward.restore();
+            miniDroneView.forward.restore();
         });
 
         it("test if method is called with wrong intensity", (done) => {
-            let methodSpy = spy(miniDroneView, 'goForward');
+            let methodSpy = spy(miniDroneView, 'forward');
 
-            miniDroneView.goForward(-10, 500).then(value => {
+            miniDroneView.forward(-10, 500).then(value => {
                 done();
             }).catch(e => {
                 assert.called(methodSpy);
                 expect(e).to.exist;
-                expect(e).to.be.equal('Error: Value for intensity should be between 1 and 100');
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
                 done();
             });
 
-            miniDroneView.goForward.restore();
+            miniDroneView.forward.restore();
         });
     });
 
-    describe("test method: goLeft", () => {
+    describe("test method: left", () => {
         it("test if exists", () => {
-            expect(miniDroneView.goLeft).to.exist;
+            expect(miniDroneView.left).to.exist;
         });
 
         it("test if method is called", (done) => {
-            let methodSpy = spy(miniDroneView, 'goLeft');
+            let methodSpy = spy(miniDroneView, 'left');
 
-            miniDroneView.goLeft(-50, 500).then(value => {
+            miniDroneView.left(50, 500).then(value => {
                 assert.called(methodSpy);
-                assert.called(sendCmdStub);
+                assert.called(execStub);
                 expect(value).to.exist;
                 expect(value).to.be.equal('success');
                 done();
@@ -304,36 +309,36 @@ describe("MiniDroneView", () => {
                 done();
             });
 
-            miniDroneView.goLeft.restore();
+            miniDroneView.left.restore();
         });
 
         it("test if method is called with wrong intensity", (done) => {
-            let methodSpy = spy(miniDroneView, 'goLeft');
+            let methodSpy = spy(miniDroneView, 'left');
 
-            miniDroneView.goLeft(10, 500).then(value => {
+            miniDroneView.left(-10, 500).then(value => {
                 done();
             }).catch(e => {
                 assert.called(methodSpy);
                 expect(e).to.exist;
-                expect(e).to.be.equal('Error: Value for intensity should be between -100 and 0');
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
                 done();
             });
 
-            miniDroneView.goLeft.restore();
+            miniDroneView.left.restore();
         });
     });
 
-    describe("test method: goRight", () => {
+    describe("test method: right", () => {
         it("test if exists", () => {
-            expect(miniDroneView.goRight).to.exist;
+            expect(miniDroneView.right).to.exist;
         });
 
         it("test if method is called", (done) => {
-            let methodSpy = spy(miniDroneView, 'goRight');
+            let methodSpy = spy(miniDroneView, 'right');
 
-            miniDroneView.goRight(50, 500).then(value => {
+            miniDroneView.right(50, 500).then(value => {
                 assert.called(methodSpy);
-                assert.called(sendCmdStub);
+                assert.called(execStub);
                 expect(value).to.exist;
                 expect(value).to.be.equal('success');
                 done();
@@ -342,22 +347,98 @@ describe("MiniDroneView", () => {
                 done();
             });
 
-            miniDroneView.goRight.restore();
+            miniDroneView.right.restore();
         });
 
         it("test if method is called with wrong intensity", (done) => {
-            let methodSpy = spy(miniDroneView, 'goRight');
+            let methodSpy = spy(miniDroneView, 'right');
 
-            miniDroneView.goRight(-10, 500).then(value => {
+            miniDroneView.right(-10, 500).then(value => {
                 done();
             }).catch(e => {
                 assert.called(methodSpy);
                 expect(e).to.exist;
-                expect(e).to.be.equal('Error: Value for intensity should be between 1 and 100');
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
                 done();
             });
 
-            miniDroneView.goRight.restore();
+            miniDroneView.right.restore();
+        });
+    });
+
+    describe("test method: up", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.up).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'up');
+
+            miniDroneView.up(50, 500).then(value => {
+                assert.called(methodSpy);
+                assert.called(execStub);
+                expect(value).to.exist;
+                expect(value).to.be.equal('success');
+                done();
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+
+            miniDroneView.up.restore();
+        });
+
+        it("test if method is called with wrong intensity", (done) => {
+            let methodSpy = spy(miniDroneView, 'up');
+
+            miniDroneView.up(-10, 500).then(value => {
+                done();
+            }).catch(e => {
+                assert.called(methodSpy);
+                expect(e).to.exist;
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
+                done();
+            });
+
+            miniDroneView.up.restore();
+        });
+    });
+
+    describe("test method: down", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.down).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'down');
+
+            miniDroneView.down(50, 500).then(value => {
+                assert.called(methodSpy);
+                assert.called(execStub);
+                expect(value).to.exist;
+                expect(value).to.be.equal('success');
+                done();
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+
+            miniDroneView.down.restore();
+        });
+
+        it("test if method is called with wrong intensity", (done) => {
+            let methodSpy = spy(miniDroneView, 'down');
+
+            miniDroneView.down(-10, 500).then(value => {
+                done();
+            }).catch(e => {
+                assert.called(methodSpy);
+                expect(e).to.exist;
+                expect(e).to.be.equal('Error: Value for intensity should be between 0 and 100');
+                done();
+            });
+
+            miniDroneView.down.restore();
         });
     });
 
@@ -664,6 +745,9 @@ describe("MiniDroneView", () => {
                 done();
             });
 
+            miniDroneView.droneController.emit('flyingStateChanged', {
+                state: 'landed'
+            });
             miniDroneView.land.restore();
         });
     });
@@ -710,81 +794,6 @@ describe("MiniDroneView", () => {
             miniDroneView.getNavDataStream.restore();
         });
     });
-
-    // describe("test navdata stream", () => {
-    //     it("test data", (done) => {
-    //
-    //         let stream = miniDroneView.getNavDataStream();
-    //         stream.subscribe((data) => {
-    //                 debug('Navdata: ', data);
-    //             },
-    //             err => debug(err),
-    //             () => debug('complete'));
-    //
-    //         miniDroneView.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneView.checkAllStates().then(value => {
-    //                     setTimeout(() => {
-    //                         done();
-    //                     }, 10000);
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
-
-    // describe("test listAllPictures", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneView.listAllPictures().then(data => {
-    //                     debug(data);
-    //                     done();
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
-
-    // describe("test downloadPicture", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneView.downloadPicture('Rolling_Spider_1970-01-01T000025+0000_.jpg', 'output').then(response => {
-    //                     if (response === 'success') {
-    //                         done();
-    //                     }
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
-
-    // describe("test deletePicture", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneView.deletePicture('Rolling_Spider_1970-01-01T000025+0000_.jpg').then(response => {
-    //                     if (response === 'success') {
-    //                         done();
-    //                     }
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
 });
 
 after(() => {

@@ -1,6 +1,7 @@
 import { MiniDroneController }     from '../controllers/MiniDroneController';
 import { Observable }              from 'rxjs/Observable';
 import { debug }                   from '../utils/debug';
+import { sleep }                   from '../utils/sleep';
 
 export class MiniDroneView {
 
@@ -9,13 +10,17 @@ export class MiniDroneView {
         this.navdata = {};
         this.fs = require('fs');
         this.md5Length = 32;
+        this.breathingTime = 200;
+        this.cmdInterval = 0;
     }
 
     connect(droneIdentifier) {
         return new Promise((resolve, reject) => {
             this.droneController.connect(droneIdentifier).then(() => {
                 debug('Drone connected successfully');
-                resolve("success");
+                sleep(this.breathingTime).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -25,7 +30,9 @@ export class MiniDroneView {
     checkAllStates() {
         return new Promise((resolve, reject) => {
             this.droneController.checkAllStates().then(() => {
-                resolve('success');
+                sleep(this.breathingTime).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -35,7 +42,9 @@ export class MiniDroneView {
     flatTrim() {
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'flatTrim').then(() => {
-                resolve("success");
+                sleep(this.breathingTime).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -49,7 +58,9 @@ export class MiniDroneView {
                     if (navObj.state === 'hovering') {
                         debug('Drone has took off');
                         this.droneController.removeListener('flyingStateChanged', callback);
-                        resolve('success');
+                        sleep(this.breathingTime).then(() => {
+                            resolve('success');
+                        });
                     }
 
                 };
@@ -61,112 +72,136 @@ export class MiniDroneView {
         });
     }
 
-    turnLeft(intensity, duration) {
+    turnLeft(intensity, frequency) {
         return new Promise((resolve, reject) => {
-            if (!(intensity >= -100 && intensity <= 0)) {
-                reject('Error: Value for intensity should be between -100 and 0');
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
             }
+            intensity -= 100;
 
-            let args = [0, 0, 0, intensity, 0, duration];
-            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
-                setTimeout(() => {
-                    resolve("success");
-                }, duration);
-            }).catch((e) => {
+            let args = [0, 0, 0, intensity, 0, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
                 reject(e);
-            });
+            })
         });
     }
 
-    turnRight(intensity, duration) {
+    turnRight(intensity, frequency) {
         return new Promise((resolve, reject) => {
-            if (!(intensity >= 1 && intensity <= 100)) {
-                reject('Error: Value for intensity should be between 1 and 100');
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
             }
 
-            let args = [0, 0, 0, intensity, 0, duration];
-            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
-                setTimeout(() => {
-                    resolve("success");
-                }, duration);
-            }).catch((e) => {
+            let args = [0, 0, 0, intensity, 0, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
                 reject(e);
-            });
+            })
         });
     }
 
-    goBackward(intensity, duration) {
+    backward(intensity, frequency) {
         return new Promise((resolve, reject) => {
-            if (!(intensity >= -100 && intensity <= 0)) {
-                reject('Error: Value for intensity should be between -100 and 0');
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
             }
+            intensity -= 100;
 
-            let args = [0, 0, intensity, 0, 0, duration];
-            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
-                setTimeout(() => {
-                    resolve("success");
-                }, duration);
-            }).catch((e) => {
+            let args = [1, 0, intensity, 0, 0, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
                 reject(e);
-            });
+            })
         });
     }
 
-    goForward(intensity, duration) {
+    forward(intensity, frequency) {
         return new Promise((resolve, reject) => {
-            if (!(intensity >= 1 && intensity <= 100)) {
-                reject('Error: Value for intensity should be between 1 and 100');
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
             }
 
-            let args = [0, 0, intensity, 0, 0, duration];
-            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
-                setTimeout(() => {
-                    resolve("success");
-                }, duration);
-            }).catch((e) => {
+            let args = [1, 0, intensity, 0, 0, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
                 reject(e);
-            });
+            })
         });
     }
 
-    goLeft(intensity, duration) {
+    left(intensity, frequency) {
         return new Promise((resolve, reject) => {
-            if (!(intensity >= -100 && intensity <= 0)) {
-                reject('Error: Value for intensity should be between -100 and 0');
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
             }
+            intensity -= 100;
 
-            let args = [0, intensity, 0, 0, 0, duration];
-            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
-                setTimeout(() => {
-                    resolve("success");
-                }, duration);
-            }).catch((e) => {
+            let args = [1, intensity, 0, 0, 0, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
                 reject(e);
-            });
+            })
         });
     }
 
-    goRight(intensity, duration) {
+    right(intensity, frequency) {
         return new Promise((resolve, reject) => {
-            if (!(intensity >= 1 && intensity <= 100)) {
-                reject('Error: Value for intensity should be between 1 and 100');
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
             }
 
-            let args = [0, intensity, 0, 0, 0, duration];
-            this.droneController.sendPilotingCommand('piloting', 'maneuver', args).then(() => {
-                setTimeout(() => {
-                    resolve("success");
-                }, duration);
-            }).catch((e) => {
+            let args = [1, intensity, 0, 0, 0, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
                 reject(e);
-            });
+            })
+        });
+    }
+
+    down(intensity, frequency) {
+        return new Promise((resolve, reject) => {
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
+            }
+            intensity -= 100;
+
+            let args = [0, 0, 0, 0, intensity, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
+                reject(e);
+            })
+        });
+    }
+
+    up(intensity, frequency) {
+        return new Promise((resolve, reject) => {
+            if (!this._isValid(intensity)) {
+                reject('Error: Value for intensity should be between 0 and 100');
+            }
+
+            let args = [0, 0, 0, 0, intensity, 0];
+            this._execManeuver(args, frequency).then(() => {
+                resolve('success');
+            }).catch(e => {
+                reject(e);
+            })
         });
     }
 
     frontFlip() {
         return new Promise((resolve, reject) => {
-            this.droneController.sendPilotingCommand('animations', 'flip', [0]).then(() => {
-                resolve("success");
+            this.droneController.sendPilotingCommand('animations', 'flip', [0, 0, 0, 0]).then(() => {
+                sleep(this.breathingTime + 1000).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -175,8 +210,10 @@ export class MiniDroneView {
 
     backFlip() {
         return new Promise((resolve, reject) => {
-            this.droneController.sendPilotingCommand('animations', 'flip', [1]).then(() => {
-                resolve("success");
+            this.droneController.sendPilotingCommand('animations', 'flip', [1, 0, 0, 0]).then(() => {
+                sleep(this.breathingTime + 1000).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -185,8 +222,10 @@ export class MiniDroneView {
 
     rightFlip() {
         return new Promise((resolve, reject) => {
-            this.droneController.sendPilotingCommand('animations', 'flip', [2]).then(() => {
-                resolve("success");
+            this.droneController.sendPilotingCommand('animations', 'flip', [2, 0, 0, 0]).then(() => {
+                sleep(this.breathingTime + 1000).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -195,8 +234,10 @@ export class MiniDroneView {
 
     leftFlip() {
         return new Promise((resolve, reject) => {
-            this.droneController.sendPilotingCommand('animations', 'flip', [3]).then(() => {
-                resolve("success");
+            this.droneController.sendPilotingCommand('animations', 'flip', [3, 0, 0, 0]).then(() => {
+                sleep(this.breathingTime + 1000).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -206,7 +247,9 @@ export class MiniDroneView {
     takePicture() {
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('mediaRecord', 'picture', [0]).then(() => {
-                resolve("success");
+                sleep(this.breathingTime).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -231,7 +274,9 @@ export class MiniDroneView {
                         imgArr = str.match(regex);
                         debug(imgArr);
                         this.droneController.removeListener('media-data', callback);
-                        resolve(imgArr);
+                        sleep(this.breathingTime).then(() => {
+                            resolve(imgArr);
+                        });
                     }
                 }
 
@@ -259,7 +304,9 @@ export class MiniDroneView {
                         debug('Closing the stream');
                         stream.end();
                         this.droneController.removeListener('media-data', callback);
-                        resolve('success');
+                        sleep(this.breathingTime).then(() => {
+                            resolve('success');
+                        });
                     } else if (dataStr.indexOf('MD5') >= 0) {
                         debug('Packet ended');
                         ignoreBytes = this.md5Length;
@@ -300,7 +347,9 @@ export class MiniDroneView {
 
                         if (confirmArr.length === 2) {
                             this.droneController.removeListener('media-data', callback);
-                            resolve('success');
+                            sleep(this.breathingTime).then(() => {
+                                resolve('success');
+                            });
                         }
                     }
                 }
@@ -329,7 +378,9 @@ export class MiniDroneView {
                     if (navObj.state === 'landed') {
                         debug('Drone has landed');
                         this.droneController.removeListener('flyingStateChanged', callback);
-                        resolve('success');
+                        sleep(this.breathingTime).then(() => {
+                            resolve('success');
+                        });
                     }
 
                 };
@@ -345,7 +396,9 @@ export class MiniDroneView {
         return new Promise((resolve, reject) => {
             this.droneController.disconnect().then(() => {
                 debug('Drone disconnected successfully');
-                resolve("success");
+                sleep(this.breathingTime).then(() => {
+                    resolve('success');
+                });
             }).catch((e) => {
                 reject(e);
             });
@@ -368,5 +421,28 @@ export class MiniDroneView {
                         debug('ending the stream');
                     }
                 });
+    }
+
+    _execManeuver(args, frequency) {
+        return new Promise((resolve, reject) => {
+            this.cmdInterval = setInterval(() => {
+                if (frequency > 0) {
+                    this.droneController
+                        .sendPilotingCommand('piloting', 'maneuver', args)
+                        .then()
+                        .catch((e) => {
+                            reject(e);
+                        });
+                    frequency--;
+                } else {
+                    clearInterval(this.cmdInterval);
+                    resolve('success');
+                }
+            }, this.breathingTime);
+        });
+    }
+
+    _isValid(val) {
+        return (val >= 0 && val <= 100)
     }
 }
