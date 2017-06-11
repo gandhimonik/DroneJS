@@ -1,5 +1,14 @@
 # DroneJS
-A Node.js based library for controlling a Parrot Rolling Spider drone. This library follows Bluetooth LE networking protocol to connect to the drone. 
+A Node.js based library for controlling a Parrot minidrone. This library follows Bluetooth LE networking protocol to connect to the drone. 
+
+## Drones Supported
+
+* Parrot Rolling Spider
+* Parrot Airborne Night Maclane
+* Parrot Airborne Night Blaze
+* Parrot Airborne Night Swat
+* Parrot Airborne Cargo Mars
+* Parrot Airborne Cargo Travis
 
 ## Prerequisites
 
@@ -26,6 +35,23 @@ class SimpleFlight {
 
     constructor() {
         this.minidrone = new MiniDrone();
+        this.keypress = require('keypress');
+
+        this.keypress(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
+        process.stdin.on('keypress', (ch, key) => {
+            if (key && key.ctrl && key.name == 'c') {
+                this.minidrone
+                    .disconnect()
+                    .then(() => process.exit(0))
+                    .catch (e => {
+                        console.log(e);
+                        process.exit(0);
+                    });
+            }
+        });
     }
 
     connect() {
@@ -57,15 +83,33 @@ class SimpleFlight {
 
     constructor() {
         this.minidrone = new MiniDrone();
+
+        this.keypress = require('keypress');
+
+        this.keypress(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
+        process.stdin.on('keypress', (ch, key) => {
+            if (key && key.ctrl && key.name == 'c') {
+                this.minidrone
+                    .disconnect()
+                    .then(() => process.exit(0))
+                    .catch (e => {
+                        console.log(e);
+                        process.exit(0);
+                    });
+            }
+        });
     }
 
     setupDataStream() {
         let navDataStream = this.minidrone.getNavDataStream();
         navDataStream.subscribe((data) => {
-                console.log(data);
-            },
-            err => debug(err),
-            () => debug('complete'));
+                        console.log(data);
+                    },
+                    err => debug(err),
+                    () => debug('complete'));
     }
 
     connect() {
@@ -93,6 +137,24 @@ class SimpleFlight {
 
     constructor() {
         this.minidrone = new MiniDrone();
+
+        this.keypress = require('keypress');
+
+        this.keypress(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
+        process.stdin.on('keypress', (ch, key) => {
+            if (key && key.ctrl && key.name == 'c') {
+                this.minidrone
+                    .disconnect()
+                    .then(() => process.exit(0))
+                    .catch (e => {
+                        console.log(e);
+                        process.exit(0);
+                    });
+            }
+        });
     }
 
     setupDataStream() {
@@ -110,11 +172,13 @@ class SimpleFlight {
             .then(() => this.minidrone.flatTrim())
             .then(() => this.minidrone.takeOff())
             .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.goForward(50, 2000))
+            .then(() => this.minidrone.forward(50, 5))
             .then(() => this.minidrone.flatTrim())
             .then(() => this.minidrone.land())
+            .then()
             .catch(e => {
                 console.log('Error occurred: ' + e);
+                this.minidrone.land();
             });
     }
 }
@@ -127,12 +191,27 @@ simpleFlight.run();
 ### Take Picture
 
 ```
-import { MiniDrone }    from 'dronejs';
-
 class SimpleFlight {
 
     constructor() {
         this.minidrone = new MiniDrone();
+        this.keypress = require('keypress');
+
+        this.keypress(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
+        process.stdin.on('keypress', (ch, key) => {
+            if (key && key.ctrl && key.name == 'c') {
+                this.minidrone
+                    .disconnect()
+                    .then(() => process.exit(0))
+                    .catch (e => {
+                        console.log(e);
+                        process.exit(0);
+                    });
+            }
+        });
     }
 
     setupDataStream() {
@@ -153,6 +232,7 @@ class SimpleFlight {
             .then(() => this.minidrone.takePicture())
             .then(() => this.minidrone.flatTrim())
             .then(() => this.minidrone.land())
+            .then()
             .catch(e => {
                 console.log('Error occurred: ' + e);
             });
@@ -173,15 +253,23 @@ class SimpleFlight {
 
     constructor() {
         this.minidrone = new MiniDrone();
-    }
+        this.keypress = require('keypress');
 
-    setupDataStream() {
-        let navDataStream = this.minidrone.getNavDataStream();
-        navDataStream.subscribe((data) => {
-                console.log(data);
-            },
-            err => debug(err),
-            () => debug('complete'));
+        this.keypress(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
+        process.stdin.on('keypress', (ch, key) => {
+            if (key && key.ctrl && key.name == 'c') {
+                this.minidrone
+                    .disconnect()
+                    .then(() => process.exit(0))
+                    .catch (e => {
+                        console.log(e);
+                        process.exit(0);
+                    });
+            }
+        });
     }
 
     run() {
@@ -201,7 +289,6 @@ class SimpleFlight {
 }
 
 let simpleFlight = new SimpleFlight();
-simpleFlight.setupDataStream();
 simpleFlight.run();
 ```
 
@@ -214,15 +301,23 @@ class SimpleFlight {
 
     constructor() {
         this.minidrone = new MiniDrone();
-    }
+        this.keypress = require('keypress');
 
-    setupDataStream() {
-        let navDataStream = this.minidrone.getNavDataStream();
-        navDataStream.subscribe((data) => {
-                console.log(data);
-            },
-            err => debug(err),
-            () => debug('complete'));
+        this.keypress(process.stdin);
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
+        process.stdin.on('keypress', (ch, key) => {
+            if (key && key.ctrl && key.name == 'c') {
+                this.minidrone
+                    .disconnect()
+                    .then(() => process.exit(0))
+                    .catch (e => {
+                        console.log(e);
+                        process.exit(0);
+                    });
+            }
+        });
     }
 
     run() {
@@ -242,7 +337,6 @@ class SimpleFlight {
 }
 
 let simpleFlight = new SimpleFlight();
-simpleFlight.setupDataStream();
 simpleFlight.run();
 ```
 
@@ -270,53 +364,53 @@ simpleFlight.run();
 
     Do a drone take off
 
-* **turnLeft(intensity, duration)**
+* **turnLeft(intensity, frequency)**
 
     Turn the drone to left
     
     > **intensity** - Intensity with which the turn should happen. 
     >
-    > **duration** - Duration until which the drone should perform this action.
+    > **frequency** - Number of times drone should perform this action.
 
-* **turnRight(intensity, duration)**
+* **turnRight(intensity, frequency)**
 
     Turn the drone to right
     
     > **intensity** - Intensity with which the turn should happen. 
     >
-    > **duration** - Duration until which the drone should perform this action.
+    > **frequency** - Number of times drone should perform this action.
 
-* **goBackward(intensity, duration)**
+* **backward(intensity, frequency)**
 
     Move the drone backward
     
     > **intensity** - Intensity with which the turn should happen. 
     >
-    > **duration** - Duration until which the drone should perform this action.
+    > **frequency** - Number of times drone should perform this action.
 
-* **goForward(intensity, duration)**
+* **forward(intensity, frequency)**
 
     Move the drone forward
     
     > **intensity** - Intensity with which the turn should happen. 
     >
-    > **duration** - Duration until which the drone should perform this action.
+    > **frequency** - Number of times drone should perform this action.
 
-* **goLeft(intensity, duration)**
+* **left(intensity, frequency)**
 
     Move the drone to left
     
     > **intensity** - Intensity with which the turn should happen. 
     >
-    > **duration** - Duration until which the drone should perform this action.
+    > **frequency** - Number of times drone should perform this action.
 
-* **goRight(intensity, duration)**
+* **right(intensity, frequency)**
 
     Move the drone to right
     
     > **intensity** - Intensity with which the turn should happen. 
     >
-    > **duration** - Duration until which the drone should perform this action.
+    > **frequency** - Number of times drone should perform this action.
 
 * **frontFlip()**
 
