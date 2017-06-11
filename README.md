@@ -18,6 +18,7 @@ A Node.js based library for controlling a Parrot minidrone. This library follows
 ## Install
 
 ```
+
 npm install dronejs
 
 ```
