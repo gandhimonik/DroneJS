@@ -1,0 +1,2392 @@
+{
+  "project": {
+    "name": "common",
+    "id": 0,
+    "description": "All common commands shared between all projects",
+    "categories": [
+      {
+        "name": "network",
+        "id": 0,
+        "description": "Network related commands",
+        "cmd": {
+          "name": "disconnect",
+          "id": 0,
+          "deprecated": "true",
+          "comment": {
+            "title": "Signals the remote that the host will disconnect",
+            "desc": "Signals the remote that the host will disconnect.",
+            "support": "none",
+            "result": "None"
+          }
+        }
+      },
+      {
+        "name": "networkEvent",
+        "id": 1,
+        "description": "Network Event from product",
+        "cmd": {
+          "name": "disconnection",
+          "id": 0,
+          "content": "NOTIFICATION",
+          "comment": {
+            "title": "Drone will disconnect",
+            "desc": "Drone will disconnect. This event is mainly triggered when the user presses on the power button of the product. This event is a notification, you can't retrieve it in the cache of the device controller.",
+            "support": "0901;090c",
+            "triggered": "mainly when the user presses the power button of the drone."
+          },
+          "arg": {
+            "name": "cause",
+            "type": "enum",
+            "description": "Cause of the disconnection of the product",
+            "values": [
+              {
+                "name": "off_button",
+                "description": "The button off has been pressed"
+              },
+              {
+                "name": "unknown",
+                "description": "Unknown generic cause"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "settings",
+        "id": 2,
+        "description": "Settings commands",
+        "cmd": [
+          {
+            "name": "allSettings",
+            "id": 0,
+            "timeout": "RETRY",
+            "comment": {
+              "title": "Ask for all settings",
+              "desc": "Ask for all settings.",
+              "support": "drones",
+              "result": "The product will trigger all settings events (such as [CameraSettings](#0-15-0), or product specific settings as the [MaxAltitude](#1-6-0) for the Bebop). Then, it will trigger [AllSettingsEnd](#0-3-0)."
+            }
+          },
+          {
+            "name": "reset",
+            "id": 1,
+            "comment": {
+              "title": "Reset all settings",
+              "desc": "Reset all settings.",
+              "support": "drones",
+              "result": "It will trigger [ResetChanged](#0-3-1). Then, the product will trigger all settings events (such as [CameraSettings](#0-15-0), or product specific settings as the [MaxAltitude](#1-6-0) for the Bebop) with factory values."
+            }
+          },
+          {
+            "name": "productName",
+            "id": 2,
+            "comment": {
+              "title": "Set product name",
+              "desc": "Set the product name. It also sets the name of the SSID for Wifi products and advertisement name for BLE products (changed after a reboot of the product).",
+              "support": "drones",
+              "result": "Name is changed. Then, it will trigger [NameChanged](#0-3-2)."
+            },
+            "arg": {
+              "name": "name",
+              "type": "string",
+              "description": "Product name"
+            }
+          },
+          {
+            "name": "country",
+            "id": 3,
+            "comment": {
+              "title": "Set the country",
+              "desc": "Set the country for Wifi products. This can modify Wifi band and/or channel. Please note that you might be disconnected from the product after changing the country as it changes Wifi parameters.",
+              "support": "0901;0902;0905;0906;090c;090e",
+              "result": "The country is set. Then, it will trigger [CountryChanged](#0-3-6)."
+            },
+            "arg": {
+              "name": "code",
+              "type": "string",
+              "description": "Country code with ISO 3166 format"
+            }
+          },
+          {
+            "name": "autoCountry",
+            "id": 4,
+            "comment": {
+              "title": "Enable auto-country",
+              "desc": "Enable auto-country. If auto-country is set, the drone will guess its Wifi country by itself by checking other Wifi country around it. Please note that you might be disconnected from the product after changing the country as it changes Wifi parameters.",
+              "support": "0901;0902;0905;0906;090c;090e",
+              "result": "The auto-country of the product is changed.     Then, it will trigger [AutoCountryChanged](#0-3-7) and [CountryChanged](#0-3-6)."
+            },
+            "arg": {
+              "name": "automatic",
+              "type": "u8",
+              "description": "Boolean : 0 : Manual / 1 : Auto"
+            }
+          }
+        ]
+      },
+      {
+        "name": "settingsState",
+        "id": 3,
+        "description": "Settings state from product",
+        "cmd": [
+          {
+            "name": "allSettingsChanged",
+            "id": 0,
+            "timeout": "RETRY",
+            "comment": {
+              "title": "All settings have been sent",
+              "desc": "All settings have been sent.",
+              "support": "drones",
+              "triggered": "when all settings values have been sent."
+            }
+          },
+          {
+            "name": "resetChanged",
+            "id": 1,
+            "comment": {
+              "title": "All settings have been reset",
+              "desc": "All settings have been reset.",
+              "support": "drones",
+              "triggered": "by [ResetSettings](#0-2-1)."
+            }
+          },
+          {
+            "name": "productNameChanged",
+            "id": 2,
+            "comment": {
+              "title": "Product name changed",
+              "desc": "Product name changed.",
+              "support": "drones",
+              "triggered": "by [SetProductName](#0-2-2)."
+            },
+            "arg": {
+              "name": "name",
+              "type": "string",
+              "description": "Product name"
+            }
+          },
+          {
+            "name": "productVersionChanged",
+            "id": 3,
+            "comment": {
+              "title": "Product version",
+              "desc": "Product version.",
+              "support": "drones",
+              "triggered": "during the connection process."
+            },
+            "arg": [
+              {
+                "name": "software",
+                "type": "string",
+                "description": "Product software version"
+              },
+              {
+                "name": "hardware",
+                "type": "string",
+                "description": "Product hardware version"
+              }
+            ]
+          },
+          {
+            "name": "productSerialHighChanged",
+            "id": 4,
+            "comment": {
+              "title": "Product serial (1st part)",
+              "desc": "Product serial (1st part).",
+              "support": "drones",
+              "triggered": "during the connection process."
+            },
+            "arg": {
+              "name": "high",
+              "type": "string",
+              "description": "Serial high number (hexadecimal value)"
+            }
+          },
+          {
+            "name": "productSerialLowChanged",
+            "id": 5,
+            "comment": {
+              "title": "Product serial (2nd part)",
+              "desc": "Product serial (2nd part).",
+              "support": "drones",
+              "triggered": "during the connection process."
+            },
+            "arg": {
+              "name": "low",
+              "type": "string",
+              "description": "Serial low number (hexadecimal value)"
+            }
+          },
+          {
+            "name": "countryChanged",
+            "id": 6,
+            "-timeout": "RETRY",
+            "comment": {
+              "title": "Country changed",
+              "desc": "Country changed.",
+              "support": "drones",
+              "triggered": "by [SetCountry](#0-2-3)."
+            },
+            "arg": {
+              "name": "code",
+              "type": "string",
+              "description": "Country code with ISO 3166 format, empty string means unknown country."
+            }
+          },
+          {
+            "name": "autoCountryChanged",
+            "id": 7,
+            "comment": {
+              "title": "Auto-country changed",
+              "desc": "Auto-country changed.",
+              "support": "drones",
+              "triggered": "by [SetAutoCountry](#0-2-4)."
+            },
+            "arg": {
+              "name": "automatic",
+              "type": "u8",
+              "description": "Boolean : 0 : Manual / 1 : Auto"
+            }
+          }
+        ]
+      },
+      {
+        "name": "common",
+        "id": 4,
+        "description": "Common commands",
+        "cmd": [
+          {
+            "name": "allStates",
+            "id": 0,
+            "timeout": "RETRY",
+            "comment": {
+              "title": "Ask for all states",
+              "desc": "Ask for all states.",
+              "support": "drones",
+              "result": "The product will trigger all states events (such as [FlyingState](#1-4-1) for the Bebop). Then, it will trigger [AllStatesEnd](#0-5-0)."
+            }
+          },
+          {
+            "name": "currentDate",
+            "id": 1,
+            "comment": {
+              "title": "Set the date",
+              "desc": "Set the date. This date is taken by the drone as its own date. So medias and other files will be dated from this date.",
+              "support": "drones",
+              "result": "The date of the product is set. Then, it will trigger [DateChanged](#0-5-4)."
+            },
+            "arg": {
+              "name": "date",
+              "type": "string",
+              "description": "Date with ISO-8601 format"
+            }
+          },
+          {
+            "name": "currentTime",
+            "id": 2,
+            "comment": {
+              "title": "Set the time",
+              "desc": "Set the time. This time is taken by the drone as its own time. So medias and other files will be dated from this time.",
+              "support": "drones",
+              "result": "The time of the product is set. Then, it will trigger [TimeChanged](#0-5-5)."
+            },
+            "arg": {
+              "name": "time",
+              "type": "string",
+              "description": "Time with ISO-8601 format"
+            }
+          },
+          {
+            "name": "reboot",
+            "id": 3,
+            "comment": {
+              "title": "Reboot",
+              "desc": "Reboot the product. The product will accept this command only if is not flying.",
+              "support": "drones",
+              "result": "The product will reboot if it can."
+            }
+          }
+        ]
+      },
+      {
+        "name": "commonState",
+        "id": 5,
+        "description": "Common state from product",
+        "cmd": [
+          {
+            "name": "allStatesChanged",
+            "id": 0,
+            "timeout": "RETRY",
+            "comment": {
+              "title": "All states have been sent",
+              "desc": "All states have been sent.     ",
+              "support": "drones",
+              "triggered": "when all states values have been sent."
+            }
+          },
+          {
+            "name": "batteryStateChanged",
+            "id": 1,
+            "buffer": "NON_ACK",
+            "comment": {
+              "title": "Battery state",
+              "desc": "Battery state.",
+              "support": "drones",
+              "triggered": "when the battery level changes."
+            },
+            "arg": {
+              "name": "percent",
+              "type": "u8",
+              "description": "Battery percentage"
+            }
+          },
+          {
+            "name": "massStorageStateListChanged",
+            "id": 2,
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "Mass storage state list",
+              "desc": "Mass storage state list.",
+              "support": "drones",
+              "triggered": "when a mass storage is inserted or ejected."
+            },
+            "arg": [
+              {
+                "name": "mass_storage_id",
+                "type": "u8",
+                "description": "Mass storage id (unique)"
+              },
+              {
+                "name": "name",
+                "type": "string",
+                "description": "Mass storage name"
+              }
+            ]
+          },
+          {
+            "name": "massStorageInfoStateListChanged",
+            "id": 3,
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "Mass storage info state list",
+              "desc": "Mass storage info state list.",
+              "support": "drones",
+              "triggered": "when a mass storage info changes."
+            },
+            "arg": [
+              {
+                "name": "mass_storage_id",
+                "type": "u8",
+                "description": "Mass storage state id (unique)"
+              },
+              {
+                "name": "size",
+                "type": "u32",
+                "description": "Mass storage size in MBytes"
+              },
+              {
+                "name": "used_size",
+                "type": "u32",
+                "description": "Mass storage used size in MBytes"
+              },
+              {
+                "name": "plugged",
+                "type": "u8",
+                "description": "Mass storage plugged (1 if mass storage is plugged, otherwise 0)"
+              },
+              {
+                "name": "full",
+                "type": "u8",
+                "description": "Mass storage full information state (1 if mass storage full, 0 otherwise)."
+              },
+              {
+                "name": "internal",
+                "type": "u8",
+                "description": "Mass storage internal type state (1 if mass storage is internal, 0 otherwise)"
+              }
+            ]
+          },
+          {
+            "name": "currentDateChanged",
+            "id": 4,
+            "comment": {
+              "title": "Date changed",
+              "desc": "Date changed. Corresponds to the latest date set on the drone.",
+              "support": "drones",
+              "triggered": "by [SetDate](#0-4-1)."
+            },
+            "arg": {
+              "name": "date",
+              "type": "string",
+              "description": "Date with ISO-8601 format"
+            }
+          },
+          {
+            "name": "currentTimeChanged",
+            "id": 5,
+            "comment": {
+              "title": "Time changed",
+              "desc": "Time changed. Corresponds to the latest time set on the drone.",
+              "support": "drones",
+              "triggered": "by [SetTime](#0-4-2)."
+            },
+            "arg": {
+              "name": "time",
+              "type": "string",
+              "description": "Time with ISO-8601 format"
+            }
+          },
+          {
+            "name": "massStorageInfoRemainingListChanged",
+            "id": 6,
+            "type": "LIST_ITEM",
+            "deprecated": "true",
+            "comment": {
+              "title": "Mass storage remaining data list",
+              "desc": "Mass storage remaining data list."
+            },
+            "arg": [
+              {
+                "name": "free_space",
+                "type": "u32",
+                "description": "Mass storage free space in MBytes"
+              },
+              {
+                "name": "rec_time",
+                "type": "u16",
+                "description": "Mass storage record time reamining in minute"
+              },
+              {
+                "name": "photo_remaining",
+                "type": "u32",
+                "description": "Mass storage photo remaining"
+              }
+            ]
+          },
+          {
+            "name": "wifiSignalChanged",
+            "id": 7,
+            "-buffer": "NON_ACK",
+            "comment": {
+              "title": "Rssi changed",
+              "desc": "Rssi (Wifi Signal between controller and product) changed.",
+              "support": "0901;0902;0905;0906;090c;090e",
+              "triggered": "regularly."
+            },
+            "arg": {
+              "name": "rssi",
+              "type": "i16",
+              "description": "RSSI of the signal between controller and the product (in dbm)"
+            }
+          },
+          {
+            "name": "sensorsStatesListChanged",
+            "id": 8,
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "Sensors state list",
+              "desc": "Sensors state list.",
+              "support": "0901:2.0.3;0902;0905;0906;0907;0909;090a;090c;090e",
+              "triggered": "at connection and when a sensor state changes."
+            },
+            "arg": [
+              {
+                "name": "sensorName",
+                "type": "enum",
+                "description": "Sensor name",
+                "enum": [
+                  {
+                    "name": "IMU",
+                    "description": "Inertial Measurement Unit sensor"
+                  },
+                  {
+                    "name": "barometer",
+                    "description": "Barometer sensor"
+                  },
+                  {
+                    "name": "ultrasound",
+                    "description": "Ultrasonic sensor"
+                  },
+                  {
+                    "name": "GPS",
+                    "description": "GPS sensor"
+                  },
+                  {
+                    "name": "magnetometer",
+                    "description": "Magnetometer sensor"
+                  },
+                  {
+                    "name": "vertical_camera",
+                    "description": "Vertical Camera sensor"
+                  }
+                ]
+              },
+              {
+                "name": "sensorState",
+                "type": "u8",
+                "description": "Sensor state (1 if the sensor is OK, 0 if the sensor is NOT OK)"
+              }
+            ]
+          },
+          {
+            "name": "productModel",
+            "id": 9,
+            "comment": {
+              "title": "Product sub-model",
+              "desc": "Product sub-model.     This can be used to customize the UI depending on the product.",
+              "support": "0905;0906;0907;0909",
+              "triggered": "at connection."
+            },
+            "arg": {
+              "name": "model",
+              "type": "enum",
+              "description": "The Model of the product.",
+              "enum": [
+                {
+                  "name": "RS_TRAVIS",
+                  "description": "Travis (RS taxi) model."
+                },
+                {
+                  "name": "RS_MARS",
+                  "description": "Mars (RS space) model"
+                },
+                {
+                  "name": "RS_SWAT",
+                  "description": "SWAT (RS SWAT) model"
+                },
+                {
+                  "name": "RS_MCLANE",
+                  "description": "Mc Lane (RS police) model"
+                },
+                {
+                  "name": "RS_BLAZE",
+                  "description": "Blaze (RS fire) model"
+                },
+                {
+                  "name": "RS_ORAK",
+                  "description": "Orak (RS carbon hydrofoil) model"
+                },
+                {
+                  "name": "RS_NEWZ",
+                  "description": "New Z (RS wooden hydrofoil) model"
+                },
+                {
+                  "name": "JS_MARSHALL",
+                  "description": "Marshall (JS fire) model"
+                },
+                {
+                  "name": "JS_DIESEL",
+                  "description": "Diesel (JS SWAT) model"
+                },
+                {
+                  "name": "JS_BUZZ",
+                  "description": "Buzz (JS space) model"
+                },
+                {
+                  "name": "JS_MAX",
+                  "description": "Max (JS F1) model"
+                },
+                {
+                  "name": "JS_JETT",
+                  "description": "Jett (JS flames) model"
+                },
+                {
+                  "name": "JS_TUKTUK",
+                  "description": "Tuk-Tuk (JS taxi) model"
+                },
+                {
+                  "name": "SW_BLACK",
+                  "description": "Swing black model"
+                },
+                {
+                  "name": "SW_WHITE",
+                  "description": "Swing white model"
+                }
+              ]
+            }
+          },
+          {
+            "name": "countryListKnown",
+            "id": "10",
+            "type": "LIST_ITEM",
+            "deprecated": "true",
+            "comment": {
+              "title": "Country list",
+              "desc": "List of countries known by the drone."
+            },
+            "arg": [
+              {
+                "name": "listFlags",
+                "type": "u8",
+                "description": "List entry attribute Bitfield. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored."
+              },
+              {
+                "name": "countryCodes",
+                "type": "string",
+                "description": "Following of country code with ISO 3166 format, separated by \";\". Be careful of the command size allowed by the network used. If necessary, split the list in several commands."
+              }
+            ]
+          },
+          {
+            "name": "deprecatedMassStorageContentChanged",
+            "id": "11",
+            "type": "MAP_ITEM",
+            "deprecated": "true",
+            "comment": {
+              "title": "Mass storage content changed",
+              "desc": "Mass storage content changed."
+            },
+            "arg": [
+              {
+                "name": "mass_storage_id",
+                "type": "u8",
+                "description": "Mass storage id (unique)"
+              },
+              {
+                "name": "nbPhotos",
+                "type": "u16",
+                "description": "Number of photos (does not include raw photos)"
+              },
+              {
+                "name": "nbVideos",
+                "type": "u16",
+                "description": "Number of videos"
+              },
+              {
+                "name": "nbPuds",
+                "type": "u16",
+                "description": "Number of puds"
+              },
+              {
+                "name": "nbCrashLogs",
+                "type": "u16",
+                "description": "Number of crash logs"
+              }
+            ]
+          },
+          {
+            "name": "massStorageContent",
+            "id": "12",
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "Mass storage content",
+              "desc": "Mass storage content.",
+              "support": "090c:4.0.0;090e:4.0.0",
+              "triggered": "when the content of the mass storage changes."
+            },
+            "arg": [
+              {
+                "name": "mass_storage_id",
+                "type": "u8",
+                "description": "Mass storage id (unique)"
+              },
+              {
+                "name": "nbPhotos",
+                "type": "u16",
+                "description": "Number of photos (does not include raw photos)"
+              },
+              {
+                "name": "nbVideos",
+                "type": "u16",
+                "description": "Number of videos"
+              },
+              {
+                "name": "nbPuds",
+                "type": "u16",
+                "description": "Number of puds"
+              },
+              {
+                "name": "nbCrashLogs",
+                "type": "u16",
+                "description": "Number of crash logs"
+              },
+              {
+                "name": "nbRawPhotos",
+                "type": "u16",
+                "description": "Number of raw photos"
+              }
+            ]
+          },
+          {
+            "name": "massStorageContentForCurrentRun",
+            "id": "13",
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "Mass storage content for current run",
+              "desc": "Mass storage content for current run. Only counts the files related to the current run (see [RunId](#0-30-0))",
+              "support": "090c:4.0.0;090e:4.0.0",
+              "triggered": "when the content of the mass storage changes and this content is related to the current run."
+            },
+            "arg": [
+              {
+                "name": "mass_storage_id",
+                "type": "u8",
+                "description": "Mass storage id (unique)"
+              },
+              {
+                "name": "nbPhotos",
+                "type": "u16",
+                "description": "Number of photos (does not include raw photos)"
+              },
+              {
+                "name": "nbVideos",
+                "type": "u16",
+                "description": "Number of videos"
+              },
+              {
+                "name": "nbRawPhotos",
+                "type": "u16",
+                "description": "Number of raw photos"
+              }
+            ]
+          },
+          {
+            "name": "videoRecordingTimestamp",
+            "id": "14",
+            "comment": {
+              "title": "Video recording timestamp",
+              "desc": "Current or last video recording timestamp. Timestamp in milliseconds since 00:00:00 UTC on 1 January 1970. Please note that values don't persist after drone reboot",
+              "triggered": "on video recording start and video recording stop or after that the date/time of the drone changed."
+            },
+            "arg": [
+              {
+                "name": "startTimestamp",
+                "type": "u64",
+                "description": "Timestamp in milliseconds since 00:00:00 UTC on 1 January 1970."
+              },
+              {
+                "name": "stopTimestamp",
+                "type": "u64",
+                "description": "Timestamp in milliseconds since 00:00:00 UTC on 1 January 1970. 0 mean that video is still recording."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "overHeat",
+        "id": 6,
+        "description": "Over heat commands",
+        "cmd": [
+          {
+            "name": "switchOff",
+            "id": 0,
+            "deprecated": "true",
+            "comment": {
+              "title": "Switch off after an overheat",
+              "desc": "Switch off after an overheat.",
+              "support": "none",
+              "result": "None"
+            }
+          },
+          {
+            "name": "ventilate",
+            "id": 1,
+            "deprecated": "true",
+            "comment": {
+              "title": "Ventilate after an overheat",
+              "desc": "Ventilate after an overheat.",
+              "support": "none",
+              "result": "None"
+            }
+          }
+        ]
+      },
+      {
+        "name": "overHeatState",
+        "id": 7,
+        "description": "Overheat state from product",
+        "cmd": [
+          {
+            "name": "overHeatChanged",
+            "id": 0,
+            "deprecated": "true",
+            "comment": {
+              "title": "Overheat",
+              "desc": "Overheat temperature reached."
+            }
+          },
+          {
+            "name": "overHeatRegulationChanged",
+            "id": 1,
+            "comment": {
+              "title": "Overheat regulation type",
+              "desc": "Overheat regulation type."
+            },
+            "arg": {
+              "name": "regulationType",
+              "type": "u8",
+              "description": "Type of overheat regulation : 0 for ventilation, 1 for switch off"
+            }
+          }
+        ]
+      },
+      {
+        "name": "controller",
+        "id": 8,
+        "description": "Notify the device about the state of the controller application.",
+        "cmd": {
+          "name": "isPiloting",
+          "id": 0,
+          "comment": {
+            "title": "Inform about hud entering",
+            "desc": "Inform about hud entering. Tell the drone that the controller enters/leaves the piloting hud. On a non-flying products it is used to know when a run begins.",
+            "support": "drones",
+            "result": "If yes, the product will begin a new session (so it should send a new [runId](#0-30-0)). Also, on the JumpingSumos, if the video is in autorecord mode, it will start recording."
+          },
+          "arg": {
+            "name": "piloting",
+            "type": "u8",
+            "description": "0 when the application is not in the piloting HUD, 1 when it enters the HUD."
+          }
+        }
+      },
+      {
+        "name": "wifiSettings",
+        "id": 9,
+        "description": "Wifi settings commands",
+        "cmd": {
+          "name": "outdoorSetting",
+          "id": 0,
+          "comment": {
+            "title": "Set wifi outdoor mode",
+            "desc": "Set wifi indoor/outdoor mode. Please note that you might be disconnected from the product after changing the indoor/outdoor setting as it changes Wifi parameters.",
+            "support": "0901;0902;0905;0906;090c;090e",
+            "result": "The product change its indoor/outdoor wifi settings. Then, it will trigger [WifiOutdoorMode](#0-10-0)."
+          },
+          "arg": {
+            "name": "outdoor",
+            "type": "u8",
+            "description": "1 if it should use outdoor wifi settings, 0 otherwise"
+          }
+        }
+      },
+      {
+        "name": "wifiSettingsState",
+        "id": "10",
+        "description": "Wifi settings state from product",
+        "cmd": {
+          "name": "outdoorSettingsChanged",
+          "id": 0,
+          "comment": {
+            "title": "Wifi outdoor mode",
+            "desc": "Wifi outdoor mode.",
+            "support": "0901;0902;0905;0906;090c;090e",
+            "triggered": "by [SetWifiOutdoorMode](#0-9-0)."
+          },
+          "arg": {
+            "name": "outdoor",
+            "type": "u8",
+            "description": "1 if it should use outdoor wifi settings, 0 otherwise"
+          }
+        }
+      },
+      {
+        "name": "mavlink",
+        "id": "11",
+        "description": "Mavlink flight plans commands",
+        "cmd": [
+          {
+            "name": "start",
+            "id": 0,
+            "comment": {
+              "title": "Start a FlightPlan",
+              "desc": "Start a FlightPlan based on a mavlink file existing on the drone. Requirements are: * Product is calibrated * Product should be in outdoor mode * Product has fixed its GPS",
+              "support": "0901:2.0.29;090c;090e",
+              "result": "If the FlightPlan has been started, event [FlightPlanPlayingStateChanged](#0-12-0) is triggered with param state set to *playing*. Otherwise, event [FlightPlanPlayingStateChanged](#0-12-0) is triggered with param state set to stopped and event [MavlinkPlayErrorStateChanged](#0-12-1) is triggered with an explanation of the error."
+            },
+            "arg": [
+              {
+                "name": "filePath",
+                "type": "string",
+                "description": " flight plan file path from the mavlink ftp root"
+              },
+              {
+                "name": "type",
+                "type": "enum",
+                "description": "type of the played mavlink file",
+                "values": [
+                  {
+                    "name": "flightPlan",
+                    "description": "Mavlink file for FlightPlan",
+                    "value": 0
+                  },
+                  {
+                    "name": "mapMyHouse",
+                    "description": "Mavlink file for MapMyHouse",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "pause",
+            "id": 1,
+            "comment": {
+              "title": "Pause a FlightPlan",
+              "desc": "Pause a FlightPlan that was playing. To unpause a FlightPlan, see [StartFlightPlan](#0-11-0)",
+              "support": "0901:2.0.29;090c;090e",
+              "result": "The currently playing FlightPlan will be paused. Then, event [FlightPlanPlayingStateChanged](#0-12-0) is triggered with param state set to the current state of the FlightPlan (should be *paused* if everything went well)."
+            }
+          },
+          {
+            "name": "stop",
+            "id": 2,
+            "comment": {
+              "title": "Stop a FlightPlan",
+              "desc": "Stop a FlightPlan that was playing.",
+              "support": "0901:2.0.29;090c;090e",
+              "result": "The currently playing FlightPlan will be stopped. Then, event [FlightPlanPlayingStateChanged](#0-12-0) is triggered with param state set to the current state of the FlightPlan (should be *stopped* if everything went well)."
+            }
+          }
+        ]
+      },
+      {
+        "name": "mavlinkState",
+        "id": "12",
+        "description": "Mavlink flight plans states commands",
+        "cmd": [
+          {
+            "name": "mavlinkFilePlayingStateChanged",
+            "id": 0,
+            "comment": {
+              "title": "Playing state of a FlightPlan",
+              "desc": "Playing state of a FlightPlan.",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "by [StartFlightPlan](#0-11-0), [PauseFlightPlan](#0-11-1) or [StopFlightPlan](#0-11-2)."
+            },
+            "arg": [
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "State of the mavlink",
+                "values": [
+                  {
+                    "name": "playing",
+                    "description": "Mavlink file is playing",
+                    "value": 0
+                  },
+                  {
+                    "name": "stopped",
+                    "description": "Mavlink file is stopped (arg filepath and type are useless in this state)",
+                    "value": 1
+                  },
+                  {
+                    "name": "paused",
+                    "description": "Mavlink file is paused",
+                    "value": 2
+                  },
+                  {
+                    "name": "loaded",
+                    "description": "Mavlink file is loaded (it will be played at take-off)",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "filePath",
+                "type": "string",
+                "description": " flight plan file path from the mavlink ftp root"
+              },
+              {
+                "name": "type",
+                "type": "enum",
+                "description": "type of the played mavlink file",
+                "values": [
+                  {
+                    "name": "flightPlan",
+                    "description": "Mavlink file for FlightPlan",
+                    "value": 0
+                  },
+                  {
+                    "name": "mapMyHouse",
+                    "description": "Mavlink file for MapMyHouse",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "mavlinkPlayErrorStateChanged",
+            "id": 1,
+            "comment": {
+              "title": "FlightPlan error",
+              "desc": "FlightPlan error.",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "by [StartFlightPlan](#0-11-0) if an error occurs."
+            },
+            "arg": {
+              "name": "error",
+              "type": "enum",
+              "description": "State of play error",
+              "values": [
+                {
+                  "name": "none",
+                  "description": "There is no error",
+                  "value": 0
+                },
+                {
+                  "name": "notInOutDoorMode",
+                  "description": "The drone is not in outdoor mode",
+                  "value": 1
+                },
+                {
+                  "name": "gpsNotFixed",
+                  "description": "The gps is not fixed",
+                  "value": 2
+                },
+                {
+                  "name": "notCalibrated",
+                  "description": "The magnetometer of the drone is not calibrated",
+                  "value": 3
+                }
+              ]
+            }
+          },
+          {
+            "name": "missonItemExecuted",
+            "id": 2,
+            "content": "NOTIFICATION",
+            "comment": {
+              "title": "Mission item executed",
+              "desc": "Mission item has been executed.",
+              "support": "none",
+              "triggered": "when a mission item has been executed during a flight plan."
+            },
+            "arg": {
+              "name": "idx",
+              "type": "u32",
+              "description": "Index of the mission item. This is the place of the mission item in the list of the items of the mission. Begins at 0."
+            }
+          }
+        ]
+      },
+      {
+        "name": "calibration",
+        "id": "13",
+        "description": "Calibration commands",
+        "cmd": [
+          {
+            "name": "magnetoCalibration",
+            "id": 0,
+            "comment": {
+              "title": "Start/Abort magnetometer calibration",
+              "desc": "Start or abort magnetometer calibration process.",
+              "support": "0901;090c;090e",
+              "result": "The magnetometer calibration process is started or aborted. Then, event [MagnetoCalibrationStartedChanged](#0-14-3) is triggered. If started, event [MagnetoCalibrationStateChanged](#0-14-3) is triggered with the current calibration state: a list of all axis and their calibration states. It will also trigger [MagnetoCalibrationAxisToCalibrateChanged](#0-14-2), that will inform the controller about the current axis to calibrate."
+            },
+            "arg": {
+              "name": "calibrate",
+              "type": "u8",
+              "description": "1 if the calibration should be started, 0 if it should be aborted"
+            }
+          },
+          {
+            "name": "pitotCalibration",
+            "id": 1,
+            "description": "Sent when a calibration of the pitot is asked or is aborted",
+            "arg": {
+              "name": "calibrate",
+              "type": "u8",
+              "description": "1 if the calibration should be started, 0 if it should be aborted"
+            }
+          }
+        ]
+      },
+      {
+        "name": "calibrationState",
+        "id": "14",
+        "description": "Status of the calibration",
+        "cmd": [
+          {
+            "name": "magnetoCalibrationStateChanged",
+            "id": 0,
+            "comment": {
+              "title": "Magneto calib process axis state",
+              "desc": "Magneto calib process axis state.",
+              "support": "0901;090c;090e",
+              "triggered": "when the calibration process is started with [StartOrAbortMagnetoCalib](#0-13-0) and each time an axis calibration state changes."
+            },
+            "arg": [
+              {
+                "name": "xAxisCalibration",
+                "type": "u8",
+                "description": "State of the x axis (roll) calibration : 1 if calibration is done, 0 otherwise"
+              },
+              {
+                "name": "yAxisCalibration",
+                "type": "u8",
+                "description": "State of the y axis (pitch) calibration : 1 if calibration is done, 0 otherwise"
+              },
+              {
+                "name": "zAxisCalibration",
+                "type": "u8",
+                "description": "State of the z axis (yaw) calibration : 1 if calibration is done, 0 otherwise"
+              },
+              {
+                "name": "calibrationFailed",
+                "type": "u8",
+                "description": "1 if calibration has failed, 0 otherwise. If this arg is 1, consider all previous arg as 0"
+              }
+            ]
+          },
+          {
+            "name": "magnetoCalibrationRequiredState",
+            "id": 1,
+            "comment": {
+              "title": "Calibration required",
+              "desc": "Calibration required.",
+              "support": "0901;090c;090e",
+              "triggered": "when the calibration requirement changes."
+            },
+            "arg": {
+              "name": "required",
+              "type": "u8",
+              "description": "1 if calibration is required, 0 if current calibration is still valid"
+            }
+          },
+          {
+            "name": "magnetoCalibrationAxisToCalibrateChanged",
+            "id": 2,
+            "comment": {
+              "title": "Axis to calibrate during calibration process",
+              "desc": "Axis to calibrate during calibration process.",
+              "support": "0901;090c;090e",
+              "triggered": "during the calibration process when the axis to calibrate changes."
+            },
+            "arg": {
+              "name": "axis",
+              "type": "enum",
+              "description": "The axis to calibrate",
+              "values": [
+                {
+                  "name": "xAxis",
+                  "description": "If the current calibration axis should be the x axis",
+                  "value": 0
+                },
+                {
+                  "name": "yAxis",
+                  "description": "If the current calibration axis should be the y axis",
+                  "value": 1
+                },
+                {
+                  "name": "zAxis",
+                  "description": "If the current calibration axis should be the z axis",
+                  "value": 2
+                },
+                {
+                  "name": "none",
+                  "description": "If none of the axis should be calibrated",
+                  "value": 3
+                }
+              ]
+            }
+          },
+          {
+            "name": "magnetoCalibrationStartedChanged",
+            "id": 3,
+            "comment": {
+              "title": "Calibration process state",
+              "desc": "Calibration process state.",
+              "support": "0901;090c;090e",
+              "triggered": "by [StartOrAbortMagnetoCalib](#0-13-0) or when the process ends because it succeeded."
+            },
+            "description": "Status of the calibration process",
+            "arg": {
+              "name": "started",
+              "type": "u8",
+              "description": "1 if calibration has started, 0 otherwise"
+            }
+          },
+          {
+            "name": "pitotCalibrationStateChanged",
+            "id": 4,
+            "description": "Sent when the state of the pitot calibration has changed",
+            "arg": [
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "State of pitot calibration",
+                "values": [
+                  {
+                    "name": "done",
+                    "description": "Calibration is ok",
+                    "value": 0
+                  },
+                  {
+                    "name": "ready",
+                    "description": "Calibration is started, waiting user action",
+                    "value": 1
+                  },
+                  {
+                    "name": "in_progress",
+                    "description": "Calibration is in progress",
+                    "value": 2
+                  },
+                  {
+                    "name": "required",
+                    "description": "Calibration is required",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "lastError",
+                "type": "u8",
+                "description": "lastError : 1 if an error occured and 0 if not"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "cameraSettingsState",
+        "id": "15",
+        "description": "Status of the camera settings",
+        "cmd": {
+          "name": "cameraSettingsChanged",
+          "id": 0,
+          "comment": {
+            "title": "Camera info",
+            "desc": "Camera info.",
+            "support": "0901;090c;090e",
+            "triggered": "at connection."
+          },
+          "arg": [
+            {
+              "name": "fov",
+              "type": "float",
+              "description": "Value of the camera horizontal fov (in degree)"
+            },
+            {
+              "name": "panMax",
+              "type": "float",
+              "description": "Value of max pan (right pan) (in degree)"
+            },
+            {
+              "name": "panMin",
+              "type": "float",
+              "description": "Value of min pan (left pan) (in degree)"
+            },
+            {
+              "name": "tiltMax",
+              "type": "float",
+              "description": "Value of max tilt (top tilt) (in degree)"
+            },
+            {
+              "name": "tiltMin",
+              "type": "float",
+              "description": "Value of min tilt (bottom tilt) (in degree)"
+            }
+          ]
+        }
+      },
+      {
+        "name": "gps",
+        "id": "16",
+        "description": "GPS related commands",
+        "cmd": {
+          "name": "controllerPositionForRun",
+          "id": 0,
+          "comment": {
+            "title": "Set the position of a run",
+            "desc": "Set the position of a run. This will let the product know the controller location for the flight/run. The location is typically used to geotag medias. Only used on products that have no gps. Watch out, this command is not used by BLE products.",
+            "support": "0902;0905;0906",
+            "result": "The position is set."
+          },
+          "arg": [
+            {
+              "name": "latitude",
+              "type": "double",
+              "description": "Controller latitude in decimal degrees"
+            },
+            {
+              "name": "longitude",
+              "type": "double",
+              "description": "Controller longitude in decimal degrees"
+            }
+          ]
+        }
+      },
+      {
+        "name": "flightPlanState",
+        "id": "17",
+        "description": "FlightPlan state commands",
+        "cmd": [
+          {
+            "name": "availabilityStateChanged",
+            "id": 0,
+            "comment": {
+              "title": "FlightPlan availability",
+              "desc": "FlightPlan availability. Availability is linked to GPS fix, magnetometer calibration, sensor states...",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "on change."
+            },
+            "arg": {
+              "name": "availabilityState",
+              "type": "u8",
+              "description": "Running a flightPlan file is available (1 running a flightPlan file is available, otherwise 0)"
+            }
+          },
+          {
+            "name": "componentStateListChanged",
+            "id": 1,
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "FlightPlan components state list",
+              "desc": "FlightPlan components state list.",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "when the state of required components changes."
+            },
+            "arg": [
+              {
+                "name": "component",
+                "type": "enum",
+                "description": "Drone FlightPlan component id (unique)",
+                "values": [
+                  {
+                    "name": "gps",
+                    "description": "GPS for Drone FlightPlan",
+                    "value": 0
+                  },
+                  {
+                    "name": "calibration",
+                    "description": "Calibration for Drone FlightPlan",
+                    "value": 1
+                  },
+                  {
+                    "name": "mavlink_File",
+                    "description": "Mavlink file for Drone FlightPlan",
+                    "value": 2
+                  },
+                  {
+                    "name": "takeOff",
+                    "description": "Take off",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "state",
+                "type": "u8",
+                "description": "State of the FlightPlan component (1 FlightPlan component OK, otherwise 0)"
+              }
+            ]
+          },
+          {
+            "name": "lockStateChanged",
+            "id": 2,
+            "comment": {
+              "title": "FlightPlan lock state",
+              "desc": "FlightPlan lock state. Represents the fact that the controller is able or not to stop or pause a playing FlightPlan",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "when the lock changes."
+            },
+            "arg": {
+              "name": "lockState",
+              "type": "u8",
+              "description": "1 if FlightPlan is locked: can't pause or stop FlightPlan. 0 if FlightPlan is unlocked: pause or stop available."
+            }
+          }
+        ]
+      },
+      {
+        "name": "flightPlanEvent",
+        "id": "19",
+        "description": "FlightPlan Event commands",
+        "cmd": [
+          {
+            "name": "startingErrorEvent",
+            "id": 0,
+            "content": "NOTIFICATION",
+            "comment": {
+              "title": "FlightPlan start error",
+              "desc": "FlightPlan start error. This event is a notification, you can't retrieve it in the cache of the device controller.",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "on an error after a [StartFlightPlan](#0-11-0)."
+            }
+          },
+          {
+            "name": "speedBridleEvent",
+            "id": 1,
+            "content": "NOTIFICATION",
+            "comment": {
+              "title": "FlightPlan speed clamping",
+              "desc": "FlightPlan speed clamping. Sent when a speed specified in the FlightPlan file is considered too high by the drone. This event is a notification, you can't retrieve it in the cache of the device controller.",
+              "support": "0901:2.0.29;090c;090e",
+              "triggered": "on an speed related clamping after a [StartFlightPlan](#0-11-0)."
+            }
+          }
+        ]
+      },
+      {
+        "name": "arLibsVersionsState",
+        "id": "18",
+        "description": "ARlibs Versions Commands",
+        "cmd": [
+          {
+            "name": "controllerLibARCommandsVersion",
+            "id": 0,
+            "description": "Controller libARCommands version",
+            "arg": {
+              "name": "version",
+              "type": "string",
+              "description": "version of libARCommands (\"1.2.3.4\" format)"
+            }
+          },
+          {
+            "name": "skyControllerLibARCommandsVersion",
+            "id": 1,
+            "description": "SkyController libARCommands version",
+            "arg": {
+              "name": "version",
+              "type": "string",
+              "description": "version of libARCommands (\"1.2.3.4\" format)"
+            }
+          },
+          {
+            "name": "deviceLibARCommandsVersion",
+            "id": 2,
+            "description": "Device libARCommands version",
+            "arg": {
+              "name": "version",
+              "type": "string",
+              "description": "version of libARCommands (\"1.2.3.4\" format)"
+            }
+          }
+        ]
+      },
+      {
+        "name": "audio",
+        "id": "20",
+        "description": "Audio-related commands.",
+        "cmd": {
+          "name": "controllerReadyForStreaming",
+          "id": 0,
+          "comment": {
+            "title": "Set audio stream direction",
+            "desc": "Set audio stream direction.",
+            "support": "0905;0906",
+            "result": "The audio stream direction is set. Then, event [AudioStreamDirection](#0-21-0) is triggered."
+          },
+          "arg": {
+            "name": "ready",
+            "type": "u8",
+            "description": "Bit field for TX and RX ready. bit 0 is 1 if controller is ready and wants to receive sound (Drone TX) bit 1 is 1 if controller is ready and wants to send sound (Drone RX)"
+          }
+        }
+      },
+      {
+        "name": "audioState",
+        "id": "21",
+        "description": "Audio-related state updates.",
+        "cmd": {
+          "name": "audioStreamingRunning",
+          "id": 0,
+          "comment": {
+            "title": "Audio stream direction",
+            "desc": "Audio stream direction.",
+            "support": "0905;0906",
+            "triggered": "by [SetAudioStreamDirection](#0-20-0)."
+          },
+          "arg": {
+            "name": "running",
+            "type": "u8",
+            "description": "Bit field for TX and RX running bit 0 is 1 if Drone TX is running bit 1 is 1 if Drone RX is running"
+          }
+        }
+      },
+      {
+        "name": "headlights",
+        "id": "22",
+        "description": "Controls the headlight LEDs of the Evo variants.",
+        "cmd": {
+          "name": "intensity",
+          "id": 0,
+          "comment": {
+            "title": "Set LEDs intensity",
+            "desc": "Set lighting LEDs intensity.",
+            "support": "0905;0906;0907",
+            "result": "The intensity of the LEDs is changed. Then, event [LedIntensity](#0-23-0) is triggered."
+          },
+          "arg": [
+            {
+              "name": "left",
+              "type": "u8",
+              "description": "Set the left LED intensity value (0 through 255)."
+            },
+            {
+              "name": "right",
+              "type": "u8",
+              "description": "Set the right LED intensity value (0 through 255)."
+            }
+          ]
+        }
+      },
+      {
+        "name": "headlightsState",
+        "id": "23",
+        "description": "Get information about the state of the Evo variants' LEDs.",
+        "cmd": {
+          "name": "intensityChanged",
+          "id": 0,
+          "comment": {
+            "title": "LEDs intensity",
+            "desc": "Lighting LEDs intensity.",
+            "support": "0905;0906;0907",
+            "triggered": "by [SetLedsIntensity](#0-22-0)."
+          },
+          "arg": [
+            {
+              "name": "left",
+              "type": "u8",
+              "description": "The intensity value for the left LED (0 through 255)."
+            },
+            {
+              "name": "right",
+              "type": "u8",
+              "description": "The intensity value for the right LED (0 through 255)."
+            }
+          ]
+        }
+      },
+      {
+        "name": "animations",
+        "id": "24",
+        "description": "Animations-related commands.",
+        "cmd": [
+          {
+            "name": "startAnimation",
+            "id": 0,
+            "comment": {
+              "title": "Start an animation",
+              "desc": "Start a paramaterless animation. List of available animations can be retrieved from [AnimationsStateList](#0-25-0).",
+              "support": "0902;0905;0906;0907;0909",
+              "result": "If possible, the product starts the requested animation. Then, event [AnimationsStateList](#0-25-0) is triggered."
+            },
+            "arg": {
+              "name": "anim",
+              "type": "enum",
+              "description": "Animation to start.",
+              "values": [
+                {
+                  "name": "HEADLIGHTS_FLASH",
+                  "description": "Flash headlights.",
+                  "value": 0
+                },
+                {
+                  "name": "HEADLIGHTS_BLINK",
+                  "description": "Blink headlights.",
+                  "value": 1
+                },
+                {
+                  "name": "HEADLIGHTS_OSCILLATION",
+                  "description": "Oscillating headlights.",
+                  "value": 2
+                },
+                {
+                  "name": "SPIN",
+                  "description": "Spin animation.",
+                  "value": 3
+                },
+                {
+                  "name": "TAP",
+                  "description": "Tap animation.",
+                  "value": 4
+                },
+                {
+                  "name": "SLOW_SHAKE",
+                  "description": "Slow shake animation.",
+                  "value": 5
+                },
+                {
+                  "name": "METRONOME",
+                  "description": "Metronome animation.",
+                  "value": 6
+                },
+                {
+                  "name": "ONDULATION",
+                  "description": "Standing dance animation.",
+                  "value": 7
+                },
+                {
+                  "name": "SPIN_JUMP",
+                  "description": "Spin jump animation.",
+                  "value": 8
+                },
+                {
+                  "name": "SPIN_TO_POSTURE",
+                  "description": "Spin that end in standing posture, or in jumper if it was standing animation.",
+                  "value": 9
+                },
+                {
+                  "name": "SPIRAL",
+                  "description": "Spiral animation.",
+                  "value": 10
+                },
+                {
+                  "name": "SLALOM",
+                  "description": "Slalom animation.",
+                  "value": 11
+                },
+                {
+                  "name": "BOOST",
+                  "description": "Boost animation.",
+                  "value": 12
+                },
+                {
+                  "name": "LOOPING",
+                  "description": "Make a looping. (Only for WingX)",
+                  "value": 13
+                },
+                {
+                  "name": "BARREL_ROLL_180_RIGHT",
+                  "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)",
+                  "value": 14
+                },
+                {
+                  "name": "BARREL_ROLL_180_LEFT",
+                  "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)",
+                  "value": 15
+                },
+                {
+                  "name": "BACKSWAP",
+                  "description": "Put the drone upside down. (Only for WingX)",
+                  "value": 16
+                }
+              ]
+            }
+          },
+          {
+            "name": "StopAnimation",
+            "id": 1,
+            "comment": {
+              "title": "Stop an animation",
+              "desc": "Stop a paramaterless animation.     List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
+              "support": "0902;0905;0906;0907;0909",
+              "result": "If the requested animation was running, it will be stopped.     Then, event [AnimationsStateList](#0-25-0) is triggered."
+            },
+            "arg": {
+              "name": "anim",
+              "type": "enum",
+              "description": "Animation to stop.",
+              "enum": [
+                {
+                  "name": "HEADLIGHTS_FLASH",
+                  "description": "Flash headlights."
+                },
+                {
+                  "name": "HEADLIGHTS_BLINK",
+                  "description": "Blink headlights."
+                },
+                {
+                  "name": "HEADLIGHTS_OSCILLATION",
+                  "description": "Oscillating headlights."
+                },
+                {
+                  "name": "SPIN",
+                  "description": "Spin animation."
+                },
+                {
+                  "name": "TAP",
+                  "description": "Tap animation."
+                },
+                {
+                  "name": "SLOW_SHAKE",
+                  "description": "Slow shake animation."
+                },
+                {
+                  "name": "METRONOME",
+                  "description": "Metronome animation."
+                },
+                {
+                  "name": "ONDULATION",
+                  "description": "Standing dance animation."
+                },
+                {
+                  "name": "SPIN_JUMP",
+                  "description": "Spin jump animation."
+                },
+                {
+                  "name": "SPIN_TO_POSTURE",
+                  "description": "Spin that end in standing posture, or in jumper if it was standing animation."
+                },
+                {
+                  "name": "SPIRAL",
+                  "description": "Spiral animation."
+                },
+                {
+                  "name": "SLALOM",
+                  "description": "Slalom animation."
+                },
+                {
+                  "name": "BOOST",
+                  "description": "Boost animation."
+                },
+                {
+                  "name": "LOOPING",
+                  "description": "Make a looping. (Only for WingX)"
+                },
+                {
+                  "name": "BARREL_ROLL_180_RIGHT",
+                  "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)"
+                },
+                {
+                  "name": "BARREL_ROLL_180_LEFT",
+                  "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)"
+                },
+                {
+                  "name": "BACKSWAP",
+                  "description": "Put the drone upside down. (Only for WingX)"
+                }
+              ]
+            }
+          },
+          {
+            "name": "StopAllAnimations",
+            "id": 2,
+            "comment": {
+              "title": "Stop all animations",
+              "desc": "Stop all running paramaterless animations.     List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
+              "support": "0902;0905;0906;0907;0909",
+              "result": "All running animations are stopped.     Then, event [AnimationsStateList](#0-25-0) is triggered."
+            }
+          }
+        ]
+      },
+      {
+        "name": "animationsState",
+        "id": "25",
+        "description": "Animations-related notification/feedback commands.",
+        "cmd": {
+          "name": "list",
+          "type": "MAP_ITEM",
+          "id": 0,
+          "comment": {
+            "title": "Animation state list",
+            "desc": "Paramaterless animations state list.",
+            "support": "0902;0905;0906;0907;0909",
+            "triggered": "when the list of available animations changes and also when an animation state changes (can be triggered by [StartAnim](#0-24-0), [StopAnim](#0-24-1) or [StopAllAnims](#0-24-2)."
+          },
+          "arg": [
+            {
+              "name": "anim",
+              "type": "enum",
+              "description": "Animation type.",
+              "values": [
+                {
+                  "name": "HEADLIGHTS_FLASH",
+                  "description": "Flash headlights.",
+                  "value": 0
+                },
+                {
+                  "name": "HEADLIGHTS_BLINK",
+                  "description": "Blink headlights.",
+                  "value": 1
+                },
+                {
+                  "name": "HEADLIGHTS_OSCILLATION",
+                  "description": "Oscillating headlights.",
+                  "value": 2
+                },
+                {
+                  "name": "SPIN",
+                  "description": "Spin animation.",
+                  "value": 3
+                },
+                {
+                  "name": "TAP",
+                  "description": "Tap animation.",
+                  "value": 4
+                },
+                {
+                  "name": "SLOW_SHAKE",
+                  "description": "Slow shake animation.",
+                  "value": 5
+                },
+                {
+                  "name": "METRONOME",
+                  "description": "Metronome animation.",
+                  "value": 6
+                },
+                {
+                  "name": "ONDULATION",
+                  "description": "Standing dance animation.",
+                  "value": 7
+                },
+                {
+                  "name": "SPIN_JUMP",
+                  "description": "Spin jump animation.",
+                  "value": 8
+                },
+                {
+                  "name": "SPIN_TO_POSTURE",
+                  "description": "Spin that end in standing posture, or in jumper if it was standing animation.",
+                  "value": 9
+                },
+                {
+                  "name": "SPIRAL",
+                  "description": "Spiral animation.",
+                  "value": 10
+                },
+                {
+                  "name": "SLALOM",
+                  "description": "Slalom animation.",
+                  "value": 11
+                },
+                {
+                  "name": "BOOST",
+                  "description": "Boost animation.",
+                  "value": 12
+                },
+                {
+                  "name": "LOOPING",
+                  "description": "Make a looping. (Only for WingX)",
+                  "value": 13
+                },
+                {
+                  "name": "BARREL_ROLL_180_RIGHT",
+                  "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)",
+                  "value": 14
+                },
+                {
+                  "name": "BARREL_ROLL_180_LEFT",
+                  "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)",
+                  "value": 15
+                },
+                {
+                  "name": "BACKSWAP",
+                  "description": "Put the drone upside down. (Only for WingX)",
+                  "value": 16
+                }
+              ]
+            },
+            {
+              "name": "state",
+              "type": "enum",
+              "description": "State of the animation",
+              "values": [
+                {
+                  "name": "stopped",
+                  "description": "animation is stopped",
+                  "value": 0
+                },
+                {
+                  "name": "started",
+                  "description": "animation is started",
+                  "value": 1
+                },
+                {
+                  "name": "notAvailable",
+                  "description": "The animation is not available",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "name": "error",
+              "type": "enum",
+              "description": "Error to explain the state",
+              "values": [
+                {
+                  "name": "ok",
+                  "description": "No Error",
+                  "value": 0
+                },
+                {
+                  "name": "unknown",
+                  "description": "Unknown generic error",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "accessory",
+        "id": "26",
+        "description": "Accessories-related commands.",
+        "cmd": {
+          "name": "config",
+          "id": 0,
+          "comment": {
+            "title": "Declare an accessory",
+            "desc": "Declare an accessory. You can choose the accessory between all accessible for this product. You can get this list through event [SupportedAccessories](#0-27-0). You can only set the accessory when the modification is enabled. You can know if it possible with the event [AccessoryDeclarationAvailability](#0-27-2).",
+            "support": "0902;0905;0906;0907;0909;090a",
+            "result": "The product knows which accessory it is wearing. Then, event [AccessoryConfigChanged](#0-27-1) is triggered."
+          },
+          "arg": {
+            "name": "accessory",
+            "type": "enum",
+            "description": "Accessory configuration to set.",
+            "values": [
+              {
+                "name": "NO_ACCESSORY",
+                "description": "No accessory.",
+                "value": 0
+              },
+              {
+                "name": "STD_WHEELS",
+                "description": "Standard wheels",
+                "value": 1
+              },
+              {
+                "name": "TRUCK_WHEELS",
+                "description": "Truck wheels",
+                "value": 2
+              },
+              {
+                "name": "HULL",
+                "description": "Hull",
+                "value": 3
+              },
+              {
+                "name": "HYDROFOIL",
+                "description": "Hydrofoil",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "accessoryState",
+        "id": "27",
+        "description": "Accessories-related commands.",
+        "cmd": [
+          {
+            "name": "supportedAccessoriesListChanged",
+            "id": 0,
+            "type": "MAP_ITEM",
+            "comment": {
+              "title": "Supported accessories list",
+              "desc": "Supported accessories list.",
+              "support": "0902;0905;0906;0907;0909;090a",
+              "triggered": "at connection."
+            },
+            "arg": {
+              "name": "accessory",
+              "type": "enum",
+              "description": "Accessory configurations supported by the product.",
+              "values": [
+                {
+                  "name": "NO_ACCESSORY",
+                  "description": "No accessory.",
+                  "value": 0
+                },
+                {
+                  "name": "STD_WHEELS",
+                  "description": "Standard wheels",
+                  "value": 1
+                },
+                {
+                  "name": "TRUCK_WHEELS",
+                  "description": "Truck wheels",
+                  "value": 2
+                },
+                {
+                  "name": "HULL",
+                  "description": "Hull",
+                  "value": 3
+                },
+                {
+                  "name": "HYDROFOIL",
+                  "description": "Hydrofoil",
+                  "value": 4
+                }
+              ]
+            }
+          },
+          {
+            "name": "accessoryConfigChanged",
+            "id": 1,
+            "comment": {
+              "title": "Accessory config",
+              "desc": "Accessory config.",
+              "support": "0902;0905;0906;0907;0909;090a",
+              "triggered": "by [DeclareAccessory](#0-26-0)."
+            },
+            "description": "Accessory config response.",
+            "arg": [
+              {
+                "name": "newAccessory",
+                "type": "enum",
+                "description": "Accessory configuration reported by firmware.",
+                "values": [
+                  {
+                    "name": "UNCONFIGURED",
+                    "description": "No accessory configuration set. Controller needs to set one.",
+                    "value": 0
+                  },
+                  {
+                    "name": "NO_ACCESSORY",
+                    "description": "No accessory.",
+                    "value": 1
+                  },
+                  {
+                    "name": "STD_WHEELS",
+                    "description": "Standard wheels",
+                    "value": 2
+                  },
+                  {
+                    "name": "TRUCK_WHEELS",
+                    "description": "Truck wheels",
+                    "value": 3
+                  },
+                  {
+                    "name": "HULL",
+                    "description": "Hull",
+                    "value": 4
+                  },
+                  {
+                    "name": "HYDROFOIL",
+                    "description": "Hydrofoil",
+                    "value": 5
+                  },
+                  {
+                    "name": "IN_PROGRESS",
+                    "description": "Configuration in progress.",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "name": "error",
+                "type": "enum",
+                "description": "Error code.",
+                "values": [
+                  {
+                    "name": "OK",
+                    "description": "No error. Accessory config change successful.",
+                    "value": 0
+                  },
+                  {
+                    "name": "UNKNOWN",
+                    "description": "Cannot change accessory configuration for some reason.",
+                    "value": 1
+                  },
+                  {
+                    "name": "FLYING",
+                    "description": "Cannot change accessory configuration while flying.",
+                    "value": 2
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "accessoryConfigModificationEnabled",
+            "id": 2,
+            "comment": {
+              "title": "Accessory declaration availability",
+              "desc": "Availability to declare or not an accessory.",
+              "support": "0902;0905;0906;0907;0909;090a",
+              "triggered": "when the availability changes."
+            },
+            "arg": {
+              "name": "enabled",
+              "type": "u8",
+              "description": "1 if the modification of the accessory Config is enabled, 0 otherwise"
+            }
+          }
+        ]
+      },
+      {
+        "name": "charger",
+        "id": "28",
+        "description": "Commands sent by the controller to set charger parameters.",
+        "cmd": {
+          "name": "setMaxChargeRate",
+          "id": 0,
+          "deprecated": "true",
+          "comment": {
+            "title": "Set max charge rate",
+            "desc": "The product will inform itself the controller about its charging type (see [ChargingInfoChanged](#0-29-3)).",
+            "support": "none",
+            "result": "None."
+          },
+          "arg": {
+            "name": "rate",
+            "type": "enum",
+            "description": "The new maximum charge rate.",
+            "values": [
+              {
+                "name": "SLOW",
+                "description": "Fully charge the battery at a slow rate. Typically limit max charge current to 512 mA.",
+                "value": 0
+              },
+              {
+                "name": "MODERATE",
+                "description": "Almost fully-charge the battery at moderate rate (> 512mA) but slower than the fastest rate.",
+                "value": 1
+              },
+              {
+                "name": "FAST",
+                "description": "Almost fully-charge the battery at the highest possible rate supported by the charger.",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "chargerState",
+        "id": "29",
+        "description": "Commands sent by the firmware to advertise the charger status.",
+        "cmd": [
+          {
+            "name": "maxChargeRateChanged",
+            "id": 0,
+            "deprecated": "true",
+            "comment": {
+              "title": "Max charge rate",
+              "desc": "Max charge rate."
+            },
+            "arg": {
+              "name": "rate",
+              "type": "enum",
+              "description": "The current maximum charge rate.",
+              "values": [
+                {
+                  "name": "SLOW",
+                  "description": "Fully charge the battery at a slow rate. Typically limit max charge current to 512 mA.",
+                  "value": 0
+                },
+                {
+                  "name": "MODERATE",
+                  "description": "Almost fully-charge the battery at moderate rate (> 512 mA) but slower than the fastest rate.",
+                  "value": 1
+                },
+                {
+                  "name": "FAST",
+                  "description": "Almost fully-charge the battery at the highest possible rate supported by the charger.",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          {
+            "name": "currentChargeStateChanged",
+            "id": 1,
+            "deprecated": "true",
+            "comment": {
+              "title": "Current charge state",
+              "desc": "Current charge state."
+            },
+            "arg": [
+              {
+                "name": "status",
+                "type": "enum",
+                "description": "Charger status.",
+                "values": [
+                  {
+                    "name": "DISCHARGING",
+                    "description": "The battery is discharging.",
+                    "value": 0
+                  },
+                  {
+                    "name": "CHARGING_SLOW",
+                    "description": "The battery is charging at a slow rate about 512 mA.",
+                    "value": 1
+                  },
+                  {
+                    "name": "CHARGING_MODERATE",
+                    "description": "The battery is charging at a moderate rate (> 512 mA) but slower than the fastest rate.",
+                    "value": 2
+                  },
+                  {
+                    "name": "CHARGING_FAST",
+                    "description": "The battery is charging at a the fastest rate.",
+                    "value": 3
+                  },
+                  {
+                    "name": "BATTERY_FULL",
+                    "description": "The charger is plugged and the battery is fully charged.",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "name": "phase",
+                "type": "enum",
+                "description": "The current charging phase.",
+                "values": [
+                  {
+                    "name": "UNKNOWN",
+                    "description": "The charge phase is unknown or irrelevant.",
+                    "value": 0
+                  },
+                  {
+                    "name": "CONSTANT_CURRENT_1",
+                    "description": "First phase of the charging process. The battery is charging with constant current.",
+                    "value": 1
+                  },
+                  {
+                    "name": "CONSTANT_CURRENT_2",
+                    "description": "Second phase of the charging process. The battery is charging with constant current, with a higher voltage than the first phase.",
+                    "value": 2
+                  },
+                  {
+                    "name": "CONSTANT_VOLTAGE",
+                    "description": "Last part of the charging process. The battery is charging with a constant voltage.",
+                    "value": 3
+                  },
+                  {
+                    "name": "CHARGED",
+                    "description": "The battery is fully charged.",
+                    "value": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "lastChargeRateChanged",
+            "id": 2,
+            "deprecated": "true",
+            "comment": {
+              "title": "Last charge rate",
+              "desc": "Last charge rate."
+            },
+            "arg": {
+              "name": "rate",
+              "type": "enum",
+              "description": "The charge rate recorded by the firmware for the last charge.",
+              "values": [
+                {
+                  "name": "UNKNOWN",
+                  "description": "The last charge rate is not known.",
+                  "value": 0
+                },
+                {
+                  "name": "SLOW",
+                  "description": "Slow charge rate.",
+                  "value": 1
+                },
+                {
+                  "name": "MODERATE",
+                  "description": "Moderate charge rate.",
+                  "value": 2
+                },
+                {
+                  "name": "FAST",
+                  "description": "Fast charge rate.",
+                  "value": 3
+                }
+              ]
+            }
+          },
+          {
+            "name": "chargingInfo",
+            "id": 3,
+            "comment": {
+              "title": "Charging information",
+              "desc": "Charging information.",
+              "support": "0905;0906;0907;0909;090a",
+              "triggered": "when the product is charging or when the charging state changes."
+            },
+            "arg": [
+              {
+                "name": "phase",
+                "type": "enum",
+                "description": "The current charging phase.",
+                "values": [
+                  {
+                    "name": "UNKNOWN",
+                    "description": "The charge phase is unknown or irrelevant.",
+                    "value": 0
+                  },
+                  {
+                    "name": "CONSTANT_CURRENT_1",
+                    "description": "First phase of the charging process. The battery is charging with constant current.",
+                    "value": 1
+                  },
+                  {
+                    "name": "CONSTANT_CURRENT_2",
+                    "description": "Second phase of the charging process. The battery is charging with constant current, with a higher voltage than the first phase.",
+                    "value": 2
+                  },
+                  {
+                    "name": "CONSTANT_VOLTAGE",
+                    "description": "Last part of the charging process. The battery is charging with a constant voltage.",
+                    "value": 3
+                  },
+                  {
+                    "name": "CHARGED",
+                    "description": "The battery is fully charged.",
+                    "value": 4
+                  },
+                  {
+                    "name": "DISCHARGING",
+                    "description": "The battery is discharging; Other arguments refers to the last charge.",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "name": "rate",
+                "type": "enum",
+                "description": "The charge rate. If phase is DISCHARGING, refers to the last charge.",
+                "values": [
+                  {
+                    "name": "UNKNOWN",
+                    "description": "The charge rate is not known.",
+                    "value": 0
+                  },
+                  {
+                    "name": "SLOW",
+                    "description": "Slow charge rate.",
+                    "value": 1
+                  },
+                  {
+                    "name": "MODERATE",
+                    "description": "Moderate charge rate.",
+                    "value": 2
+                  },
+                  {
+                    "name": "FAST",
+                    "description": "Fast charge rate.",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "intensity",
+                "type": "u8",
+                "description": "The charging intensity, in dA. (12dA = 1,2A); If phase is DISCHARGING, refers to the last charge. Equals to 0 if not known."
+              },
+              {
+                "name": "fullChargingTime",
+                "type": "u8",
+                "description": "The full charging time estimated, in minute. If phase is DISCHARGING, refers to the last charge. Equals to 0 if not known."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "runState",
+        "id": "30",
+        "description": "Commands sent by the drone to inform about the run or flight state",
+        "cmd": {
+          "name": "runIdChanged",
+          "id": 0,
+          "comment": {
+            "title": "Current run id",
+            "desc": "Current run id. A run id is uniquely identifying a run or a flight. For each run is generated on the drone a file which can be used by Academy to sum up the run. Also, each medias taken during a run has a filename containing the run id.",
+            "support": "0901:3:0:1;090c;090e",
+            "triggered": "when the drone generates a new run id (generally right after a take off)."
+          },
+          "arg": {
+            "name": "runId",
+            "type": "string",
+            "description": "Id of the run"
+          }
+        }
+      }
+    ]
+  }
+}

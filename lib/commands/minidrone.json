@@ -1,0 +1,1236 @@
+{
+  "project": {
+    "name": "minidrone",
+    "id": 2,
+    "description": "All MiniDrone-only commands",
+    "categories": [
+      {
+        "name": "piloting",
+        "id": 0,
+        "description": "All commands related to piloting the MiniDrone",
+        "cmd": [
+          {
+            "name": "flatTrim",
+            "id": 0,
+            "description": "Do a flat trim"
+          },
+          {
+            "name": "takeOff",
+            "id": 1,
+            "description": "Ask the drone to take off"
+          },
+          {
+            "name": "maneuver",
+            "id": 2,
+            "buffer": "NON_ACK",
+            "description": "Ask the drone to move around.",
+            "arg": [
+              {
+                "name": "flag",
+                "type": "u8",
+                "description": "Boolean flag to activate roll/pitch movement"
+              },
+              {
+                "name": "roll",
+                "type": "i8",
+                "description": "Roll consign for the MiniDrone [-100;100]"
+              },
+              {
+                "name": "pitch",
+                "type": "i8",
+                "description": "Pitch consign for the MiniDrone [-100;100]"
+              },
+              {
+                "name": "yaw",
+                "type": "i8",
+                "description": "Yaw consign for the MiniDrone [-100;100]"
+              },
+              {
+                "name": "gaz",
+                "type": "i8",
+                "description": "Gaz consign for the MiniDrone [-100;100]"
+              },
+              {
+                "name": "timestamp",
+                "type": "u32",
+                "description": "Timestamp in milliseconds. Not an absolute time. (Typically 0 = time of connexion)."
+              }
+            ]
+          },
+          {
+            "name": "landing",
+            "id": 3,
+            "description": "Ask the MiniDrone to land"
+          },
+          {
+            "name": "emergency",
+            "id": 4,
+            "buffer": "HIGH_PRIO",
+            "timeout": "RETRY",
+            "description": "Put drone in emergency state"
+          },
+          {
+            "name": "autoTakeOffMode",
+            "id": 5,
+            "description": "Set MiniDrone automatic take off mode",
+            "arg": {
+              "name": "state",
+              "type": "u8",
+              "description": "State of automatic take off mode"
+            }
+          },
+          {
+            "name": "flyingMode",
+            "id": 6,
+            "description": "Set drone FlyingMode. Only supported by WingX",
+            "arg": {
+              "name": "mode",
+              "type": "enum",
+              "description": "Drone Flying Mode",
+              "values": [
+                {
+                  "name": "quadricopter",
+                  "description": "Fly as a quadrictopter",
+                  "value": 0
+                },
+                {
+                  "name": "plane_forward",
+                  "description": "Fly as a plane in forward mode",
+                  "value": 1
+                },
+                {
+                  "name": "plane_backward",
+                  "description": "Fly as a plane in backward mode",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          {
+            "name": "planeGearBox",
+            "id": 7,
+            "description": "Set Plane Gear Box. Only supported by WingX",
+            "arg": {
+              "name": "state",
+              "type": "enum",
+              "description": "Plane Gear Box",
+              "values": [
+                {
+                  "name": "gear_1",
+                  "description": "Gear 1. Low speed",
+                  "value": 0
+                },
+                {
+                  "name": "gear_2",
+                  "description": "Gear 2. Middle speed",
+                  "value": 1
+                },
+                {
+                  "name": "gear_3",
+                  "description": "Gear 3. High speed",
+                  "value": 2
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "pilotingState",
+        "id": 3,
+        "description": "Occasional information",
+        "cmd": [
+          {
+            "name": "flatTrimChanged",
+            "id": 0,
+            "description": "MiniDrone send flat trim was correctly processed"
+          },
+          {
+            "name": "flyingStateChanged",
+            "id": 1,
+            "description": "Drone flying state changed",
+            "arg": {
+              "name": "state",
+              "type": "enum",
+              "description": "Drone flying state",
+              "values": [
+                {
+                  "name": "landed",
+                  "description": "Landed state",
+                  "value": 0
+                },
+                {
+                  "name": "takingoff",
+                  "description": "Taking off state",
+                  "value": 1
+                },
+                {
+                  "name": "hovering",
+                  "description": "Hovering state",
+                  "value": 2
+                },
+                {
+                  "name": "flying",
+                  "description": "Flying state",
+                  "value": 3
+                },
+                {
+                  "name": "landing",
+                  "description": "Landing state",
+                  "value": 4
+                },
+                {
+                  "name": "emergency",
+                  "description": "Emergency state",
+                  "value": 5
+                },
+                {
+                  "name": "rolling",
+                  "description": "Rolling state",
+                  "value": 6
+                },
+                {
+                  "name": "init",
+                  "description": "Initializing state (user should let the drone steady for a while)",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "name": "alertStateChanged",
+            "id": 2,
+            "description": "Drone alert state changed",
+            "arg": {
+              "name": "state",
+              "type": "enum",
+              "description": "Drone alert state",
+              "values": [
+                {
+                  "name": "none",
+                  "description": "No alert",
+                  "value": 0
+                },
+                {
+                  "name": "user",
+                  "description": "User emergency alert",
+                  "value": 1
+                },
+                {
+                  "name": "cut_out",
+                  "description": "Cut out alert",
+                  "value": 2
+                },
+                {
+                  "name": "critical_battery",
+                  "description": "Critical battery alert",
+                  "value": 3
+                },
+                {
+                  "name": "low_battery",
+                  "description": "Low battery alert",
+                  "value": 4
+                }
+              ]
+            }
+          },
+          {
+            "name": "autoTakeOffModeChanged",
+            "id": 3,
+            "description": "Set MiniDrone automatic take off mode",
+            "arg": {
+              "name": "state",
+              "type": "u8",
+              "description": "State of automatic take off mode"
+            }
+          },
+          {
+            "name": "flyingModeChanged",
+            "id": 4,
+            "description": "FlyingMode changed. Only supported by WingX",
+            "arg": {
+              "name": "mode",
+              "type": "enum",
+              "description": "Drone Flying Mode",
+              "values": [
+                {
+                  "name": "quadricopter",
+                  "description": "Fly as a quadrictopter",
+                  "value": 0
+                },
+                {
+                  "name": "plane_forward",
+                  "description": "Fly as a plane in forward mode",
+                  "value": 1
+                },
+                {
+                  "name": "plane_backward",
+                  "description": "Fly as a plane in backward mode",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          {
+            "name": "planeGearBoxChanged",
+            "id": 5,
+            "description": "Plane Gear Box changed. Only supported by WingX",
+            "arg": {
+              "name": "state",
+              "type": "enum",
+              "description": "Plane Gear Box",
+              "values": [
+                {
+                  "name": "gear_1",
+                  "description": "Gear 1. Low speed",
+                  "value": 0
+                },
+                {
+                  "name": "gear_2",
+                  "description": "Gear 2. Middle speed",
+                  "value": 1
+                },
+                {
+                  "name": "gear_3",
+                  "description": "Gear 3. High speed",
+                  "value": 2
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "animations",
+        "id": 4,
+        "description": "Animation commands",
+        "cmd": [
+          {
+            "name": "flip",
+            "id": 0,
+            "description": "Make a flip",
+            "arg": {
+              "name": "direction",
+              "type": "enum",
+              "description": "Direction for the flip",
+              "values": [
+                {
+                  "name": "front",
+                  "description": "Flip direction front",
+                  "value": 0
+                },
+                {
+                  "name": "back",
+                  "description": "Flip direction back",
+                  "value": 1
+                },
+                {
+                  "name": "right",
+                  "description": "Flip direction right",
+                  "value": 2
+                },
+                {
+                  "name": "left",
+                  "description": "Flip direction left",
+                  "value": 3
+                }
+              ]
+            }
+          },
+          {
+            "name": "cap",
+            "id": 1,
+            "description": "Change the product cap",
+            "arg": {
+              "name": "offset",
+              "type": "i16",
+              "description": "Change the cap with offset angle [-180;180]"
+            }
+          }
+        ]
+      },
+      {
+        "name": "mediaRecord",
+        "id": 6,
+        "description": "Media recording management",
+        "cmd": [
+          {
+            "name": "picture",
+            "id": 0,
+            "description": "Take picture",
+            "arg": {
+              "name": "mass_storage_id",
+              "type": "u8",
+              "description": "Mass storage id to take picture"
+            }
+          },
+          {
+            "name": "pictureV2",
+            "id": 1,
+            "description": "Take picture"
+          }
+        ]
+      },
+      {
+        "name": "mediaRecordState",
+        "id": 7,
+        "description": "State of media recording",
+        "cmd": [
+          {
+            "name": "pictureStateChanged",
+            "id": 0,
+            "description": "State of picture recording",
+            "arg": [
+              {
+                "name": "state",
+                "type": "u8",
+                "description": "1 if picture has been taken, 0 otherwise"
+              },
+              {
+                "name": "mass_storage_id",
+                "type": "u8",
+                "description": "Mass storage id to record"
+              }
+            ]
+          },
+          {
+            "name": "pictureStateChangedV2",
+            "id": 1,
+            "description": "State of device picture recording changed",
+            "arg": [
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "State of device picture recording",
+                "values": [
+                  {
+                    "name": "ready",
+                    "description": "The picture recording is ready",
+                    "value": 0
+                  },
+                  {
+                    "name": "busy",
+                    "description": "The picture recording is busy",
+                    "value": 1
+                  },
+                  {
+                    "name": "notAvailable",
+                    "description": "The picture recording is not available",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "name": "error",
+                "type": "enum",
+                "description": "Error to explain the state",
+                "values": [
+                  {
+                    "name": "ok",
+                    "description": "No Error",
+                    "value": 0
+                  },
+                  {
+                    "name": "unknown",
+                    "description": "Unknown generic error",
+                    "value": 1
+                  },
+                  {
+                    "name": "camera_ko",
+                    "description": "Picture camera is out of order",
+                    "value": 2
+                  },
+                  {
+                    "name": "memoryFull",
+                    "description": "Memory full ; cannot save one additional picture",
+                    "value": 3
+                  },
+                  {
+                    "name": "lowBattery",
+                    "description": "Battery is too low to start/keep recording.",
+                    "value": 4
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "mediaRecordEvent",
+        "id": 2,
+        "description": "Events of media recording",
+        "cmd": {
+          "name": "pictureEventChanged",
+          "id": 0,
+          "content": "NOTIFICATION",
+          "description": "Event of picture recording",
+          "arg": [
+            {
+              "name": "event",
+              "type": "enum",
+              "description": "Last event of picture recording",
+              "values": [
+                {
+                  "name": "taken",
+                  "description": "Picture taken and saved",
+                  "value": 0
+                },
+                {
+                  "name": "failed",
+                  "description": "Picture failed",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "name": "error",
+              "type": "enum",
+              "description": "Error to explain the event",
+              "values": [
+                {
+                  "name": "ok",
+                  "description": "No Error",
+                  "value": 0
+                },
+                {
+                  "name": "unknown",
+                  "description": "Unknown generic error ; only when state is failed",
+                  "value": 1
+                },
+                {
+                  "name": "busy",
+                  "description": "Picture recording is busy ; only when state is failed",
+                  "value": 2
+                },
+                {
+                  "name": "notAvailable",
+                  "description": "Picture recording not available ; only when state is failed",
+                  "value": 3
+                },
+                {
+                  "name": "memoryFull",
+                  "description": "Memory full ; only when state is failed",
+                  "value": 4
+                },
+                {
+                  "name": "lowBattery",
+                  "description": "Battery is too low to record.",
+                  "value": 5
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "pilotingSettings",
+        "id": 8,
+        "description": "Piloting Settings commands",
+        "cmd": [
+          {
+            "name": "maxAltitude",
+            "id": 0,
+            "description": "Set Max Altitude",
+            "arg": {
+              "name": "current",
+              "type": "float",
+              "description": "Current altitude max in m"
+            }
+          },
+          {
+            "name": "maxTilt",
+            "id": 1,
+            "description": "Set Max Tilt",
+            "arg": {
+              "name": "current",
+              "type": "float",
+              "description": "Current tilt max in degree"
+            }
+          },
+          {
+            "name": "bankedTurn",
+            "id": 2,
+            "comment": {
+              "title": "Set banked turn mode",
+              "desc": "Set banked turn mode. When banked turn mode is enabled, the drone will use yaw values from the piloting command to infer with roll and pitch on the drone when its horizontal speed is not null.",
+              "support": "none",
+              "result": "The banked turn mode is enabled or disabled. Then, event [BankedTurnMode](#2-9-2) is triggered."
+            },
+            "arg": {
+              "name": "value",
+              "type": "u8",
+              "description": "1 to enable, 0 to disable"
+            }
+          }
+        ]
+      },
+      {
+        "name": "pilotingSettingsState",
+        "id": 9,
+        "description": "Piloting Settings state from product",
+        "cmd": [
+          {
+            "name": "maxAltitudeChanged",
+            "id": 0,
+            "description": "Max Altitude sent by product",
+            "arg": [
+              {
+                "name": "current",
+                "type": "float",
+                "description": "Current altitude max"
+              },
+              {
+                "name": "min",
+                "type": "float",
+                "description": "Range min of altitude"
+              },
+              {
+                "name": "max",
+                "type": "float",
+                "description": "Range max of altitude"
+              }
+            ]
+          },
+          {
+            "name": "maxTiltChanged",
+            "id": 1,
+            "description": "Max tilt sent by product",
+            "arg": [
+              {
+                "name": "current",
+                "type": "float",
+                "description": "Current max tilt"
+              },
+              {
+                "name": "min",
+                "type": "float",
+                "description": "Range min of tilt"
+              },
+              {
+                "name": "max",
+                "type": "float",
+                "description": "Range max of tilt"
+              }
+            ]
+          },
+          {
+            "name": "bankedTurnChanged",
+            "id": 2,
+            "comment": {
+              "title": "Banked Turn mode",
+              "desc": "Banked Turn mode. If banked turn mode is enabled, the drone will use yaw values from the piloting command to infer with roll and pitch on the drone when its horizontal speed is not null.",
+              "support": "none",
+              "triggered": "by [SetBankedTurnMode](#2-8-2)."
+            },
+            "arg": {
+              "name": "state",
+              "type": "u8",
+              "description": "1 if enabled, 0 if disabled"
+            }
+          }
+        ]
+      },
+      {
+        "name": "speedSettings",
+        "id": 1,
+        "description": "Speed Settings commands",
+        "cmd": [
+          {
+            "name": "maxVerticalSpeed",
+            "id": 0,
+            "description": "Set Max Vertical speed",
+            "arg": {
+              "name": "current",
+              "type": "float",
+              "description": "Current max vertical speed in m/s"
+            }
+          },
+          {
+            "name": "maxRotationSpeed",
+            "id": 1,
+            "description": "Set Max Rotation speed",
+            "arg": {
+              "name": "current",
+              "type": "float",
+              "description": "Current max rotation speed in degree/s"
+            }
+          },
+          {
+            "name": "wheels",
+            "id": 2,
+            "description": "Presence of wheels",
+            "arg": {
+              "name": "present",
+              "type": "u8",
+              "description": "1 if present, 0 if not present"
+            }
+          },
+          {
+            "name": "maxHorizontalSpeed",
+            "id": 3,
+            "description": "Set Max Horizontal speed (only used in case where PilotingSettings_MaxTilt is not used like in hydrofoil mode)",
+            "arg": {
+              "name": "current",
+              "type": "float",
+              "description": "Current max Horizontal speed in m/s"
+            }
+          },
+          {
+            "name": "maxPlaneModeRotationSpeed",
+            "id": 4,
+            "description": "Set max plane mode rotation speed (only available for wing x)",
+            "arg": {
+              "name": "current",
+              "type": "float",
+              "description": "Current max plane mode rotation speed in degree/s"
+            }
+          }
+        ]
+      },
+      {
+        "name": "speedSettingsState",
+        "id": 5,
+        "description": "Speed Settings state from product",
+        "cmd": [
+          {
+            "name": "maxVerticalSpeedChanged",
+            "id": 0,
+            "description": "Max vertical speed sent by product",
+            "arg": [
+              {
+                "name": "current",
+                "type": "float",
+                "description": "Current max vertical speed in m/s"
+              },
+              {
+                "name": "min",
+                "type": "float",
+                "description": "Range min of vertical speed"
+              },
+              {
+                "name": "max",
+                "type": "float",
+                "description": "Range max of vertical speed"
+              }
+            ]
+          },
+          {
+            "name": "maxRotationSpeedChanged",
+            "id": 1,
+            "description": "Max rotation speed sent by product",
+            "arg": [
+              {
+                "name": "current",
+                "type": "float",
+                "description": "Current max rotation speed in degree/s"
+              },
+              {
+                "name": "min",
+                "type": "float",
+                "description": "Range min of rotation speed"
+              },
+              {
+                "name": "max",
+                "type": "float",
+                "description": "Range max of rotation speed"
+              }
+            ]
+          },
+          {
+            "name": "wheelsChanged",
+            "id": 2,
+            "description": "Presence of wheels sent by product",
+            "arg": {
+              "name": "present",
+              "type": "u8",
+              "description": "1 if present, 0 if not present"
+            }
+          },
+          {
+            "name": "maxHorizontalSpeedChanged",
+            "id": 3,
+            "description": "Max horizontal speed sent by product (only used in case where PilotingSettings_MaxTilt is not used like in hydrofoil mode)",
+            "arg": [
+              {
+                "name": "current",
+                "type": "float",
+                "description": "Current max horizontal speed in m/s"
+              },
+              {
+                "name": "min",
+                "type": "float",
+                "description": "Range min of horizontal speed"
+              },
+              {
+                "name": "max",
+                "type": "float",
+                "description": "Range max of horizontal speed"
+              }
+            ]
+          },
+          {
+            "name": "maxPlaneModeRotationSpeedChanged",
+            "id": 4,
+            "description": "Max plane rotation speed sent by product (only available for wing x)",
+            "arg": [
+              {
+                "name": "current",
+                "type": "float",
+                "description": "Current max plane mode rotation speed in degree/s"
+              },
+              {
+                "name": "min",
+                "type": "float",
+                "description": "Range min of plane mode rotation speed"
+              },
+              {
+                "name": "max",
+                "type": "float",
+                "description": "Range max of plane mode rotation speed"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "settings",
+        "id": "10",
+        "description": "Settings commands",
+        "cmd": {
+          "name": "cutOutMode",
+          "id": 0,
+          "description": "Set MiniDrone cut out mode",
+          "arg": {
+            "name": "enable",
+            "type": "u8",
+            "description": "Enable cut out mode (1 if is activate, 0 otherwise)"
+          }
+        }
+      },
+      {
+        "name": "settingsState",
+        "id": "11",
+        "description": "Settings state from product",
+        "cmd": [
+          {
+            "name": "productMotorsVersionChanged",
+            "id": 0,
+            "description": "Product Motors versions",
+            "arg": [
+              {
+                "name": "motor",
+                "type": "u8",
+                "description": "Product Motor number [1 - 4]"
+              },
+              {
+                "name": "type",
+                "type": "string",
+                "description": "Product Motor type"
+              },
+              {
+                "name": "software",
+                "type": "string",
+                "description": "Product Motors software version"
+              },
+              {
+                "name": "hardware",
+                "type": "string",
+                "description": "Product Motors hardware version"
+              }
+            ]
+          },
+          {
+            "name": "productInertialVersionChanged",
+            "id": 1,
+            "description": "Product Inertial versions",
+            "arg": [
+              {
+                "name": "software",
+                "type": "string",
+                "description": "Product Inertial software version"
+              },
+              {
+                "name": "hardware",
+                "type": "string",
+                "description": "Product Inertial hardware version"
+              }
+            ]
+          },
+          {
+            "name": "cutOutModeChanged",
+            "id": 2,
+            "description": "MiniDrone cut out mode",
+            "arg": {
+              "name": "enable",
+              "type": "u8",
+              "description": "State of cut out mode (1 if is activate, 0 otherwise)"
+            }
+          }
+        ]
+      },
+      {
+        "name": "floodControlState",
+        "id": "12",
+        "description": "Settings state from product",
+        "cmd": {
+          "name": "floodControlChanged",
+          "id": 0,
+          "description": "Flood control regulation",
+          "arg": {
+            "name": "delay",
+            "type": "u16",
+            "description": "Delay (in ms) between two PCMD"
+          }
+        }
+      },
+      {
+        "name": "gps",
+        "id": "13",
+        "description": "GPS related commands",
+        "cmd": [
+          {
+            "name": "controllerLatitudeForRun",
+            "id": 0,
+            "description": "Set the controller latitude for a run.",
+            "arg": {
+              "name": "latitude",
+              "type": "double",
+              "description": "Controller latitude in decimal degrees"
+            }
+          },
+          {
+            "name": "controllerLongitudeForRun",
+            "id": 1,
+            "description": "Set the controller longitude for a run.",
+            "arg": {
+              "name": "longitude",
+              "type": "double",
+              "description": "Controller longitude in decimal degrees"
+            }
+          }
+        ]
+      },
+      {
+        "name": "configuration",
+        "id": "14",
+        "description": "Configuration related commands",
+        "cmd": [
+          {
+            "name": "controllerType",
+            "id": 0,
+            "description": "Set the controller type.",
+            "arg": {
+              "name": "type",
+              "type": "string",
+              "description": "Controller type like iOS or Android"
+            }
+          },
+          {
+            "name": "controllerName",
+            "id": 1,
+            "description": "Set the controller name.",
+            "arg": {
+              "name": "name",
+              "type": "string",
+              "description": "Controller name like com.parrot.freeflight3"
+            }
+          }
+        ]
+      },
+      {
+        "name": "usbAccessoryState",
+        "id": "15",
+        "description": "USB Accessories state commands.",
+        "cmd": [
+          {
+            "name": "lightState",
+            "id": 0,
+            "type": "MAP_ITEM",
+            "description": "USB Light accessory state cmd.",
+            "arg": [
+              {
+                "name": "id",
+                "type": "u8",
+                "description": "Usb accessory id"
+              },
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "Usb Light state.",
+                "values": [
+                  {
+                    "name": "FIXED",
+                    "description": "Fixed state at given intensity.",
+                    "value": 0
+                  },
+                  {
+                    "name": "BLINKED",
+                    "description": "Blinked state.",
+                    "value": 1
+                  },
+                  {
+                    "name": "OSCILLATED",
+                    "description": "Oscillated state.",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "name": "intensity",
+                "type": "u8",
+                "description": "Light intensity from 0 (OFF) to 100 (Max intensity). Only used in FIXED state."
+              },
+              {
+                "name": "listFlags",
+                "type": "u8",
+                "description": "List entry attribute Bit field. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. 0x08: Remove: This value should be removed from the existing list."
+              }
+            ]
+          },
+          {
+            "name": "clawState",
+            "id": 1,
+            "type": "MAP_ITEM",
+            "description": "USB Claw accessory state cmd.",
+            "arg": [
+              {
+                "name": "id",
+                "type": "u8",
+                "description": "Usb accessory id"
+              },
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "Usb Claw state.",
+                "values": [
+                  {
+                    "name": "OPENED",
+                    "description": "Claw is fully opened.",
+                    "value": 0
+                  },
+                  {
+                    "name": "OPENING",
+                    "description": "Claw open in progress.",
+                    "value": 1
+                  },
+                  {
+                    "name": "CLOSED",
+                    "description": "Claw is fully closed.",
+                    "value": 2
+                  },
+                  {
+                    "name": "CLOSING",
+                    "description": "Claw close in progress.",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "name": "listFlags",
+                "type": "u8",
+                "description": "List entry attribute Bitfield. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. 0x08: Remove: This value should be removed from the existing list."
+              }
+            ]
+          },
+          {
+            "name": "gunState",
+            "id": 2,
+            "type": "MAP_ITEM",
+            "description": "USB Gun accessory state cmd.",
+            "arg": [
+              {
+                "name": "id",
+                "type": "u8",
+                "description": "Usb accessory id."
+              },
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "USB Claw state.",
+                "values": [
+                  {
+                    "name": "READY",
+                    "description": "Gun is ready to fire.",
+                    "value": 0
+                  },
+                  {
+                    "name": "BUSY",
+                    "description": "Gun is busy (ie not ready to fire).",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "listFlags",
+                "type": "u8",
+                "description": "List entry attribute Bitfield. 0x01: First: indicate it's the first element of the list. 0x02: Last: indicate it's the last element of the list. 0x04: Empty: indicate the list is empty (implies First/Last). All other arguments should be ignored. 0x08: Remove: This value should be removed from the existing list."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "usbAccessory",
+        "id": "16",
+        "description": "USB Accessories control commands.",
+        "cmd": [
+          {
+            "name": "lightControl",
+            "id": 0,
+            "description": "USB Light control cmd.",
+            "arg": [
+              {
+                "name": "id",
+                "type": "u8",
+                "description": "Usb accessory id"
+              },
+              {
+                "name": "mode",
+                "type": "enum",
+                "description": "Usb Light mode.",
+                "values": [
+                  {
+                    "name": "FIXED",
+                    "description": "Turn light in fixed state at a given intensity.",
+                    "value": 0
+                  },
+                  {
+                    "name": "BLINKED",
+                    "description": "Turn light in blinked state.",
+                    "value": 1
+                  },
+                  {
+                    "name": "OSCILLATED",
+                    "description": "Turn light in oscillated state.",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "name": "intensity",
+                "type": "u8",
+                "description": "Light intensity from 0 (OFF) to 100 (Max intensity). Only used in FIXED mode."
+              }
+            ]
+          },
+          {
+            "name": "clawControl",
+            "id": 1,
+            "description": "USB Claw control cmd.",
+            "arg": [
+              {
+                "name": "id",
+                "type": "u8",
+                "description": "Usb accessory id."
+              },
+              {
+                "name": "action",
+                "type": "enum",
+                "description": "USB Claw action.",
+                "values": [
+                  {
+                    "name": "OPEN",
+                    "description": "Open Claw.",
+                    "value": 0
+                  },
+                  {
+                    "name": "CLOSE",
+                    "description": "Close Claw.",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "gunControl",
+            "id": 2,
+            "description": "USB Gun control cmd.",
+            "arg": [
+              {
+                "name": "id",
+                "type": "u8",
+                "description": "Usb accessory id"
+              },
+              {
+                "name": "action",
+                "type": "enum",
+                "description": "USB Gun action.",
+                "values": {
+                  "name": "FIRE",
+                  "description": "Fire.",
+                  "value": 0
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "remoteController",
+        "id": "17",
+        "description": "Remote controller related commands.",
+        "cmd": {
+          "name": "setPairedRemote",
+          "id": 0,
+          "description": "Send the address of the remote controller on which the drone should be paired. This is used to pair a Tinos controller Where mac address: MSB-MID-LSB.",
+          "arg": [
+            {
+              "name": "msbMac",
+              "type": "u16",
+              "description": "2 most significant bytes of mac address"
+            },
+            {
+              "name": "midMac",
+              "type": "u16",
+              "description": "2 middle bytes of mac address"
+            },
+            {
+              "name": "lsbMac",
+              "type": "u16",
+              "description": "2 least significant bytes of mac address"
+            }
+          ]
+        }
+      },
+      {
+        "name": "navigationDataState",
+        "id": "18",
+        "description": "Navigation Data.",
+        "cmd": {
+          "name": "dronePosition",
+          "id": 0,
+          "description": "Get the drone position from takeoff point (0, 0, 0, 0). The orthonormal basis is fixed at this point. The axis are oriented the following way : * X : From the rear of the drone to its front. * Y : From the right of the drone to its left. * Z : Orthogonal to X and Y and oriented upward. * Psi : From 180 to -180 in the clockwise direction,",
+          "arg": [
+            {
+              "name": "posx",
+              "type": "float",
+              "description": "Position on X axis, relative to take off position (cm)."
+            },
+            {
+              "name": "posy",
+              "type": "float",
+              "description": "Position on Y axis, relative to take off position (cm)."
+            },
+            {
+              "name": "posz",
+              "type": "i16",
+              "description": "Position on Z axis, relative to take off position (cm)."
+            },
+            {
+              "name": "psi",
+              "type": "i16",
+              "description": "Psi angle [-180; 180], relative to take off orientation."
+            },
+            {
+              "name": "ts",
+              "type": "i16",
+              "description": "Time elapsed since last data send (ms)."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

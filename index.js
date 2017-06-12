@@ -1,3 +1,3 @@
-import { MiniDroneView } from './src/views/MiniDroneView';
+var MiniDroneView = require('./lib/views/MiniDroneView');
 
-exports.MiniDrone = MiniDroneView;
+module.exports = new MiniDroneView.MiniDroneView();
