@@ -30,47 +30,13 @@ npm install dronejs
 To connect to drone, you need to instantiate the MiniDrone class and then call its **connect** method.
 
 ```
-import { MiniDrone }    from 'dronejs';
+var minidrone = require('dronejs');
 
-class SimpleFlight {
-
-    constructor() {
-        this.minidrone = new MiniDrone();
-        this.keypress = require('keypress');
-
-        this.keypress(process.stdin);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-
-        process.stdin.on('keypress', (ch, key) => {
-            if (key && key.ctrl && key.name == 'c') {
-                this.minidrone
-                    .disconnect()
-                    .then(() => process.exit(0))
-                    .catch (e => {
-                        console.log(e);
-                        process.exit(0);
-                    });
-            }
+minidrone.connect('RS_')
+        .then()
+        .catch((e) => {
+            console.log('Error occurred: ' + e);
         });
-    }
-
-    connect() {
-        this.minidrone
-            .connect('RS_')
-            .then(response => {
-                if (response === 'success') {
-                    console.log('drone connected successfully...');
-                }
-            })
-            .catch((e) => {
-                console.log('Error occurred: ' + e);
-            });
-    }
-}
-
-let simpleFlight = new SimpleFlight();
-simpleFlight.connect();
 ```
 
 ### Setup Navdata Stream
@@ -78,267 +44,110 @@ simpleFlight.connect();
 To listen to the navigation data from the drone, you need to call the **getNavDataStream** function and then subscribe to the object returned from it.
 
 ```
-import { MiniDrone }    from 'dronejs';
+var minidrone = require('dronejs');
 
-class SimpleFlight {
+var navDataStream = minidrone.getNavDataStream();
+navDataStream.subscribe((data) => {
+        console.log(data);
+    },
+    err => debug(err),
+    () => debug('complete'));
 
-    constructor() {
-        this.minidrone = new MiniDrone();
 
-        this.keypress = require('keypress');
-
-        this.keypress(process.stdin);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-
-        process.stdin.on('keypress', (ch, key) => {
-            if (key && key.ctrl && key.name == 'c') {
-                this.minidrone
-                    .disconnect()
-                    .then(() => process.exit(0))
-                    .catch (e => {
-                        console.log(e);
-                        process.exit(0);
-                    });
-            }
-        });
-    }
-
-    setupDataStream() {
-        let navDataStream = this.minidrone.getNavDataStream();
-        navDataStream.subscribe((data) => {
-                        console.log(data);
-                    },
-                    err => debug(err),
-                    () => debug('complete'));
-    }
-
-    connect() {
-        this.minidrone
-            .connect('RS_')
-            .then(() => this.minidrone.checkAllStates())
-            .then()
-            .catch((e) => {
-                console.log('Error occurred: ' + e);
-            });
-    }
-}
-
-let simpleFlight = new SimpleFlight();
-simpleFlight.setupDataStream();
-simpleFlight.connect();
+minidrone.connect('RS_')
+    .then(() => minidrone.checkAllStates())
+    .then()
+    .catch((e) => {
+        console.log('Error occurred: ' + e);
+    });
 ```
 
 ### Basic Maneuvers
 
 ```
-import { MiniDrone }    from 'dronejs';
+var minidrone = require('dronejs');
 
-class SimpleFlight {
+var navDataStream = minidrone.getNavDataStream();
+navDataStream.subscribe((data) => {
+        console.log(data);
+    },
+    err => debug(err),
+    () => debug('complete'));
 
-    constructor() {
-        this.minidrone = new MiniDrone();
 
-        this.keypress = require('keypress');
-
-        this.keypress(process.stdin);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-
-        process.stdin.on('keypress', (ch, key) => {
-            if (key && key.ctrl && key.name == 'c') {
-                this.minidrone
-                    .disconnect()
-                    .then(() => process.exit(0))
-                    .catch (e => {
-                        console.log(e);
-                        process.exit(0);
-                    });
-            }
-        });
-    }
-
-    setupDataStream() {
-        let navDataStream = this.minidrone.getNavDataStream();
-        navDataStream.subscribe((data) => {
-                console.log(data);
-            },
-            err => debug(err),
-            () => debug('complete'));
-    }
-
-    run() {
-        this.minidrone
-            .connect('RS_')
-            .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.takeOff())
-            .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.forward(50, 5))
-            .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.land())
-            .then()
-            .catch(e => {
-                console.log('Error occurred: ' + e);
-                this.minidrone.land();
-            });
-    }
-}
-
-let simpleFlight = new SimpleFlight();
-simpleFlight.setupDataStream();
-simpleFlight.run();
+minidrone.connect('RS_')
+    .then(() => minidrone.flatTrim())
+    .then(() => minidrone.takeOff())
+    .then(() => minidrone.flatTrim())
+    .then(() => minidrone.forward(50, 5))
+    .then(() => minidrone.flatTrim())
+    .then(() => minidrone.land())
+    .then()
+    .catch((e) => {
+        console.log('Error occurred: ' + e);
+    });
 ```
 
 ### Take Picture
 
 ```
-class SimpleFlight {
+var minidrone = require('dronejs');
 
-    constructor() {
-        this.minidrone = new MiniDrone();
-        this.keypress = require('keypress');
+var navDataStream = minidrone.getNavDataStream();
+navDataStream.subscribe((data) => {
+        console.log(data);
+    },
+    err => debug(err),
+    () => debug('complete'));
 
-        this.keypress(process.stdin);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
 
-        process.stdin.on('keypress', (ch, key) => {
-            if (key && key.ctrl && key.name == 'c') {
-                this.minidrone
-                    .disconnect()
-                    .then(() => process.exit(0))
-                    .catch (e => {
-                        console.log(e);
-                        process.exit(0);
-                    });
-            }
-        });
-    }
-
-    setupDataStream() {
-        let navDataStream = this.minidrone.getNavDataStream();
-        navDataStream.subscribe((data) => {
-                console.log(data);
-            },
-            err => debug(err),
-            () => debug('complete'));
-    }
-
-    run() {
-        this.minidrone
-            .connect('RS_')
-            .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.takeOff())
-            .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.takePicture())
-            .then(() => this.minidrone.flatTrim())
-            .then(() => this.minidrone.land())
-            .then()
-            .catch(e => {
-                console.log('Error occurred: ' + e);
-            });
-    }
-}
-
-let simpleFlight = new SimpleFlight();
-simpleFlight.setupDataStream();
-simpleFlight.run();
+minidrone.connect('RS_')
+    .then(() => minidrone.flatTrim())
+    .then(() => minidrone.takeOff())
+    .then(() => minidrone.flatTrim())
+    .then(() => minidrone.takePicture())
+    .then(() => minidrone.flatTrim())
+    .then(() => minidrone.land())
+    .then()
+    .catch((e) => {
+        console.log('Error occurred: ' + e);
+    });
 ```
 
 ### Download Pictures
 
 ```
-import { MiniDrone }    from 'dronejs';
+var minidrone = require('dronejs');
 
-class SimpleFlight {
-
-    constructor() {
-        this.minidrone = new MiniDrone();
-        this.keypress = require('keypress');
-
-        this.keypress(process.stdin);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-
-        process.stdin.on('keypress', (ch, key) => {
-            if (key && key.ctrl && key.name == 'c') {
-                this.minidrone
-                    .disconnect()
-                    .then(() => process.exit(0))
-                    .catch (e => {
-                        console.log(e);
-                        process.exit(0);
-                    });
-            }
-        });
-    }
-
-    run() {
-        this.minidrone
-            .connect('RS_')
-            .then(() => this.minidrone.listAllPictures())
-            .then(pictures => this.minidrone.downloadPicture(pictures[0], 'output'))
-            .then(response => {
-                if (response === 'success') {
-                    console.log('picture downloaded successfully...');
-                }
-            })
-            .catch(e => {
-                console.log('Error occurred: ' + e);
-            });
-    }
-}
-
-let simpleFlight = new SimpleFlight();
-simpleFlight.run();
+minidrone.connect('RS_')
+    .then(() => minidrone.listAllPictures())
+    .then(pictures => minidrone.downloadPicture(pictures[0], 'output'))
+    .then(response => {
+        if (response === 'success') {
+            console.log('picture downloaded successfully...');
+        }
+    })
+    .catch((e) => {
+        console.log('Error occurred: ' + e);
+    });
 ```
 
 ### Delete Picture
 
 ```
-import { MiniDrone }    from 'dronejs';
+var minidrone = require('dronejs');
 
-class SimpleFlight {
-
-    constructor() {
-        this.minidrone = new MiniDrone();
-        this.keypress = require('keypress');
-
-        this.keypress(process.stdin);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-
-        process.stdin.on('keypress', (ch, key) => {
-            if (key && key.ctrl && key.name == 'c') {
-                this.minidrone
-                    .disconnect()
-                    .then(() => process.exit(0))
-                    .catch (e => {
-                        console.log(e);
-                        process.exit(0);
-                    });
-            }
-        });
-    }
-
-    run() {
-        this.minidrone
-            .connect('RS_')
-            .then(() => this.minidrone.listAllPictures())
-            .then(pictures => this.minidrone.deletePicture(pictures[0]))
-            .then(response => {
-                if (response === 'success') {
-                    console.log('picture deleted successfully...');
-                }
-            })
-            .catch(e => {
-                console.log('Error occurred: ' + e);
-            });
-    }
-}
-
-let simpleFlight = new SimpleFlight();
-simpleFlight.run();
+minidrone.connect('RS_')
+    .then(() => minidrone.listAllPictures())
+    .then(pictures => minidrone.deletePicture(pictures[0]))
+    .then(response => {
+        if (response === 'success') {
+            console.log('picture deleted successfully...');
+        }
+    })
+    .catch((e) => {
+        console.log('Error occurred: ' + e);
+    });
 ```
 
 ## API
