@@ -3,10 +3,11 @@
   "version": "1.4.0",
   "description": "A Node.js based library for controlling a Parrot Rolling Spider drone",
   "main": "index.js",
-  "debugging": true,
+  "debugging": false,
   "scripts": {
     "test": "mocha --compilers js:babel-register --require babel-polyfill --recursive ./test/integration/MiniDroneSpec.js --timeout 500000",
-    "start": "mocha --compilers js:babel-register --require babel-polyfill --reporter spec --inspect --debug-brk ./test/integration/MiniDroneSpec.js"
+    "start": "mocha --compilers js:babel-register --require babel-polyfill --reporter spec --inspect --debug-brk ./test/integration/MiniDroneSpec.js",
+    "build": "babel src --out-dir lib --copy-files"
   },
   "repository": {
     "type": "git",
