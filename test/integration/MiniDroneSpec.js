@@ -33,55 +33,71 @@ describe("MiniDroneView", () => {
         });
     });
 
-    // describe("test listAllPictures", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneView.listAllPictures().then(data => {
-    //                     debug(data);
-    //                     done();
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
+    describe("test listAllPictures", () => {
+        it("test when method called", (done) => {
+            miniDroneView.connect('RS_').then(value => {
+                if (value === 'success') {
+                    miniDroneView.listAllPictures().then(data => {
+                        debug(data);
+                        done();
+                    });
+                }
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+        });
+    });
 
-    // describe("test downloadPicture", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView
-    //             .connect('RS_')
-    //             .then(() => miniDroneView.listAllPictures())
-    //             .then(pictures => miniDroneView.downloadPicture(pictures[0], 'output'))
-    //             .then(response => {
-    //                 if (response === 'success') {
-    //                     console.log('picture downloaded successfully...');
-    //                 }
-    //             })
-    //             .catch(e => {
-    //                 console.log('Error occurred: ' + e);
-    //             });
-    //     });
-    // });
+    describe("test downloadPicture", () => {
+        it("test when method called", (done) => {
+            let picList = null;
+            miniDroneView
+                .connect('RS_')
+                .then(() => miniDroneView.listAllPictures())
+                .then(pictures => {
+                    picList = pictures;
+                    return miniDroneView.downloadPicture(picList[0], 'output');
+                })
+                .then(response => {
+                    if (response === 'success') {
+                        console.log('first pic downloaded successfully...');
+                        return miniDroneView.downloadPicture(picList[1], 'output');
+                    }
+                })
+                .then(response => {
+                    if (response === 'success') {
+                        console.log('second pic downloaded successfully...');
+                        return miniDroneView.downloadPicture(picList[2], 'output');
+                    }
+                })
+                .then(response => {
+                    if (response === 'success') {
+                        console.log('third pic downloaded successfully...');
+                    }
+                })
+                .catch(e => {
+                    console.log('Error occurred: ' + e);
+                });
+        });
+    });
 
-    // describe("test deletePicture", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneView.deletePicture('Rolling_Spider_1970-01-01T000025+0000_.jpg').then(response => {
-    //                     if (response === 'success') {
-    //                         done();
-    //                     }
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
+    describe("test deletePicture", () => {
+        it("test when method called", (done) => {
+            miniDroneView.connect('RS_').then(value => {
+                if (value === 'success') {
+                    miniDroneView.deletePicture('Rolling_Spider_1970-01-01T000025+0000_.jpg').then(response => {
+                        if (response === 'success') {
+                            done();
+                        }
+                    });
+                }
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+        });
+    });
 });
 
 after(() => {

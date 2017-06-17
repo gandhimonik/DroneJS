@@ -9,7 +9,6 @@ export class MiniDroneView {
         this.droneController = new MiniDroneController();
         this.navdata = {};
         this.fs = require('fs');
-        this.md5Length = 32;
         this.breathingTime = 200;
         this.cmdInterval = 0;
     }
@@ -271,7 +270,7 @@ export class MiniDroneView {
                              .replace('\u0003', '');
 
                     if (str.toLowerCase().indexOf('end of transfer') >= 0) {
-                        imgArr = str.match(regex);
+                        imgArr = str.match(regex) || [];
                         debug(imgArr);
                         this.droneController.removeListener('media-data', callback);
                         sleep(this.breathingTime).then(() => {
@@ -279,11 +278,9 @@ export class MiniDroneView {
                         });
                     }
                 }
-
             };
 
             this.droneController.on('media-data', callback);
-
             this.droneController.sendMediaCommand('LIS', '/internal_000/Rolling_Spider/media').then(() => {
             }).catch((e) => {
                 reject(e);
@@ -293,8 +290,7 @@ export class MiniDroneView {
 
     downloadPicture(name, downloadPath) {
         return new Promise((resolve, reject) => {
-            let stream = this.fs.createWriteStream(downloadPath + '/' + name),
-                ignoreBytes = 0;
+            let stream = this.fs.createWriteStream(downloadPath + '/' + name);
 
             let callback = mediaObj => {
                 if (mediaObj.state === 'GET' || mediaObj.state === 'MD5 OK') {
@@ -309,15 +305,11 @@ export class MiniDroneView {
                         });
                     } else if (dataStr.indexOf('MD5') >= 0) {
                         debug('Packet ended');
-                        ignoreBytes = this.md5Length;
-                        ignoreBytes -= dataStr.length;
                         this.droneController.sendMediaCommand('MD5 OK', '')
                                             .then(() => {})
                                             .catch((e) => {
                                                 reject(e);
                                             });
-                    } else if (ignoreBytes) {
-                        ignoreBytes -= dataStr;
                     } else {
                         stream.write(mediaObj.data.slice(1));
                     }
@@ -326,7 +318,6 @@ export class MiniDroneView {
             };
 
             this.droneController.on('media-data', callback);
-
             this.droneController.sendMediaCommand('GET', '/internal_000/Rolling_Spider/media/' + name).then(() => {
             }).catch((e) => {
                 reject(e);
@@ -362,7 +353,6 @@ export class MiniDroneView {
                                 .catch((e) => {
                                     reject(e);
                                 });
-
             this.droneController.sendMediaCommand('DEL', '/internal_000/Rolling_Spider/media/' + name)
                                 .then(() => {})
                                 .catch((e) => {

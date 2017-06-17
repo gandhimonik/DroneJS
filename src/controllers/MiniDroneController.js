@@ -3,6 +3,7 @@ import { debug }                from '../utils/debug';
 import { EventEmitter }         from 'events';
 
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
 
 export class MiniDroneController extends EventEmitter {
 
@@ -15,6 +16,8 @@ export class MiniDroneController extends EventEmitter {
         this.cmdSubscription = null;
         this.ftpSubscription = null;
         this.mediaState = '';
+        this.md5PacketLength = 37;
+        this.lastPacketLength = 34;
     }
 
     connect(droneIdentifier) {
@@ -87,8 +90,6 @@ export class MiniDroneController extends EventEmitter {
                 buffer = Buffer.alloc(cmdName.length + param.length + 2),
                 offset = 0;
 
-            this.mediaState = cmdName;
-
             if (cmdName.startsWith('MD5')) {
                 thruGetService = true;
             }
@@ -110,6 +111,7 @@ export class MiniDroneController extends EventEmitter {
             }
 
             this.droneService.sendFTPCommand(buffer, thruGetService).then(() => {
+                this.mediaState = cmdName;
                 resolve("success");
             }).catch((e) => {
                 reject(e);
@@ -151,7 +153,25 @@ export class MiniDroneController extends EventEmitter {
                                     err => debug(err),
                                     () => debug('complete'));
 
+        let ignoreBytes = 0;
         this.ftpSubscription = this.droneService.ftpObservable
+                                    .filter(data => {
+                                        let str = data.toString('utf8');
+
+                                        if (str.toLowerCase().indexOf('end of transfer') >= 0) {
+                                            ignoreBytes = this.lastPacketLength;
+                                            return true;
+                                        } else if (str.indexOf('MD5') >= 0) {
+                                            ignoreBytes = this.md5PacketLength;
+                                            ignoreBytes -= data.length;
+                                            return true;
+                                        } else if (ignoreBytes) {
+                                            ignoreBytes -= data.length;
+                                            return false;
+                                        }
+
+                                        return (ignoreBytes <= 0);
+                                    })
                                     .subscribe((data) => {
                                         this.emit('media-data', {
                                             state: this.mediaState,
