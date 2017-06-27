@@ -1,5 +1,5 @@
 # DroneJS
-A Node.js based library for controlling a Parrot minidrone. This library also provides the feature to take pictures from the drone, download them all at a time and delete them whenever required. This library follows Bluetooth LE networking protocol to connect to the drone. 
+A Node.js based library for controlling a Parrot minidrone. The library also provides the feature to take pictures from the drone, download them all at a time and delete them whenever required. The library follows Bluetooth LE networking protocol to connect to the drone. 
 
 ## Drones Supported
 
