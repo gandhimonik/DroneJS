@@ -43,6 +43,26 @@ describe("MiniDroneView", () => {
         expect(miniDroneView.droneController).to.exist;
     });
 
+    describe("test method: logging", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.logging).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'logging');
+
+            miniDroneView.logging(true).then(response => {
+                assert.called(methodSpy);
+                expect(response).to.exist;
+                expect(response).to.be.equal('success');
+                done();
+            });
+
+
+            miniDroneView.logging.restore();
+        });
+    });
+
     describe("test method: connect", () => {
         it("test if exists", () => {
             expect(miniDroneView.connect).to.exist;

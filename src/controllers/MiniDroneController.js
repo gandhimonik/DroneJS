@@ -194,6 +194,8 @@ export class MiniDroneController extends EventEmitter {
             return;
         }
 
+        debug(data);
+
         data.shift();
         data.shift();
 

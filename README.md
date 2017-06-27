@@ -267,3 +267,9 @@ minidrone.connect('RS_')
 * **disconnect()**
 
     Disconnect the drone
+    
+* **logging(enable)**
+
+    Enable logging
+    
+    > **enable** - True to enable logging and false to disable.

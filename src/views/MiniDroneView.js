@@ -11,6 +11,19 @@ export class MiniDroneView {
         this.fs = require('fs');
         this.breathingTime = 200;
         this.cmdInterval = 0;
+        this.pjson = require('../../package.json');
+    }
+
+    logging(enable) {
+        return new Promise((resolve, reject) => {
+            try {
+                this.pjson.debugging = enable;
+                resolve('success');
+            } catch (e) {
+                reject(e);
+            }
+
+        });
     }
 
     connect(droneIdentifier) {
