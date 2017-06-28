@@ -224,7 +224,6 @@ export class MiniDroneController extends EventEmitter {
                             .pop().pop();
 
         navInfo.args = this.getValuesByType(data, offset, navInfo.args);
-        // debug(navInfo);
 
         return navInfo;
     }

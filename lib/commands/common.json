@@ -8,48 +8,52 @@
         "name": "network",
         "id": 0,
         "description": "Network related commands",
-        "cmd": {
-          "name": "disconnect",
-          "id": 0,
-          "deprecated": "true",
-          "comment": {
-            "title": "Signals the remote that the host will disconnect",
-            "desc": "Signals the remote that the host will disconnect.",
-            "support": "none",
-            "result": "None"
+        "cmd": [
+          {
+            "name": "disconnect",
+            "id": 0,
+            "deprecated": "true",
+            "comment": {
+              "title": "Signals the remote that the host will disconnect",
+              "desc": "Signals the remote that the host will disconnect.",
+              "support": "none",
+              "result": "None"
+            }
           }
-        }
+        ]
       },
       {
         "name": "networkEvent",
         "id": 1,
         "description": "Network Event from product",
-        "cmd": {
-          "name": "disconnection",
-          "id": 0,
-          "content": "NOTIFICATION",
-          "comment": {
-            "title": "Drone will disconnect",
-            "desc": "Drone will disconnect. This event is mainly triggered when the user presses on the power button of the product. This event is a notification, you can't retrieve it in the cache of the device controller.",
-            "support": "0901;090c",
-            "triggered": "mainly when the user presses the power button of the drone."
-          },
-          "arg": {
-            "name": "cause",
-            "type": "enum",
-            "description": "Cause of the disconnection of the product",
-            "values": [
-              {
-                "name": "off_button",
-                "description": "The button off has been pressed"
-              },
-              {
-                "name": "unknown",
-                "description": "Unknown generic cause"
-              }
-            ]
+        "cmd": [
+          {
+            "name": "disconnection",
+            "id": 0,
+            "content": "NOTIFICATION",
+            "comment": {
+              "title": "Drone will disconnect",
+              "desc": "Drone will disconnect. This event is mainly triggered when the user presses on the power button of the product. This event is a notification, you can't retrieve it in the cache of the device controller.",
+              "support": "0901;090c",
+              "triggered": "mainly when the user presses the power button of the drone."
+            },
+            "arg": {
+              "name": "cause",
+              "type": "enum",
+              "description": "Cause of the disconnection of the product",
+              "values": [
+                {
+                  "name": "off_button",
+                  "description": "The button off has been pressed"
+                },
+                {
+                  "name": "unknown",
+                  "description": "Unknown generic cause"
+                }
+              ]
+            }
           }
-        }
+        ]
       },
       {
         "name": "settings",
@@ -607,7 +611,7 @@
           },
           {
             "name": "countryListKnown",
-            "id": "10",
+            "id": 10,
             "type": "LIST_ITEM",
             "deprecated": "true",
             "comment": {
@@ -629,7 +633,7 @@
           },
           {
             "name": "deprecatedMassStorageContentChanged",
-            "id": "11",
+            "id": 11,
             "type": "MAP_ITEM",
             "deprecated": "true",
             "comment": {
@@ -666,7 +670,7 @@
           },
           {
             "name": "massStorageContent",
-            "id": "12",
+            "id": 12,
             "type": "MAP_ITEM",
             "comment": {
               "title": "Mass storage content",
@@ -709,7 +713,7 @@
           },
           {
             "name": "massStorageContentForCurrentRun",
-            "id": "13",
+            "id": 13,
             "type": "MAP_ITEM",
             "comment": {
               "title": "Mass storage content for current run",
@@ -742,7 +746,7 @@
           },
           {
             "name": "videoRecordingTimestamp",
-            "id": "14",
+            "id": 14,
             "comment": {
               "title": "Video recording timestamp",
               "desc": "Current or last video recording timestamp. Timestamp in milliseconds since 00:00:00 UTC on 1 January 1970. Please note that values don't persist after drone reboot",
@@ -825,65 +829,71 @@
         "name": "controller",
         "id": 8,
         "description": "Notify the device about the state of the controller application.",
-        "cmd": {
-          "name": "isPiloting",
-          "id": 0,
-          "comment": {
-            "title": "Inform about hud entering",
-            "desc": "Inform about hud entering. Tell the drone that the controller enters/leaves the piloting hud. On a non-flying products it is used to know when a run begins.",
-            "support": "drones",
-            "result": "If yes, the product will begin a new session (so it should send a new [runId](#0-30-0)). Also, on the JumpingSumos, if the video is in autorecord mode, it will start recording."
-          },
-          "arg": {
-            "name": "piloting",
-            "type": "u8",
-            "description": "0 when the application is not in the piloting HUD, 1 when it enters the HUD."
+        "cmd": [
+          {
+            "name": "isPiloting",
+            "id": 0,
+            "comment": {
+              "title": "Inform about hud entering",
+              "desc": "Inform about hud entering. Tell the drone that the controller enters/leaves the piloting hud. On a non-flying products it is used to know when a run begins.",
+              "support": "drones",
+              "result": "If yes, the product will begin a new session (so it should send a new [runId](#0-30-0)). Also, on the JumpingSumos, if the video is in autorecord mode, it will start recording."
+            },
+            "arg": {
+              "name": "piloting",
+              "type": "u8",
+              "description": "0 when the application is not in the piloting HUD, 1 when it enters the HUD."
+            }
           }
-        }
+        ]
       },
       {
         "name": "wifiSettings",
         "id": 9,
         "description": "Wifi settings commands",
-        "cmd": {
-          "name": "outdoorSetting",
-          "id": 0,
-          "comment": {
-            "title": "Set wifi outdoor mode",
-            "desc": "Set wifi indoor/outdoor mode. Please note that you might be disconnected from the product after changing the indoor/outdoor setting as it changes Wifi parameters.",
-            "support": "0901;0902;0905;0906;090c;090e",
-            "result": "The product change its indoor/outdoor wifi settings. Then, it will trigger [WifiOutdoorMode](#0-10-0)."
-          },
-          "arg": {
-            "name": "outdoor",
-            "type": "u8",
-            "description": "1 if it should use outdoor wifi settings, 0 otherwise"
+        "cmd": [
+          {
+            "name": "outdoorSetting",
+            "id": 0,
+            "comment": {
+              "title": "Set wifi outdoor mode",
+              "desc": "Set wifi indoor/outdoor mode. Please note that you might be disconnected from the product after changing the indoor/outdoor setting as it changes Wifi parameters.",
+              "support": "0901;0902;0905;0906;090c;090e",
+              "result": "The product change its indoor/outdoor wifi settings. Then, it will trigger [WifiOutdoorMode](#0-10-0)."
+            },
+            "arg": {
+              "name": "outdoor",
+              "type": "u8",
+              "description": "1 if it should use outdoor wifi settings, 0 otherwise"
+            }
           }
-        }
+        ]
       },
       {
         "name": "wifiSettingsState",
-        "id": "10",
+        "id": 10,
         "description": "Wifi settings state from product",
-        "cmd": {
-          "name": "outdoorSettingsChanged",
-          "id": 0,
-          "comment": {
-            "title": "Wifi outdoor mode",
-            "desc": "Wifi outdoor mode.",
-            "support": "0901;0902;0905;0906;090c;090e",
-            "triggered": "by [SetWifiOutdoorMode](#0-9-0)."
-          },
-          "arg": {
-            "name": "outdoor",
-            "type": "u8",
-            "description": "1 if it should use outdoor wifi settings, 0 otherwise"
+        "cmd": [
+          {
+            "name": "outdoorSettingsChanged",
+            "id": 0,
+            "comment": {
+              "title": "Wifi outdoor mode",
+              "desc": "Wifi outdoor mode.",
+              "support": "0901;0902;0905;0906;090c;090e",
+              "triggered": "by [SetWifiOutdoorMode](#0-9-0)."
+            },
+            "arg": {
+              "name": "outdoor",
+              "type": "u8",
+              "description": "1 if it should use outdoor wifi settings, 0 otherwise"
+            }
           }
-        }
+        ]
       },
       {
         "name": "mavlink",
-        "id": "11",
+        "id": 11,
         "description": "Mavlink flight plans commands",
         "cmd": [
           {
@@ -944,7 +954,7 @@
       },
       {
         "name": "mavlinkState",
-        "id": "12",
+        "id": 12,
         "description": "Mavlink flight plans states commands",
         "cmd": [
           {
@@ -1065,7 +1075,7 @@
       },
       {
         "name": "calibration",
-        "id": "13",
+        "id": 13,
         "description": "Calibration commands",
         "cmd": [
           {
@@ -1097,7 +1107,7 @@
       },
       {
         "name": "calibrationState",
-        "id": "14",
+        "id": 14,
         "description": "Status of the calibration",
         "cmd": [
           {
@@ -1243,76 +1253,80 @@
       },
       {
         "name": "cameraSettingsState",
-        "id": "15",
+        "id": 15,
         "description": "Status of the camera settings",
-        "cmd": {
-          "name": "cameraSettingsChanged",
-          "id": 0,
-          "comment": {
-            "title": "Camera info",
-            "desc": "Camera info.",
-            "support": "0901;090c;090e",
-            "triggered": "at connection."
-          },
-          "arg": [
-            {
-              "name": "fov",
-              "type": "float",
-              "description": "Value of the camera horizontal fov (in degree)"
+        "cmd": [
+          {
+            "name": "cameraSettingsChanged",
+            "id": 0,
+            "comment": {
+              "title": "Camera info",
+              "desc": "Camera info.",
+              "support": "0901;090c;090e",
+              "triggered": "at connection."
             },
-            {
-              "name": "panMax",
-              "type": "float",
-              "description": "Value of max pan (right pan) (in degree)"
-            },
-            {
-              "name": "panMin",
-              "type": "float",
-              "description": "Value of min pan (left pan) (in degree)"
-            },
-            {
-              "name": "tiltMax",
-              "type": "float",
-              "description": "Value of max tilt (top tilt) (in degree)"
-            },
-            {
-              "name": "tiltMin",
-              "type": "float",
-              "description": "Value of min tilt (bottom tilt) (in degree)"
-            }
-          ]
-        }
+            "arg": [
+              {
+                "name": "fov",
+                "type": "float",
+                "description": "Value of the camera horizontal fov (in degree)"
+              },
+              {
+                "name": "panMax",
+                "type": "float",
+                "description": "Value of max pan (right pan) (in degree)"
+              },
+              {
+                "name": "panMin",
+                "type": "float",
+                "description": "Value of min pan (left pan) (in degree)"
+              },
+              {
+                "name": "tiltMax",
+                "type": "float",
+                "description": "Value of max tilt (top tilt) (in degree)"
+              },
+              {
+                "name": "tiltMin",
+                "type": "float",
+                "description": "Value of min tilt (bottom tilt) (in degree)"
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "gps",
-        "id": "16",
+        "id": 16,
         "description": "GPS related commands",
-        "cmd": {
-          "name": "controllerPositionForRun",
-          "id": 0,
-          "comment": {
-            "title": "Set the position of a run",
-            "desc": "Set the position of a run. This will let the product know the controller location for the flight/run. The location is typically used to geotag medias. Only used on products that have no gps. Watch out, this command is not used by BLE products.",
-            "support": "0902;0905;0906",
-            "result": "The position is set."
-          },
-          "arg": [
-            {
-              "name": "latitude",
-              "type": "double",
-              "description": "Controller latitude in decimal degrees"
+        "cmd": [
+          {
+            "name": "controllerPositionForRun",
+            "id": 0,
+            "comment": {
+              "title": "Set the position of a run",
+              "desc": "Set the position of a run. This will let the product know the controller location for the flight/run. The location is typically used to geotag medias. Only used on products that have no gps. Watch out, this command is not used by BLE products.",
+              "support": "0902;0905;0906",
+              "result": "The position is set."
             },
-            {
-              "name": "longitude",
-              "type": "double",
-              "description": "Controller longitude in decimal degrees"
-            }
-          ]
-        }
+            "arg": [
+              {
+                "name": "latitude",
+                "type": "double",
+                "description": "Controller latitude in decimal degrees"
+              },
+              {
+                "name": "longitude",
+                "type": "double",
+                "description": "Controller longitude in decimal degrees"
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "flightPlanState",
-        "id": "17",
+        "id": 17,
         "description": "FlightPlan state commands",
         "cmd": [
           {
@@ -1394,7 +1408,7 @@
       },
       {
         "name": "flightPlanEvent",
-        "id": "19",
+        "id": 19,
         "description": "FlightPlan Event commands",
         "cmd": [
           {
@@ -1423,7 +1437,7 @@
       },
       {
         "name": "arLibsVersionsState",
-        "id": "18",
+        "id": 18,
         "description": "ARlibs Versions Commands",
         "cmd": [
           {
@@ -1460,101 +1474,109 @@
       },
       {
         "name": "audio",
-        "id": "20",
+        "id": 20,
         "description": "Audio-related commands.",
-        "cmd": {
-          "name": "controllerReadyForStreaming",
-          "id": 0,
-          "comment": {
-            "title": "Set audio stream direction",
-            "desc": "Set audio stream direction.",
-            "support": "0905;0906",
-            "result": "The audio stream direction is set. Then, event [AudioStreamDirection](#0-21-0) is triggered."
-          },
-          "arg": {
-            "name": "ready",
-            "type": "u8",
-            "description": "Bit field for TX and RX ready. bit 0 is 1 if controller is ready and wants to receive sound (Drone TX) bit 1 is 1 if controller is ready and wants to send sound (Drone RX)"
+        "cmd": [
+          {
+            "name": "controllerReadyForStreaming",
+            "id": 0,
+            "comment": {
+              "title": "Set audio stream direction",
+              "desc": "Set audio stream direction.",
+              "support": "0905;0906",
+              "result": "The audio stream direction is set. Then, event [AudioStreamDirection](#0-21-0) is triggered."
+            },
+            "arg": {
+              "name": "ready",
+              "type": "u8",
+              "description": "Bit field for TX and RX ready. bit 0 is 1 if controller is ready and wants to receive sound (Drone TX) bit 1 is 1 if controller is ready and wants to send sound (Drone RX)"
+            }
           }
-        }
+        ]
       },
       {
         "name": "audioState",
-        "id": "21",
+        "id": 21,
         "description": "Audio-related state updates.",
-        "cmd": {
-          "name": "audioStreamingRunning",
-          "id": 0,
-          "comment": {
-            "title": "Audio stream direction",
-            "desc": "Audio stream direction.",
-            "support": "0905;0906",
-            "triggered": "by [SetAudioStreamDirection](#0-20-0)."
-          },
-          "arg": {
-            "name": "running",
-            "type": "u8",
-            "description": "Bit field for TX and RX running bit 0 is 1 if Drone TX is running bit 1 is 1 if Drone RX is running"
+        "cmd": [
+          {
+            "name": "audioStreamingRunning",
+            "id": 0,
+            "comment": {
+              "title": "Audio stream direction",
+              "desc": "Audio stream direction.",
+              "support": "0905;0906",
+              "triggered": "by [SetAudioStreamDirection](#0-20-0)."
+            },
+            "arg": {
+              "name": "running",
+              "type": "u8",
+              "description": "Bit field for TX and RX running bit 0 is 1 if Drone TX is running bit 1 is 1 if Drone RX is running"
+            }
           }
-        }
+        ]
       },
       {
         "name": "headlights",
-        "id": "22",
+        "id": 22,
         "description": "Controls the headlight LEDs of the Evo variants.",
-        "cmd": {
-          "name": "intensity",
-          "id": 0,
-          "comment": {
-            "title": "Set LEDs intensity",
-            "desc": "Set lighting LEDs intensity.",
-            "support": "0905;0906;0907",
-            "result": "The intensity of the LEDs is changed. Then, event [LedIntensity](#0-23-0) is triggered."
-          },
-          "arg": [
-            {
-              "name": "left",
-              "type": "u8",
-              "description": "Set the left LED intensity value (0 through 255)."
+        "cmd": [
+          {
+            "name": "intensity",
+            "id": 0,
+            "comment": {
+              "title": "Set LEDs intensity",
+              "desc": "Set lighting LEDs intensity.",
+              "support": "0905;0906;0907",
+              "result": "The intensity of the LEDs is changed. Then, event [LedIntensity](#0-23-0) is triggered."
             },
-            {
-              "name": "right",
-              "type": "u8",
-              "description": "Set the right LED intensity value (0 through 255)."
-            }
-          ]
-        }
+            "arg": [
+              {
+                "name": "left",
+                "type": "u8",
+                "description": "Set the left LED intensity value (0 through 255)."
+              },
+              {
+                "name": "right",
+                "type": "u8",
+                "description": "Set the right LED intensity value (0 through 255)."
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "headlightsState",
-        "id": "23",
+        "id": 23,
         "description": "Get information about the state of the Evo variants' LEDs.",
-        "cmd": {
-          "name": "intensityChanged",
-          "id": 0,
-          "comment": {
-            "title": "LEDs intensity",
-            "desc": "Lighting LEDs intensity.",
-            "support": "0905;0906;0907",
-            "triggered": "by [SetLedsIntensity](#0-22-0)."
-          },
-          "arg": [
-            {
-              "name": "left",
-              "type": "u8",
-              "description": "The intensity value for the left LED (0 through 255)."
+        "cmd": [
+          {
+            "name": "intensityChanged",
+            "id": 0,
+            "comment": {
+              "title": "LEDs intensity",
+              "desc": "Lighting LEDs intensity.",
+              "support": "0905;0906;0907",
+              "triggered": "by [SetLedsIntensity](#0-22-0)."
             },
-            {
-              "name": "right",
-              "type": "u8",
-              "description": "The intensity value for the right LED (0 through 255)."
-            }
-          ]
-        }
+            "arg": [
+              {
+                "name": "left",
+                "type": "u8",
+                "description": "The intensity value for the left LED (0 through 255)."
+              },
+              {
+                "name": "right",
+                "type": "u8",
+                "description": "The intensity value for the right LED (0 through 255)."
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "animations",
-        "id": "24",
+        "id": 24,
         "description": "Animations-related commands.",
         "cmd": [
           {
@@ -1758,203 +1780,207 @@
       },
       {
         "name": "animationsState",
-        "id": "25",
+        "id": 25,
         "description": "Animations-related notification/feedback commands.",
-        "cmd": {
-          "name": "list",
-          "type": "MAP_ITEM",
-          "id": 0,
-          "comment": {
-            "title": "Animation state list",
-            "desc": "Paramaterless animations state list.",
-            "support": "0902;0905;0906;0907;0909",
-            "triggered": "when the list of available animations changes and also when an animation state changes (can be triggered by [StartAnim](#0-24-0), [StopAnim](#0-24-1) or [StopAllAnims](#0-24-2)."
-          },
-          "arg": [
-            {
-              "name": "anim",
-              "type": "enum",
-              "description": "Animation type.",
-              "values": [
-                {
-                  "name": "HEADLIGHTS_FLASH",
-                  "description": "Flash headlights.",
-                  "value": 0
-                },
-                {
-                  "name": "HEADLIGHTS_BLINK",
-                  "description": "Blink headlights.",
-                  "value": 1
-                },
-                {
-                  "name": "HEADLIGHTS_OSCILLATION",
-                  "description": "Oscillating headlights.",
-                  "value": 2
-                },
-                {
-                  "name": "SPIN",
-                  "description": "Spin animation.",
-                  "value": 3
-                },
-                {
-                  "name": "TAP",
-                  "description": "Tap animation.",
-                  "value": 4
-                },
-                {
-                  "name": "SLOW_SHAKE",
-                  "description": "Slow shake animation.",
-                  "value": 5
-                },
-                {
-                  "name": "METRONOME",
-                  "description": "Metronome animation.",
-                  "value": 6
-                },
-                {
-                  "name": "ONDULATION",
-                  "description": "Standing dance animation.",
-                  "value": 7
-                },
-                {
-                  "name": "SPIN_JUMP",
-                  "description": "Spin jump animation.",
-                  "value": 8
-                },
-                {
-                  "name": "SPIN_TO_POSTURE",
-                  "description": "Spin that end in standing posture, or in jumper if it was standing animation.",
-                  "value": 9
-                },
-                {
-                  "name": "SPIRAL",
-                  "description": "Spiral animation.",
-                  "value": 10
-                },
-                {
-                  "name": "SLALOM",
-                  "description": "Slalom animation.",
-                  "value": 11
-                },
-                {
-                  "name": "BOOST",
-                  "description": "Boost animation.",
-                  "value": 12
-                },
-                {
-                  "name": "LOOPING",
-                  "description": "Make a looping. (Only for WingX)",
-                  "value": 13
-                },
-                {
-                  "name": "BARREL_ROLL_180_RIGHT",
-                  "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)",
-                  "value": 14
-                },
-                {
-                  "name": "BARREL_ROLL_180_LEFT",
-                  "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)",
-                  "value": 15
-                },
-                {
-                  "name": "BACKSWAP",
-                  "description": "Put the drone upside down. (Only for WingX)",
-                  "value": 16
-                }
-              ]
+        "cmd": [
+          {
+            "name": "list",
+            "type": "MAP_ITEM",
+            "id": 0,
+            "comment": {
+              "title": "Animation state list",
+              "desc": "Paramaterless animations state list.",
+              "support": "0902;0905;0906;0907;0909",
+              "triggered": "when the list of available animations changes and also when an animation state changes (can be triggered by [StartAnim](#0-24-0), [StopAnim](#0-24-1) or [StopAllAnims](#0-24-2)."
             },
-            {
-              "name": "state",
-              "type": "enum",
-              "description": "State of the animation",
-              "values": [
-                {
-                  "name": "stopped",
-                  "description": "animation is stopped",
-                  "value": 0
-                },
-                {
-                  "name": "started",
-                  "description": "animation is started",
-                  "value": 1
-                },
-                {
-                  "name": "notAvailable",
-                  "description": "The animation is not available",
-                  "value": 2
-                }
-              ]
-            },
-            {
-              "name": "error",
-              "type": "enum",
-              "description": "Error to explain the state",
-              "values": [
-                {
-                  "name": "ok",
-                  "description": "No Error",
-                  "value": 0
-                },
-                {
-                  "name": "unknown",
-                  "description": "Unknown generic error",
-                  "value": 1
-                }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        "name": "accessory",
-        "id": "26",
-        "description": "Accessories-related commands.",
-        "cmd": {
-          "name": "config",
-          "id": 0,
-          "comment": {
-            "title": "Declare an accessory",
-            "desc": "Declare an accessory. You can choose the accessory between all accessible for this product. You can get this list through event [SupportedAccessories](#0-27-0). You can only set the accessory when the modification is enabled. You can know if it possible with the event [AccessoryDeclarationAvailability](#0-27-2).",
-            "support": "0902;0905;0906;0907;0909;090a",
-            "result": "The product knows which accessory it is wearing. Then, event [AccessoryConfigChanged](#0-27-1) is triggered."
-          },
-          "arg": {
-            "name": "accessory",
-            "type": "enum",
-            "description": "Accessory configuration to set.",
-            "values": [
+            "arg": [
               {
-                "name": "NO_ACCESSORY",
-                "description": "No accessory.",
-                "value": 0
+                "name": "anim",
+                "type": "enum",
+                "description": "Animation type.",
+                "values": [
+                  {
+                    "name": "HEADLIGHTS_FLASH",
+                    "description": "Flash headlights.",
+                    "value": 0
+                  },
+                  {
+                    "name": "HEADLIGHTS_BLINK",
+                    "description": "Blink headlights.",
+                    "value": 1
+                  },
+                  {
+                    "name": "HEADLIGHTS_OSCILLATION",
+                    "description": "Oscillating headlights.",
+                    "value": 2
+                  },
+                  {
+                    "name": "SPIN",
+                    "description": "Spin animation.",
+                    "value": 3
+                  },
+                  {
+                    "name": "TAP",
+                    "description": "Tap animation.",
+                    "value": 4
+                  },
+                  {
+                    "name": "SLOW_SHAKE",
+                    "description": "Slow shake animation.",
+                    "value": 5
+                  },
+                  {
+                    "name": "METRONOME",
+                    "description": "Metronome animation.",
+                    "value": 6
+                  },
+                  {
+                    "name": "ONDULATION",
+                    "description": "Standing dance animation.",
+                    "value": 7
+                  },
+                  {
+                    "name": "SPIN_JUMP",
+                    "description": "Spin jump animation.",
+                    "value": 8
+                  },
+                  {
+                    "name": "SPIN_TO_POSTURE",
+                    "description": "Spin that end in standing posture, or in jumper if it was standing animation.",
+                    "value": 9
+                  },
+                  {
+                    "name": "SPIRAL",
+                    "description": "Spiral animation.",
+                    "value": 10
+                  },
+                  {
+                    "name": "SLALOM",
+                    "description": "Slalom animation.",
+                    "value": 11
+                  },
+                  {
+                    "name": "BOOST",
+                    "description": "Boost animation.",
+                    "value": 12
+                  },
+                  {
+                    "name": "LOOPING",
+                    "description": "Make a looping. (Only for WingX)",
+                    "value": 13
+                  },
+                  {
+                    "name": "BARREL_ROLL_180_RIGHT",
+                    "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)",
+                    "value": 14
+                  },
+                  {
+                    "name": "BARREL_ROLL_180_LEFT",
+                    "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)",
+                    "value": 15
+                  },
+                  {
+                    "name": "BACKSWAP",
+                    "description": "Put the drone upside down. (Only for WingX)",
+                    "value": 16
+                  }
+                ]
               },
               {
-                "name": "STD_WHEELS",
-                "description": "Standard wheels",
-                "value": 1
+                "name": "state",
+                "type": "enum",
+                "description": "State of the animation",
+                "values": [
+                  {
+                    "name": "stopped",
+                    "description": "animation is stopped",
+                    "value": 0
+                  },
+                  {
+                    "name": "started",
+                    "description": "animation is started",
+                    "value": 1
+                  },
+                  {
+                    "name": "notAvailable",
+                    "description": "The animation is not available",
+                    "value": 2
+                  }
+                ]
               },
               {
-                "name": "TRUCK_WHEELS",
-                "description": "Truck wheels",
-                "value": 2
-              },
-              {
-                "name": "HULL",
-                "description": "Hull",
-                "value": 3
-              },
-              {
-                "name": "HYDROFOIL",
-                "description": "Hydrofoil",
-                "value": 4
+                "name": "error",
+                "type": "enum",
+                "description": "Error to explain the state",
+                "values": [
+                  {
+                    "name": "ok",
+                    "description": "No Error",
+                    "value": 0
+                  },
+                  {
+                    "name": "unknown",
+                    "description": "Unknown generic error",
+                    "value": 1
+                  }
+                ]
               }
             ]
           }
-        }
+        ]
+      },
+      {
+        "name": "accessory",
+        "id": 26,
+        "description": "Accessories-related commands.",
+        "cmd": [
+          {
+            "name": "config",
+            "id": 0,
+            "comment": {
+              "title": "Declare an accessory",
+              "desc": "Declare an accessory. You can choose the accessory between all accessible for this product. You can get this list through event [SupportedAccessories](#0-27-0). You can only set the accessory when the modification is enabled. You can know if it possible with the event [AccessoryDeclarationAvailability](#0-27-2).",
+              "support": "0902;0905;0906;0907;0909;090a",
+              "result": "The product knows which accessory it is wearing. Then, event [AccessoryConfigChanged](#0-27-1) is triggered."
+            },
+            "arg": {
+              "name": "accessory",
+              "type": "enum",
+              "description": "Accessory configuration to set.",
+              "values": [
+                {
+                  "name": "NO_ACCESSORY",
+                  "description": "No accessory.",
+                  "value": 0
+                },
+                {
+                  "name": "STD_WHEELS",
+                  "description": "Standard wheels",
+                  "value": 1
+                },
+                {
+                  "name": "TRUCK_WHEELS",
+                  "description": "Truck wheels",
+                  "value": 2
+                },
+                {
+                  "name": "HULL",
+                  "description": "Hull",
+                  "value": 3
+                },
+                {
+                  "name": "HYDROFOIL",
+                  "description": "Hydrofoil",
+                  "value": 4
+                }
+              ]
+            }
+          }
+        ]
       },
       {
         "name": "accessoryState",
-        "id": "27",
+        "id": 27,
         "description": "Accessories-related commands.",
         "cmd": [
           {
@@ -2096,45 +2122,47 @@
       },
       {
         "name": "charger",
-        "id": "28",
+        "id": 28,
         "description": "Commands sent by the controller to set charger parameters.",
-        "cmd": {
-          "name": "setMaxChargeRate",
-          "id": 0,
-          "deprecated": "true",
-          "comment": {
-            "title": "Set max charge rate",
-            "desc": "The product will inform itself the controller about its charging type (see [ChargingInfoChanged](#0-29-3)).",
-            "support": "none",
-            "result": "None."
-          },
-          "arg": {
-            "name": "rate",
-            "type": "enum",
-            "description": "The new maximum charge rate.",
-            "values": [
-              {
-                "name": "SLOW",
-                "description": "Fully charge the battery at a slow rate. Typically limit max charge current to 512 mA.",
-                "value": 0
-              },
-              {
-                "name": "MODERATE",
-                "description": "Almost fully-charge the battery at moderate rate (> 512mA) but slower than the fastest rate.",
-                "value": 1
-              },
-              {
-                "name": "FAST",
-                "description": "Almost fully-charge the battery at the highest possible rate supported by the charger.",
-                "value": 2
-              }
-            ]
+        "cmd": [
+          {
+            "name": "setMaxChargeRate",
+            "id": 0,
+            "deprecated": "true",
+            "comment": {
+              "title": "Set max charge rate",
+              "desc": "The product will inform itself the controller about its charging type (see [ChargingInfoChanged](#0-29-3)).",
+              "support": "none",
+              "result": "None."
+            },
+            "arg": {
+              "name": "rate",
+              "type": "enum",
+              "description": "The new maximum charge rate.",
+              "values": [
+                {
+                  "name": "SLOW",
+                  "description": "Fully charge the battery at a slow rate. Typically limit max charge current to 512 mA.",
+                  "value": 0
+                },
+                {
+                  "name": "MODERATE",
+                  "description": "Almost fully-charge the battery at moderate rate (> 512mA) but slower than the fastest rate.",
+                  "value": 1
+                },
+                {
+                  "name": "FAST",
+                  "description": "Almost fully-charge the battery at the highest possible rate supported by the charger.",
+                  "value": 2
+                }
+              ]
+            }
           }
-        }
+        ]
       },
       {
         "name": "chargerState",
-        "id": "29",
+        "id": 29,
         "description": "Commands sent by the firmware to advertise the charger status.",
         "cmd": [
           {
@@ -2369,23 +2397,25 @@
       },
       {
         "name": "runState",
-        "id": "30",
+        "id": 30,
         "description": "Commands sent by the drone to inform about the run or flight state",
-        "cmd": {
-          "name": "runIdChanged",
-          "id": 0,
-          "comment": {
-            "title": "Current run id",
-            "desc": "Current run id. A run id is uniquely identifying a run or a flight. For each run is generated on the drone a file which can be used by Academy to sum up the run. Also, each medias taken during a run has a filename containing the run id.",
-            "support": "0901:3:0:1;090c;090e",
-            "triggered": "when the drone generates a new run id (generally right after a take off)."
-          },
-          "arg": {
-            "name": "runId",
-            "type": "string",
-            "description": "Id of the run"
+        "cmd": [
+          {
+            "name": "runIdChanged",
+            "id": 0,
+            "comment": {
+              "title": "Current run id",
+              "desc": "Current run id. A run id is uniquely identifying a run or a flight. For each run is generated on the drone a file which can be used by Academy to sum up the run. Also, each medias taken during a run has a filename containing the run id.",
+              "support": "0901:3:0:1;090c;090e",
+              "triggered": "when the drone generates a new run id (generally right after a take off)."
+            },
+            "arg": {
+              "name": "runId",
+              "type": "string",
+              "description": "Id of the run"
+            }
           }
-        }
+        ]
       }
     ]
   }

@@ -47,6 +47,14 @@ before(() => {
             }
         }
     };
+
+    miniDroneController.droneService.ftpObservable = {
+        filter: function() {
+            return {
+                subscribe: function() {}
+            }
+        }
+    };
 });
 
 describe("MiniDroneController", () => {
@@ -177,11 +185,18 @@ describe("MiniDroneController", () => {
 
         it("test if method is called", (done) => {
             let disconSpy = spy(miniDroneController, 'disconnect');
-                miniDroneController.cmdSubscription = {
-                    unsubscribe: function () {
-                        return true;
-                    }
-                };
+
+            miniDroneController.cmdSubscription = {
+                unsubscribe: function () {
+                    return true;
+                }
+            };
+
+            miniDroneController.ftpSubscription = {
+                unsubscribe: function () {
+                    return true;
+                }
+            };
 
             miniDroneController.disconnect().then(value => {
                 assert.called(disconSpy);
@@ -291,6 +306,23 @@ describe("MiniDroneController", () => {
             expect(navInfo.args.length).to.equal(1);
             expect(navInfo.args[0].name).to.equal('percent');
             expect(navInfo.args[0].value).to.equal(95);
+            done();
+
+            miniDroneController.parseData.restore();
+        });
+
+        it("test if method is called with common command", (done) => {
+            let methodSpy = spy(miniDroneController, 'parseData'),
+                data = [4, 1, 0, 30, 0, 0, 0];
+
+            let navInfo = miniDroneController.parseData(data);
+            assert.called(methodSpy);
+            expect(navInfo).to.exist;
+            expect(navInfo.name).to.be.equal('runIdChanged');
+            expect(navInfo.args).to.exist;
+            expect(navInfo.args.length).to.equal(1);
+            expect(navInfo.args[0].name).to.equal('runId');
+            expect(navInfo.args[0].value).to.equal('\u0000');
             done();
 
             miniDroneController.parseData.restore();
@@ -841,25 +873,6 @@ describe("MiniDroneController", () => {
             miniDroneController.genMiniDroneCmds.restore();
         });
     });
-
-    // describe("test navdata stream", () => {
-    //     it("test data", (done) => {
-    //
-    //         miniDroneController.connect('RS_').then(value => {
-    //             if (value === 'success') {
-    //                 miniDroneController.checkAllStates().then(value => {
-    //                     setTimeout(() => {
-    //                         done();
-    //                     }, 10000);
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             assert.fail(e);
-    //             done();
-    //         });
-    //     });
-    // });
-
 });
 
 after(() => {
