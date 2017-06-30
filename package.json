@@ -1,6 +1,6 @@
 {
   "name": "dronejs",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A Node.js based library for controlling a Parrot Rolling Spider drone",
   "main": "index.js",
   "debugging": false,
