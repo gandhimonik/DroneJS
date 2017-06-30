@@ -268,8 +268,8 @@ minidrone.connect('RS_')
 
     Disconnect the drone
     
-* **logging(enable)**
+* **enableLogging([ dir ])**
 
     Enable logging
     
-    > **enable** - True to enable logging and false to disable.
+    > **dir** - Optional. Directory to store the logs. If not specified then logs would get printed in the console.

@@ -814,6 +814,23 @@ describe("MiniDroneView", () => {
             miniDroneView.getNavDataStream.restore();
         });
     });
+
+    describe("test method: enableLogging", () => {
+        it("test if exists", () => {
+            expect(miniDroneView.enableLogging).to.exist;
+        });
+
+        it("test if method is called", (done) => {
+            let methodSpy = spy(miniDroneView, 'enableLogging');
+
+            miniDroneView.enableLogging('output').then(() => {
+                assert.called(methodSpy);
+            });
+            done();
+
+            miniDroneView.enableLogging.restore();
+        });
+    });
 });
 
 after(() => {

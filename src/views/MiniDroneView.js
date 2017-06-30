@@ -1,6 +1,6 @@
 import { MiniDroneController }     from '../controllers/MiniDroneController';
 import { Observable }              from 'rxjs/Observable';
-import { debug }                   from '../utils/debug';
+import { debug, startLogging }   from '../utils/debug';
 import { sleep }                   from '../utils/sleep';
 
 export class MiniDroneView {
@@ -11,18 +11,16 @@ export class MiniDroneView {
         this.fs = require('fs');
         this.breathingTime = 200;
         this.cmdInterval = 0;
-        this.pjson = require('../../package.json');
     }
 
-    logging(enable) {
+    enableLogging(dir) {
         return new Promise((resolve, reject) => {
             try {
-                this.pjson.debugging = enable;
+                startLogging(dir);
                 resolve('success');
             } catch (e) {
                 reject(e);
             }
-
         });
     }
 
@@ -417,6 +415,7 @@ export class MiniDroneView {
                         navInfo.args.forEach(arg => {
                             this.navdata[navInfo.name][arg.name] = arg.value;
                         });
+                        debug('Navdata: ', this.navdata);
                         observer.next(this.navdata);
                     });
 
