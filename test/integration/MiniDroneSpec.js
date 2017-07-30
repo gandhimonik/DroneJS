@@ -5,6 +5,7 @@ let miniDroneView = null;
 
 before(() => {
     miniDroneView = new MiniDroneView();
+    miniDroneView.enableLogging();
 });
 
 describe("MiniDroneView", () => {
@@ -18,7 +19,7 @@ describe("MiniDroneView", () => {
     //             err => debug(err),
     //             () => debug('complete'));
     //
-    //         miniDroneView.connect('RS_').then(value => {
+    //         miniDroneView.connect('Mars_').then(value => {
     //             if (value === 'success') {
     //                 miniDroneView.checkAllStates().then(value => {
     //                     setTimeout(() => {
@@ -32,14 +33,23 @@ describe("MiniDroneView", () => {
     //         });
     //     });
     // });
+
+    // describe("test navdata stream", () => {
+    //     it("test data", (done) => {
     //
-    // describe("test listAllPictures", () => {
-    //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
+    //         let stream = miniDroneView.getNavDataStream();
+    //         stream.subscribe((data) => {
+    //                 debug('Navdata: ', data);
+    //             },
+    //             err => debug(err),
+    //             () => debug('complete'));
+    //
+    //         miniDroneView.connect('Mars_').then(value => {
     //             if (value === 'success') {
-    //                 miniDroneView.listAllPictures().then(data => {
-    //                     debug(data);
-    //                     done();
+    //                 miniDroneView.checkAllSettings().then(value => {
+    //                     setTimeout(() => {
+    //                         done();
+    //                     }, 10000);
     //                 });
     //             }
     //         }).catch(e => {
@@ -48,16 +58,58 @@ describe("MiniDroneView", () => {
     //         });
     //     });
     // });
+
+
+    describe("test listAllPictures", () => {
+        it("test when method called", (done) => {
+            miniDroneView.connect('Mars_').then(value => {
+                if (value === 'success') {
+                    miniDroneView.listAllPictures().then(data => {
+                        done();
+                    });
+                }
+            }).catch(e => {
+                assert.fail(e);
+                done();
+            });
+        });
+    });
+
+    // describe("test takePicture", () => {
+    //     it("test when method called", (done) => {
+    //         miniDroneView.enableLogging();
     //
+    //         let stream = miniDroneView.getNavDataStream();
+    //         stream.subscribe((data) => {
+    //                 debug('Navdata: ', data);
+    //             },
+    //             err => debug(err),
+    //             () => debug('complete'));
+    //
+    //         miniDroneView.connect('Mars_')
+    //             .then(() => miniDroneView.flatTrim())
+    //             .then(() => miniDroneView.takePicture())
+    //             .then(() => {
+    //                 setTimeout(() => {
+    //                     done();
+    //                 }, 10000);
+    //             })
+    //             .catch((e) => {
+    //                 assert.fail(e);
+    //                 console.log('Error occurred: ' + e);
+    //             });
+    //     });
+    // });
+
     // describe("test downloadPicture", () => {
     //     it("test when method called", (done) => {
     //         let picList = null;
     //         miniDroneView
-    //             .connect('RS_')
+    //             .connect('Mars_')
     //             .then(() => miniDroneView.listAllPictures())
     //             .then(pictures => {
     //                 picList = pictures;
-    //                 return miniDroneView.downloadPicture(picList[0], 'output');
+    //                 return miniDroneView.downloadPicture(picList[2], 'output');
     //             })
     //             .then(response => {
     //                 if (response === 'success') {
@@ -81,15 +133,43 @@ describe("MiniDroneView", () => {
     //             });
     //     });
     // });
-    //
+
     // describe("test deletePicture", () => {
     //     it("test when method called", (done) => {
-    //         miniDroneView.connect('RS_').then(value => {
+    //         let picList = null;
+    //         miniDroneView
+    //             .connect('Mars_')
+    //             .then(() => miniDroneView.listAllPictures())
+    //             .then(pictures => {
+    //                 picList = pictures;
+    //                 return miniDroneView.deletePicture(picList[0]);
+    //             })
+    //             .then(() => {})
+    //             .catch(e => {
+    //                 assert.fail(e);
+    //                 done();
+    //             });
+    //     });
+    // });
+
+    // describe("test logging", () => {
+    //     it("test data", (done) => {
+    //
+    //         miniDroneView.enableLogging();
+    //
+    //         let stream = miniDroneView.getNavDataStream();
+    //         stream.subscribe((data) => {
+    //                 debug('Navdata: ', data);
+    //             },
+    //             err => debug(err),
+    //             () => debug('complete'));
+    //
+    //         miniDroneView.connect('Mars_').then(value => {
     //             if (value === 'success') {
-    //                 miniDroneView.deletePicture('Rolling_Spider_1970-01-01T000025+0000_.jpg').then(response => {
-    //                     if (response === 'success') {
+    //                 miniDroneView.checkAllStates().then(value => {
+    //                     setTimeout(() => {
     //                         done();
-    //                     }
+    //                     }, 10000);
     //                 });
     //             }
     //         }).catch(e => {
@@ -99,32 +179,31 @@ describe("MiniDroneView", () => {
     //     });
     // });
 
-    describe("test logging", () => {
-        it("test data", (done) => {
-
-            miniDroneView.enableLogging('/Users/ctsuser/labSpace/DroneJS/output');
-
-            let stream = miniDroneView.getNavDataStream();
-            stream.subscribe((data) => {
-                    debug('Navdata: ', data);
-                },
-                err => debug(err),
-                () => debug('complete'));
-
-            miniDroneView.connect('RS_').then(value => {
-                if (value === 'success') {
-                    miniDroneView.checkAllStates().then(value => {
-                        setTimeout(() => {
-                            done();
-                        }, 10000);
-                    });
-                }
-            }).catch(e => {
-                assert.fail(e);
-                done();
-            });
-        });
-    });
+    // describe("test logging", () => {
+    //     it("test data", (done) => {
+    //         let stream = miniDroneView.getNavDataStream();
+    //         stream.subscribe((data) => {
+    //             },
+    //             err => debug(err),
+    //             () => debug('complete'));
+    //
+    //         miniDroneView.connect('Mars_')
+    //             .then(() => miniDroneView.flatTrim())
+    //             .then(() => miniDroneView.takeOff())
+    //             .then(() => miniDroneView.flatTrim())
+    //             // .then(() => minidrone.up(50, 8))
+    //             // .then(() => minidrone.flatTrim())
+    //             // .then(() => minidrone.leftFlip())
+    //             .then(() => miniDroneView.land())
+    //             .then(() => {
+    //                 done();
+    //             })
+    //             .catch((e) => {
+    //                 assert.fail(e);
+    //                 done();
+    //             });
+    //     });
+    // });
 });
 
 after(() => {

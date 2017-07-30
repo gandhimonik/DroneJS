@@ -7,8 +7,8 @@ A Node.js based library for controlling a Parrot minidrone. The library also pro
 * Parrot Airborne Night Maclane
 * Parrot Airborne Night Blaze
 * Parrot Airborne Night Swat
-* Parrot Airborne Cargo Mars
-* Parrot Airborne Cargo Travis
+* Parrot Airborne Cargo Mars (Download picture not working. Issue #6)
+* Parrot Airborne Cargo Travis (Download picture not working. Issue #6)
 
 ## Prerequisites
 

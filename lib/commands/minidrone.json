@@ -460,68 +460,70 @@
         "name": "mediaRecordEvent",
         "id": 2,
         "description": "Events of media recording",
-        "cmd": {
-          "name": "pictureEventChanged",
-          "id": 0,
-          "content": "NOTIFICATION",
-          "description": "Event of picture recording",
-          "arg": [
-            {
-              "name": "event",
-              "type": "enum",
-              "description": "Last event of picture recording",
-              "values": [
-                {
-                  "name": "taken",
-                  "description": "Picture taken and saved",
-                  "value": 0
-                },
-                {
-                  "name": "failed",
-                  "description": "Picture failed",
-                  "value": 1
-                }
-              ]
-            },
-            {
-              "name": "error",
-              "type": "enum",
-              "description": "Error to explain the event",
-              "values": [
-                {
-                  "name": "ok",
-                  "description": "No Error",
-                  "value": 0
-                },
-                {
-                  "name": "unknown",
-                  "description": "Unknown generic error ; only when state is failed",
-                  "value": 1
-                },
-                {
-                  "name": "busy",
-                  "description": "Picture recording is busy ; only when state is failed",
-                  "value": 2
-                },
-                {
-                  "name": "notAvailable",
-                  "description": "Picture recording not available ; only when state is failed",
-                  "value": 3
-                },
-                {
-                  "name": "memoryFull",
-                  "description": "Memory full ; only when state is failed",
-                  "value": 4
-                },
-                {
-                  "name": "lowBattery",
-                  "description": "Battery is too low to record.",
-                  "value": 5
-                }
-              ]
-            }
-          ]
-        }
+        "cmd": [
+          {
+            "name": "pictureEventChanged",
+            "id": 0,
+            "content": "NOTIFICATION",
+            "description": "Event of picture recording",
+            "arg": [
+              {
+                "name": "event",
+                "type": "enum",
+                "description": "Last event of picture recording",
+                "values": [
+                  {
+                    "name": "taken",
+                    "description": "Picture taken and saved",
+                    "value": 0
+                  },
+                  {
+                    "name": "failed",
+                    "description": "Picture failed",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "name": "error",
+                "type": "enum",
+                "description": "Error to explain the event",
+                "values": [
+                  {
+                    "name": "ok",
+                    "description": "No Error",
+                    "value": 0
+                  },
+                  {
+                    "name": "unknown",
+                    "description": "Unknown generic error ; only when state is failed",
+                    "value": 1
+                  },
+                  {
+                    "name": "busy",
+                    "description": "Picture recording is busy ; only when state is failed",
+                    "value": 2
+                  },
+                  {
+                    "name": "notAvailable",
+                    "description": "Picture recording not available ; only when state is failed",
+                    "value": 3
+                  },
+                  {
+                    "name": "memoryFull",
+                    "description": "Memory full ; only when state is failed",
+                    "value": 4
+                  },
+                  {
+                    "name": "lowBattery",
+                    "description": "Battery is too low to record.",
+                    "value": 5
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "pilotingSettings",
@@ -797,16 +799,18 @@
         "name": "settings",
         "id": "10",
         "description": "Settings commands",
-        "cmd": {
-          "name": "cutOutMode",
-          "id": 0,
-          "description": "Set MiniDrone cut out mode",
-          "arg": {
-            "name": "enable",
-            "type": "u8",
-            "description": "Enable cut out mode (1 if is activate, 0 otherwise)"
+        "cmd": [
+          {
+            "name": "cutOutMode",
+            "id": 0,
+            "description": "Set MiniDrone cut out mode",
+            "arg": {
+              "name": "enable",
+              "type": "u8",
+              "description": "Enable cut out mode (1 if is activate, 0 otherwise)"
+            }
           }
-        }
+        ]
       },
       {
         "name": "settingsState",
@@ -873,16 +877,18 @@
         "name": "floodControlState",
         "id": "12",
         "description": "Settings state from product",
-        "cmd": {
-          "name": "floodControlChanged",
-          "id": 0,
-          "description": "Flood control regulation",
-          "arg": {
-            "name": "delay",
-            "type": "u16",
-            "description": "Delay (in ms) between two PCMD"
+        "cmd": [
+          {
+            "name": "floodControlChanged",
+            "id": 0,
+            "description": "Flood control regulation",
+            "arg": {
+              "name": "delay",
+              "type": "u16",
+              "description": "Delay (in ms) between two PCMD"
+            }
           }
-        }
+        ]
       },
       {
         "name": "gps",
@@ -1171,65 +1177,69 @@
         "name": "remoteController",
         "id": "17",
         "description": "Remote controller related commands.",
-        "cmd": {
-          "name": "setPairedRemote",
-          "id": 0,
-          "description": "Send the address of the remote controller on which the drone should be paired. This is used to pair a Tinos controller Where mac address: MSB-MID-LSB.",
-          "arg": [
-            {
-              "name": "msbMac",
-              "type": "u16",
-              "description": "2 most significant bytes of mac address"
-            },
-            {
-              "name": "midMac",
-              "type": "u16",
-              "description": "2 middle bytes of mac address"
-            },
-            {
-              "name": "lsbMac",
-              "type": "u16",
-              "description": "2 least significant bytes of mac address"
-            }
-          ]
-        }
+        "cmd": [
+          {
+            "name": "setPairedRemote",
+            "id": 0,
+            "description": "Send the address of the remote controller on which the drone should be paired. This is used to pair a Tinos controller Where mac address: MSB-MID-LSB.",
+            "arg": [
+              {
+                "name": "msbMac",
+                "type": "u16",
+                "description": "2 most significant bytes of mac address"
+              },
+              {
+                "name": "midMac",
+                "type": "u16",
+                "description": "2 middle bytes of mac address"
+              },
+              {
+                "name": "lsbMac",
+                "type": "u16",
+                "description": "2 least significant bytes of mac address"
+              }
+            ]
+          }
+        ]
       },
       {
         "name": "navigationDataState",
         "id": "18",
         "description": "Navigation Data.",
-        "cmd": {
-          "name": "dronePosition",
-          "id": 0,
-          "description": "Get the drone position from takeoff point (0, 0, 0, 0). The orthonormal basis is fixed at this point. The axis are oriented the following way : * X : From the rear of the drone to its front. * Y : From the right of the drone to its left. * Z : Orthogonal to X and Y and oriented upward. * Psi : From 180 to -180 in the clockwise direction,",
-          "arg": [
-            {
-              "name": "posx",
-              "type": "float",
-              "description": "Position on X axis, relative to take off position (cm)."
-            },
-            {
-              "name": "posy",
-              "type": "float",
-              "description": "Position on Y axis, relative to take off position (cm)."
-            },
-            {
-              "name": "posz",
-              "type": "i16",
-              "description": "Position on Z axis, relative to take off position (cm)."
-            },
-            {
-              "name": "psi",
-              "type": "i16",
-              "description": "Psi angle [-180; 180], relative to take off orientation."
-            },
-            {
-              "name": "ts",
-              "type": "i16",
-              "description": "Time elapsed since last data send (ms)."
-            }
-          ]
-        }
+        "cmd": [
+          {
+            "name": "dronePosition",
+            "id": 0,
+            "description": "Get the drone position from takeoff point (0, 0, 0, 0). The orthonormal basis is fixed at this point. The axis are oriented the following way : * X : From the rear of the drone to its front. * Y : From the right of the drone to its left. * Z : Orthogonal to X and Y and oriented upward. * Psi : From 180 to -180 in the clockwise direction,",
+            "arg": [
+              {
+                "name": "posx",
+                "type": "float",
+                "description": "Position on X axis, relative to take off position (cm)."
+              },
+              {
+                "name": "posy",
+                "type": "float",
+                "description": "Position on Y axis, relative to take off position (cm)."
+              },
+              {
+                "name": "posz",
+                "type": "i16",
+                "description": "Position on Z axis, relative to take off position (cm)."
+              },
+              {
+                "name": "psi",
+                "type": "i16",
+                "description": "Psi angle [-180; 180], relative to take off orientation."
+              },
+              {
+                "name": "ts",
+                "type": "i16",
+                "description": "Time elapsed since last data send (ms)."
+              }
+            ]
+          }
+        ]
       }
     ]
   }

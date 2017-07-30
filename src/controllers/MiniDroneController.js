@@ -166,7 +166,7 @@ export class MiniDroneController extends EventEmitter {
                                             ignoreBytes -= data.length;
                                             return true;
                                         } else if (ignoreBytes) {
-                                            ignoreBytes -= data.length;
+                                            ignoreBytes -= (data.length < ignoreBytes) ? data.length : ignoreBytes;
                                             return false;
                                         }
 
@@ -274,11 +274,11 @@ export class MiniDroneController extends EventEmitter {
                    break;
 
                case 'enum':
-                   let id = buffer.readUInt8(offset);
+                   let id = buffer.readUInt32LE(offset);
                    obj.value = arg.values
                                     .filter(valObj => valObj.value === id)
                                     .pop().name;
-                   offset++;
+                   offset += 4;
                    break;
 
                case 'string':

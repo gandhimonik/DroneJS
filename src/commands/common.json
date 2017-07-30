@@ -44,11 +44,13 @@
               "values": [
                 {
                   "name": "off_button",
-                  "description": "The button off has been pressed"
+                  "description": "The button off has been pressed",
+                  "value": 0
                 },
                 {
                   "name": "unknown",
-                  "description": "Unknown generic cause"
+                  "description": "Unknown generic cause",
+                  "value": 1
                 }
               ]
             }
@@ -498,30 +500,36 @@
                 "name": "sensorName",
                 "type": "enum",
                 "description": "Sensor name",
-                "enum": [
+                "values": [
                   {
                     "name": "IMU",
-                    "description": "Inertial Measurement Unit sensor"
+                    "description": "Inertial Measurement Unit sensor",
+                    "value": 0
                   },
                   {
                     "name": "barometer",
-                    "description": "Barometer sensor"
+                    "description": "Barometer sensor",
+                    "value": 1
                   },
                   {
                     "name": "ultrasound",
-                    "description": "Ultrasonic sensor"
+                    "description": "Ultrasonic sensor",
+                    "value": 2
                   },
                   {
                     "name": "GPS",
-                    "description": "GPS sensor"
+                    "description": "GPS sensor",
+                    "value": 3
                   },
                   {
                     "name": "magnetometer",
-                    "description": "Magnetometer sensor"
+                    "description": "Magnetometer sensor",
+                    "value": 4
                   },
                   {
                     "name": "vertical_camera",
-                    "description": "Vertical Camera sensor"
+                    "description": "Vertical Camera sensor",
+                    "value": 5
                   }
                 ]
               },
@@ -545,66 +553,81 @@
               "name": "model",
               "type": "enum",
               "description": "The Model of the product.",
-              "enum": [
+              "values": [
                 {
                   "name": "RS_TRAVIS",
-                  "description": "Travis (RS taxi) model."
+                  "description": "Travis (RS taxi) model.",
+                  "value": 0
                 },
                 {
                   "name": "RS_MARS",
-                  "description": "Mars (RS space) model"
+                  "description": "Mars (RS space) model",
+                  "value": 1
                 },
                 {
                   "name": "RS_SWAT",
-                  "description": "SWAT (RS SWAT) model"
+                  "description": "SWAT (RS SWAT) model",
+                  "value": 2
                 },
                 {
                   "name": "RS_MCLANE",
-                  "description": "Mc Lane (RS police) model"
+                  "description": "Mc Lane (RS police) model",
+                  "value": 3
                 },
                 {
                   "name": "RS_BLAZE",
-                  "description": "Blaze (RS fire) model"
+                  "description": "Blaze (RS fire) model",
+                  "value": 4
                 },
                 {
                   "name": "RS_ORAK",
-                  "description": "Orak (RS carbon hydrofoil) model"
+                  "description": "Orak (RS carbon hydrofoil) model",
+                  "value": 5
                 },
                 {
                   "name": "RS_NEWZ",
-                  "description": "New Z (RS wooden hydrofoil) model"
+                  "description": "New Z (RS wooden hydrofoil) model",
+                  "value": 6
                 },
                 {
                   "name": "JS_MARSHALL",
-                  "description": "Marshall (JS fire) model"
+                  "description": "Marshall (JS fire) model",
+                  "value": 7
                 },
                 {
                   "name": "JS_DIESEL",
-                  "description": "Diesel (JS SWAT) model"
+                  "description": "Diesel (JS SWAT) model",
+                  "value": 8
                 },
                 {
                   "name": "JS_BUZZ",
-                  "description": "Buzz (JS space) model"
+                  "description": "Buzz (JS space) model",
+                  "value": 9
                 },
                 {
                   "name": "JS_MAX",
-                  "description": "Max (JS F1) model"
+                  "description": "Max (JS F1) model",
+                  "value": 10
                 },
                 {
                   "name": "JS_JETT",
-                  "description": "Jett (JS flames) model"
+                  "description": "Jett (JS flames) model",
+                  "value": 11
                 },
                 {
                   "name": "JS_TUKTUK",
-                  "description": "Tuk-Tuk (JS taxi) model"
+                  "description": "Tuk-Tuk (JS taxi) model",
+                  "value": 12
                 },
                 {
                   "name": "SW_BLACK",
-                  "description": "Swing black model"
+                  "description": "Swing black model",
+                  "value": 13
                 },
                 {
                   "name": "SW_WHITE",
-                  "description": "Swing white model"
+                  "description": "Swing white model",
+                  "value": 14
                 }
               ]
             }
@@ -1694,74 +1717,91 @@
               "name": "anim",
               "type": "enum",
               "description": "Animation to stop.",
-              "enum": [
+              "values": [
                 {
                   "name": "HEADLIGHTS_FLASH",
-                  "description": "Flash headlights."
+                  "description": "Flash headlights.",
+                  "value": 0
                 },
                 {
                   "name": "HEADLIGHTS_BLINK",
-                  "description": "Blink headlights."
+                  "description": "Blink headlights.",
+                  "value": 1
                 },
                 {
                   "name": "HEADLIGHTS_OSCILLATION",
-                  "description": "Oscillating headlights."
+                  "description": "Oscillating headlights.",
+                  "value": 2
                 },
                 {
                   "name": "SPIN",
-                  "description": "Spin animation."
+                  "description": "Spin animation.",
+                  "value": 3
                 },
                 {
                   "name": "TAP",
-                  "description": "Tap animation."
+                  "description": "Tap animation.",
+                  "value": 4
                 },
                 {
                   "name": "SLOW_SHAKE",
-                  "description": "Slow shake animation."
+                  "description": "Slow shake animation.",
+                  "value": 5
                 },
                 {
                   "name": "METRONOME",
-                  "description": "Metronome animation."
+                  "description": "Metronome animation.",
+                  "value": 6
                 },
                 {
                   "name": "ONDULATION",
-                  "description": "Standing dance animation."
+                  "description": "Standing dance animation.",
+                  "value": 7
                 },
                 {
                   "name": "SPIN_JUMP",
-                  "description": "Spin jump animation."
+                  "description": "Spin jump animation.",
+                  "value": 8
                 },
                 {
                   "name": "SPIN_TO_POSTURE",
-                  "description": "Spin that end in standing posture, or in jumper if it was standing animation."
+                  "description": "Spin that end in standing posture, or in jumper if it was standing animation.",
+                  "value": 9
                 },
                 {
                   "name": "SPIRAL",
-                  "description": "Spiral animation."
+                  "description": "Spiral animation.",
+                  "value": 10
                 },
                 {
                   "name": "SLALOM",
-                  "description": "Slalom animation."
+                  "description": "Slalom animation.",
+                  "value": 11
                 },
                 {
                   "name": "BOOST",
-                  "description": "Boost animation."
+                  "description": "Boost animation.",
+                  "value": 12
                 },
                 {
                   "name": "LOOPING",
-                  "description": "Make a looping. (Only for WingX)"
+                  "description": "Make a looping. (Only for WingX)",
+                  "value": 13
                 },
                 {
                   "name": "BARREL_ROLL_180_RIGHT",
-                  "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)"
+                  "description": "Make a barrel roll of 180 degree turning on right. (Only for WingX)",
+                  "value": 14
                 },
                 {
                   "name": "BARREL_ROLL_180_LEFT",
-                  "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)"
+                  "description": "Make a barrel roll of 180 degree turning on left. (Only for WingX)",
+                  "value": 15
                 },
                 {
                   "name": "BACKSWAP",
-                  "description": "Put the drone upside down. (Only for WingX)"
+                  "description": "Put the drone upside down. (Only for WingX)",
+                  "value": 16
                 }
               ]
             }
