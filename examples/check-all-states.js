@@ -1,5 +1,5 @@
 var minidrone = require('../index');
-minidrone.enableLogging('logs');
+minidrone.enableLogging();
 var navDataStream = minidrone.getNavDataStream();
 navDataStream.subscribe((data) => {
                 console.log(data);

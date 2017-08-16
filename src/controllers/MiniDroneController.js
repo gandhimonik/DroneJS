@@ -18,12 +18,14 @@ export class MiniDroneController extends EventEmitter {
         this.mediaState = '';
         this.md5PacketLength = 37;
         this.lastPacketLength = 34;
+        this.device = '';
     }
 
     connect(droneIdentifier) {
         return new Promise((resolve, reject) => {
             this.droneService.startScanning().then(() => {
                 this.droneService.discoverDevice(droneIdentifier).then((peripheral) => {
+                    this.device = peripheral.advertisement.localName;
                     this.droneService.stopScanning().then(() => {
                     }).catch((e) => {
                         reject(e);
@@ -35,7 +37,7 @@ export class MiniDroneController extends EventEmitter {
                                 this.droneService.discoverCharacteristics(services).then((characteristics) => {
                                     this.droneService.identifyCharacteristics(characteristics).then(() => {
                                         this.addListeners();
-                                        resolve("success");
+                                        resolve(this.device);
                                     }).catch((e) => {
                                         reject(e);
                                     });
@@ -155,22 +157,37 @@ export class MiniDroneController extends EventEmitter {
 
         let ignoreBytes = 0;
         this.ftpSubscription = this.droneService.ftpObservable
-                                    .filter(data => {
-                                        let str = data.toString('utf8');
-
-                                        if (str.toLowerCase().indexOf('end of transfer') >= 0) {
-                                            ignoreBytes = this.lastPacketLength;
-                                            return true;
-                                        } else if (str.indexOf('MD5') >= 0) {
-                                            ignoreBytes = this.md5PacketLength;
-                                            ignoreBytes -= data.length;
-                                            return true;
-                                        } else if (ignoreBytes) {
-                                            ignoreBytes -= (data.length < ignoreBytes) ? data.length : ignoreBytes;
-                                            return false;
+                                    .distinctUntilChanged((prev, curr) => {
+                                        let str = curr.toString('utf8');
+                                        if (this.device.indexOf('RS') < 0 &&
+                                                str.toLowerCase().indexOf('delete successful') < 0) {
+                                            prev = Array.prototype.slice.call(prev, 0).join('');
+                                            curr = Array.prototype.slice.call(curr, 0).join('');
+                                            return prev === curr;
                                         }
 
-                                        return (ignoreBytes <= 0);
+                                        return false;
+                                    })
+                                    .filter(data => {
+                                        if (this.device.indexOf('RS') > -1) {
+                                            let str = data.toString('utf8');
+
+                                            if (str.toLowerCase().indexOf('end of transfer') >= 0) {
+                                                ignoreBytes = this.lastPacketLength;
+                                                return true;
+                                            } else if (str.indexOf('MD5') >= 0) {
+                                                ignoreBytes = this.md5PacketLength;
+                                                ignoreBytes -= data.length;
+                                                return true;
+                                            } else if (ignoreBytes) {
+                                                ignoreBytes -= (data.length < ignoreBytes) ? data.length : ignoreBytes;
+                                                return false;
+                                            }
+
+                                            return (ignoreBytes <= 0);
+                                        }
+
+                                        return true;
                                     })
                                     .subscribe((data) => {
                                         this.emit('media-data', {
@@ -311,6 +328,9 @@ export class MiniDroneController extends EventEmitter {
             case "maneuver":
             case "flip":
             case "picture":
+            case "pictureV2":
+            case "controllerType":
+            case "controllerName":
                 categoryId = this.droneCmds.project.categories
                 .filter(category => category.name === categoryName)
                 .pop().id;
@@ -344,6 +364,14 @@ export class MiniDroneController extends EventEmitter {
             case "picture":
                 args.forEach(value => {
                     buffer.writeUInt8(value, offset++);
+                });
+                break;
+
+            case "controllerType":
+            case "controllerName":
+                args.forEach(value => {
+                    buffer.write(value, offset);
+                    offset += value.length;
                 });
                 break;
         }

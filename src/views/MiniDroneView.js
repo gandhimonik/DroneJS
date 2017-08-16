@@ -12,6 +12,7 @@ export class MiniDroneView {
         this.breathingTime = 200;
         this.cmdInterval = 0;
         this.dirName = null;
+        this.device = null;
     }
 
     enableLogging(dir) {
@@ -27,9 +28,14 @@ export class MiniDroneView {
 
     connect(droneIdentifier) {
         return new Promise((resolve, reject) => {
-            this.droneController.connect(droneIdentifier).then(() => {
-                debug('Drone connected successfully');
+            this.droneController.connect(droneIdentifier).then(peripheral => {
+                if (!peripheral) {
+                    reject('Drone not connected successfully');
+                }
+
+                this.device = peripheral;
                 sleep(this.breathingTime).then(() => {
+                    debug('Drone connected successfully');
                     resolve('success');
                 });
             }).catch((e) => {
@@ -259,7 +265,10 @@ export class MiniDroneView {
 
     takePicture() {
         return new Promise((resolve, reject) => {
-            this.droneController.sendPilotingCommand('mediaRecord', 'picture', [0]).then(() => {
+            let cmd = (this.device.indexOf('RS') > -1) ? 'picture' : 'pictureV2',
+                args = (cmd === 'picture') ? [0] : null;
+
+            this.droneController.sendPilotingCommand('mediaRecord', cmd, args).then(() => {
                 sleep(this.breathingTime).then(() => {
                     resolve('success');
                 });
@@ -296,7 +305,7 @@ export class MiniDroneView {
 
             if (!this.dirName) {
                 this._mediaDir().then(dir => {
-                   this.dirName = dir;
+                    this.dirName = dir;
                     fileRegex = new RegExp('(' + this.dirName + '_[A-Z0-9_+\-]*.jpg)', 'g');
                     this.droneController.on('media-data', callback);
                     this.droneController.sendMediaCommand('LIS', '/internal_000/' + this.dirName + '/media').then(() => {
@@ -334,15 +343,19 @@ export class MiniDroneView {
                     } else if (dataStr.indexOf('MD5') >= 0) {
                         debug('Packet ended');
                         this.droneController.sendMediaCommand('MD5 OK', '')
-                                            .then(() => {})
-                                            .catch((e) => {
-                                                reject(e);
-                                            });
-                    } else {
+                            .then(() => {})
+                            .catch((e) => {
+                                reject(e);
+                            });
+
+                        if (this.dirName.indexOf('Spider') < 0) {
+                            this.flatTrim();
+                        }
+                    }
+                    else {
                         stream.write(mediaObj.data.slice(1));
                     }
                 }
-
             };
 
             if (!this.dirName) {
@@ -519,9 +532,15 @@ export class MiniDroneView {
                         }
                         debug('Directory found: ' + folderArr[0]);
                         this.droneController.removeListener('media-data', callback);
-                        sleep(this.breathingTime).then(() => {
-                            resolve(folderArr[0]);
-                        });
+                        if (this.device.indexOf('RS') > -1) {
+                            sleep(this.breathingTime).then(() => {
+                                resolve(folderArr[0]);
+                            });
+                        } else {
+                            this.flatTrim().then(() => {
+                                resolve(folderArr[0]);
+                            });
+                        }
                     }
                 }
             };
