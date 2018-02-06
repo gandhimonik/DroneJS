@@ -460,7 +460,7 @@
               {
                 "name": "rec_time",
                 "type": "u16",
-                "description": "Mass storage record time reamining in minute"
+                "description": "Mass storage record time remaining in minute"
               },
               {
                 "name": "photo_remaining",
@@ -472,7 +472,7 @@
           {
             "name": "wifiSignalChanged",
             "id": 7,
-            "-buffer": "NON_ACK",
+            "buffer": "NON_ACK",
             "comment": {
               "title": "Rssi changed",
               "desc": "Rssi (Wifi Signal between controller and product) changed.",
@@ -1044,6 +1044,7 @@
           {
             "name": "mavlinkPlayErrorStateChanged",
             "id": 1,
+            "deprecated": "true",
             "comment": {
               "title": "FlightPlan error",
               "desc": "FlightPlan error.",
@@ -1119,7 +1120,12 @@
           {
             "name": "pitotCalibration",
             "id": 1,
-            "description": "Sent when a calibration of the pitot is asked or is aborted",
+            "comment": {
+              "title": "Start/Abort Pitot calibration",
+              "desc": "Start or abort Pitot tube calibration process.",
+              "support": "090e:1.1.0",
+              "result": "The pitot calibration process is started or aborted. Then, event [PitotCalibrationStateChanged](#0-14-4) is triggered with the current calibration state."
+            },
             "arg": {
               "name": "calibrate",
               "type": "u8",
@@ -1375,7 +1381,7 @@
               "title": "FlightPlan components state list",
               "desc": "FlightPlan components state list.",
               "support": "0901:2.0.29;090c;090e",
-              "triggered": "when the state of required components changes."
+              "triggered": "when the state of required components changes. GPS component is triggered when the availability of the GPS of the drone changes. Calibration component is triggered when the calibration state of the drone sensors changes Mavlink_File component is triggered when the command [StartFlightPlan](#0-11-0) is received. Takeoff component is triggered when the drone needs to take-off to continue the FlightPlan. WaypointsBeyondGeofence component is triggered when the command [StartFlightPlan](#0-11-0) is received."
             },
             "arg": [
               {
@@ -1385,23 +1391,28 @@
                 "values": [
                   {
                     "name": "gps",
-                    "description": "GPS for Drone FlightPlan",
+                    "description": "Drone GPS component. State is 0 when the drone needs a GPS fix.",
                     "value": 0
                   },
                   {
                     "name": "calibration",
-                    "description": "Calibration for Drone FlightPlan",
+                    "description": "Drone Calibration component. State is 0 when the sensors of the drone needs to be calibrated.",
                     "value": 1
                   },
                   {
                     "name": "mavlink_File",
-                    "description": "Mavlink file for Drone FlightPlan",
+                    "description": "Mavlink file component. State is 0 when the mavlink file is missing or contains error.",
                     "value": 2
                   },
                   {
                     "name": "takeOff",
-                    "description": "Take off",
+                    "description": "Drone Take off component. State is 0 when the drone cannot take-off.",
                     "value": 3
+                  },
+                  {
+                    "name": "waypointsBeyondGeofence",
+                    "description": "Component for waypoints beyond the geofence. State is 0 when one or more waypoints are beyond the geofence.",
+                    "value": 4
                   }
                 ]
               },
@@ -1452,7 +1463,7 @@
             "comment": {
               "title": "FlightPlan speed clamping",
               "desc": "FlightPlan speed clamping. Sent when a speed specified in the FlightPlan file is considered too high by the drone. This event is a notification, you can't retrieve it in the cache of the device controller.",
-              "support": "0901:2.0.29;090c;090e",
+              "support": "none",
               "triggered": "on an speed related clamping after a [StartFlightPlan](#0-11-0)."
             }
           }
@@ -1709,9 +1720,9 @@
             "id": 1,
             "comment": {
               "title": "Stop an animation",
-              "desc": "Stop a paramaterless animation.     List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
+              "desc": "Stop a paramaterless animation. List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
               "support": "0902;0905;0906;0907;0909",
-              "result": "If the requested animation was running, it will be stopped.     Then, event [AnimationsStateList](#0-25-0) is triggered."
+              "result": "If the requested animation was running, it will be stopped. Then, event [AnimationsStateList](#0-25-0) is triggered."
             },
             "arg": {
               "name": "anim",
@@ -1811,9 +1822,9 @@
             "id": 2,
             "comment": {
               "title": "Stop all animations",
-              "desc": "Stop all running paramaterless animations.     List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
+              "desc": "Stop all running paramaterless animations. List of running animations can be retrieved from [AnimationsStateList](#0-25-0).",
               "support": "0902;0905;0906;0907;0909",
-              "result": "All running animations are stopped.     Then, event [AnimationsStateList](#0-25-0) is triggered."
+              "result": "All running animations are stopped. Then, event [AnimationsStateList](#0-25-0) is triggered."
             }
           }
         ]
@@ -2454,6 +2465,71 @@
               "type": "string",
               "description": "Id of the run"
             }
+          }
+        ]
+      },
+      {
+        "name": "factory",
+        "id": 31,
+        "description": "Factory reset commands",
+        "cmd": [
+          {
+            "name": "reset",
+            "id": 0,
+            "comment": {
+              "title": "Reset the product to its factory settings",
+              "desc": "This command will request a factory reset from the prodcut. *The factory reset procedure implies an automatic reboot*, which will be done immediately after receiving this command.",
+              "result": "The product will reboot, all settings will be reset to their default values. All data on the product will also be erased."
+            }
+          }
+        ]
+      },
+      {
+        "name": "flightPlanSettings",
+        "id": 32,
+        "cmd": [
+          {
+            "name": "returnHomeOnDisconnect",
+            "id": 0,
+            "comment": {
+              "title": "Set ReturnHome behavior during FlightPlan",
+              "desc": "Set ReturnHome behavior during FlightPlan. When set, drone will return home, after return home delay, if a disconnection occurs during execution of FlightPlan",
+              "support": "0901:4.1.0;090c:4.1.0;090e:1.4.0",
+              "result": "The return home mode is enabled or disabled. Then, event [ReturnHomeOnDisconnectionChanged](#0-33-0) is triggered."
+            },
+            "arg": {
+              "name": "value",
+              "type": "u8",
+              "description": "1 to enable, 0 to disable"
+            }
+          }
+        ]
+      },
+      {
+        "name": "flightPlanSettingsState",
+        "id": 33,
+        "cmd": [
+          {
+            "name": "returnHomeOnDisconnectChanged",
+            "id": 0,
+            "comment": {
+              "title": "ReturnHome behavior during FlightPlan",
+              "desc": "Define behavior of drone when disconnection occurs during a flight plan",
+              "support": "0901:4.1.0;090c:4.1.0;090e:1.4.0",
+              "triggered": "by [setReturnHomeOnDisconnectMode](#0-32-0)."
+            },
+            "arg": [
+              {
+                "name": "state",
+                "type": "u8",
+                "description": "1 if enabled, 0 if disabled"
+              },
+              {
+                "name": "isReadOnly",
+                "type": "u8",
+                "description": "1 if readOnly, 0 if writable"
+              }
+            ]
           }
         ]
       }

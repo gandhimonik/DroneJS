@@ -297,6 +297,32 @@
                 }
               ]
             }
+          },
+          {
+            "name": "pilotingModeChanged",
+            "id": 6,
+            "description": "Event informing about the piloting mode.",
+            "arg": {
+              "name": "mode",
+              "type": "enum",
+              "values": [
+                {
+                  "name": "easy",
+                  "description": "The flight envelope of Mambo FPV has been divided in three piloting modes. The first one corresponds to the well-known flying mode currently used for Mambo, which is based in an horizontal stabilisation (performed via the vertical camera and the acceleration information) and a vertical acceleration (by means of the ultrasound, the barometer and the vertical accelerometer) in order for the drone to stay in fixed point position when no piloting commands are sent by the user.",
+                  "value": 0
+                },
+                {
+                  "name": "medium",
+                  "description": "The second piloting mode consists of deactivating the horizontal stabilisation. Thus, in this flying mode, when no piloting command is received, the drone will try to stay at 0° tilt angle instead of responding to a 0 m/s horizontal speed reference. This behaviour will result in a slight horizontal drift.",
+                  "value": 1
+                },
+                {
+                  "name": "difficult",
+                  "description": "The third piloting mode also adds the vertical stabilisation deactivation and, therefore, a slight vertical drift. When flying in the third mode, a closed loop height control is no longer performed in order for the drone to keep a certain height and vertical speed. Instead, the vertical command coming from the user will directly generate an open loop acceleration command.",
+                  "value": 2
+                }
+              ]
+            }
           }
         ]
       },
@@ -556,13 +582,50 @@
             "comment": {
               "title": "Set banked turn mode",
               "desc": "Set banked turn mode. When banked turn mode is enabled, the drone will use yaw values from the piloting command to infer with roll and pitch on the drone when its horizontal speed is not null.",
-              "support": "none",
+              "support": "090b:3.0.6",
               "result": "The banked turn mode is enabled or disabled. Then, event [BankedTurnMode](#2-9-2) is triggered."
             },
             "arg": {
               "name": "value",
               "type": "u8",
               "description": "1 to enable, 0 to disable"
+            }
+          },
+          {
+            "name": "maxThrottle",
+            "id": 3,
+            "description": "This setting represents the vertical acceleration command that will be sent to the drone when piloting in gaz mode. In this case, closed loop height control is no longer performed; an open loop vertical acceleration command is generated instead. This command results from multiplying the user command coming from the joystick (float value between 0 and 1) by the MaxThrottle setting (also a value between 0 and 1) and by the gravity constant. Thus, we obtain the corresponding value in [m/s²] that will then be mixed with the attitude commands and translated into rotation speeds. As an example, if the value of this setting is 0.5, the maximal acceleration command that can be generated when the user command equals 1 is : acc_cmd_max = 1 * 0.5 * 9.81 m/s² = 4.905 m/s².",
+            "arg": {
+              "name": "max",
+              "type": "float",
+              "description": "Max throttle, between 0 and 1."
+            }
+          },
+          {
+            "name": "preferredPilotingMode",
+            "id": 4,
+            "description": "The flight envelope of Mambo FPV has been divided in three piloting modes.",
+            "arg": {
+              "name": "mode",
+              "type": "enum",
+              "description": "Piloting modes.",
+              "values": [
+                {
+                  "name": "easy",
+                  "description": "The flight envelope of Mambo FPV has been divided in three piloting modes. The first one corresponds to the well-known flying mode currently used for Mambo, which is based in an horizontal stabilisation (performed via the vertical camera and the acceleration information) and a vertical acceleration (by means of the ultrasound, the barometer and the vertical accelerometer) in order for the drone to stay in fixed point position when no piloting commands are sent by the user.",
+                  "value": 0
+                },
+                {
+                  "name": "medium",
+                  "description": "The second piloting mode consists of deactivating the horizontal stabilisation. Thus, in this flying mode, when no piloting command is received, the drone will try to stay at 0° tilt angle instead of responding to a 0 m/s horizontal speed reference. This behaviour will result in a slight horizontal drift.",
+                  "value": 1
+                },
+                {
+                  "name": "difficult",
+                  "description": "The third piloting mode also adds the vertical stabilisation deactivation and, therefore, a slight vertical drift. When flying in the third mode, a closed loop height control is no longer performed in order for the drone to keep a certain height and vertical speed. Instead, the vertical command coming from the user will directly generate an open loop acceleration command.",
+                  "value": 2
+                }
+              ]
             }
           }
         ]
@@ -622,13 +685,50 @@
             "comment": {
               "title": "Banked Turn mode",
               "desc": "Banked Turn mode. If banked turn mode is enabled, the drone will use yaw values from the piloting command to infer with roll and pitch on the drone when its horizontal speed is not null.",
-              "support": "none",
+              "support": "090b:3.0.6",
               "triggered": "by [SetBankedTurnMode](#2-8-2)."
             },
             "arg": {
               "name": "state",
               "type": "u8",
               "description": "1 if enabled, 0 if disabled"
+            }
+          },
+          {
+            "name": "maxThrottleChanged",
+            "id": 3,
+            "description": "Event informing about the max throttle.",
+            "arg": {
+              "name": "max",
+              "type": "float",
+              "description": "Max throttle, between 0 and 1."
+            }
+          },
+          {
+            "name": "preferredPilotingModeChanged",
+            "id": 4,
+            "description": "Event informing about the preferred piloting mode.",
+            "arg": {
+              "name": "mode",
+              "type": "enum",
+              "description": "Event informing about the preferred piloting mode.",
+              "values": [
+                {
+                  "name": "easy",
+                  "description": "The flight envelope of Mambo FPV has been divided in three piloting modes. The first one corresponds to the well-known flying mode currently used for Mambo, which is based in an horizontal stabilisation (performed via the vertical camera and the acceleration information) and a vertical acceleration (by means of the ultrasound, the barometer and the vertical accelerometer) in order for the drone to stay in fixed point position when no piloting commands are sent by the user.",
+                  "value": 0
+                },
+                {
+                  "name": "medium",
+                  "description": "The second piloting mode consists of deactivating the horizontal stabilisation. Thus, in this flying mode, when no piloting command is received, the drone will try to stay at 0° tilt angle instead of responding to a 0 m/s horizontal speed reference. This behaviour will result in a slight horizontal drift.",
+                  "value": 1
+                },
+                {
+                  "name": "difficult",
+                  "description": "The third piloting mode also adds the vertical stabilisation deactivation and, therefore, a slight vertical drift. When flying in the third mode, a closed loop height control is no longer performed in order for the drone to keep a certain height and vertical speed. Instead, the vertical command coming from the user will directly generate an open loop acceleration command.",
+                  "value": 2
+                }
+              ]
             }
           }
         ]
@@ -1238,6 +1338,500 @@
                 "description": "Time elapsed since last data send (ms)."
               }
             ]
+          },
+          {
+            "name": "droneSpeed",
+            "id": 1,
+            "description": "Event informing about the estimated drone speed in horizontal frame. It is similar to NED frame but with drone heading. Down speed is positive when the drone is going down. Speed is in m/s.",
+            "arg": [
+              {
+                "name": "speedX",
+                "type": "float",
+                "description": "Speed on the x axis (when drone moves forward, speed is > 0)."
+              },
+              {
+                "name": "speedY",
+                "type": "float",
+                "description": "Speed on the y axis (when drone moves right, speed is > 0)."
+              },
+              {
+                "name": "speedZ",
+                "type": "float",
+                "description": "Speed on the z axis (when drone moves down, speed is > 0)."
+              },
+              {
+                "name": "ts",
+                "type": "u16",
+                "description": "Acquisition timestamp (ms)."
+              }
+            ]
+          },
+          {
+            "name": "droneAltitude",
+            "id": 2,
+            "description": "Event informing about the estimated altitude above takeoff level.",
+            "arg": [
+              {
+                "name": "altitude",
+                "type": "float",
+                "description": "Altitude in meters."
+              },
+              {
+                "name": "ts",
+                "type": "u16",
+                "description": "Acquisition timestamp (ms)."
+              }
+            ]
+          },
+          {
+            "name": "droneQuaternion",
+            "id": 4,
+            "description": "Event informing about the estimated quaternion. They represent the rotation from the NED frame (determined at drone startup) to the estimated drone body frame. Its elements are between -1 and 1.",
+            "arg": [
+              {
+                "name": "qw",
+                "type": "float",
+                "description": "Element w."
+              },
+              {
+                "name": "qx",
+                "type": "float",
+                "description": "Element x."
+              },
+              {
+                "name": "qy",
+                "type": "float",
+                "description": "Element y."
+              },
+              {
+                "name": "qz",
+                "type": "float",
+                "description": "Element z."
+              },
+              {
+                "name": "ts",
+                "type": "u16",
+                "description": "Acquisition timestamp (ms)."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "miniCamState",
+        "id": "19",
+        "description": "Minicam related events.",
+        "cmd": [
+          {
+            "name": "powerModeChanged",
+            "id": 0,
+            "description": "Event informing about the minicam power mode.",
+            "arg": {
+              "name": "powerMode",
+              "type": "enum",
+              "description": "Power mode of the camera.",
+              "values": [
+                {
+                  "name": "low",
+                  "description": "Low power: most hardware is powered off, wake up via USB resume. Used when charging.",
+                  "value": 0
+                },
+                {
+                  "name": "medium",
+                  "description": "Medium power: video hardware is powered off. Used when drone is not flying during more than 3 minutes. Note that it can still stream the SD content.",
+                  "value": 1
+                },
+                {
+                  "name": "normal",
+                  "description": "Normal power: all features are available. Used when flying.",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          {
+            "name": "productSerialChanged",
+            "id": 1,
+            "description": "Event informing about the minicam product serial number.",
+            "arg": {
+              "name": "serialNumber",
+              "type": "string",
+              "description": "Serial number."
+            }
+          },
+          {
+            "name": "stateChanged",
+            "id": 2,
+            "description": "Event informing about the state of the camera.",
+            "arg": {
+              "name": "state",
+              "type": "enum",
+              "description": "State of the camera.",
+              "values": [
+                {
+                  "name": "unplugged",
+                  "description": "Minicam is unplugged.",
+                  "value": 0
+                },
+                {
+                  "name": "plugged",
+                  "description": "Minicam is plugged, but not ready.",
+                  "value": 1
+                },
+                {
+                  "name": "ready",
+                  "description": "Minicam is ready.",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          {
+            "name": "versionChanged",
+            "id": 3,
+            "description": "Get the accessory Version.",
+            "arg": [
+              {
+                "name": "software",
+                "type": "string",
+                "description": "Accessory software version."
+              },
+              {
+                "name": "hardware",
+                "type": "string",
+                "description": "Accessory hardware version."
+              }
+            ]
+          },
+          {
+            "name": "pictureChanged",
+            "id": 4,
+            "description": "Event informing that the picture has been taken.",
+            "arg": [
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "State of device picture recording.",
+                "values": [
+                  {
+                    "name": "ready",
+                    "description": "Picture recording is ready.",
+                    "value": 0
+                  },
+                  {
+                    "name": "busy",
+                    "description": "Picture recording is busy.",
+                    "value": 1
+                  },
+                  {
+                    "name": "notAvailable",
+                    "description": "Picture recording is not available.",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "name": "result",
+                "type": "enum",
+                "description": "Result of device picture recording.",
+                "values": [
+                  {
+                    "name": "success",
+                    "description": "Success.",
+                    "value": 0
+                  },
+                  {
+                    "name": "fullDevice",
+                    "description": "Device is full.",
+                    "value": 1
+                  },
+                  {
+                    "name": "continuousShooting",
+                    "description": "Continuous shooting is already running.",
+                    "value": 2
+                  },
+                  {
+                    "name": "fullQueue",
+                    "description": "Over snapshot max queue size.",
+                    "value": 3
+                  },
+                  {
+                    "name": "error",
+                    "description": "Couldn't take picture.",
+                    "value": 4
+                  },
+                  {
+                    "name": "noSD",
+                    "description": "SD card doesn't exist.",
+                    "value": 5
+                  },
+                  {
+                    "name": "sdBadFormat",
+                    "description": "SD card format error.",
+                    "value": 6
+                  },
+                  {
+                    "name": "sdFormatting",
+                    "description": "SD card is formatting.",
+                    "value": 7
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "videoStateChanged",
+            "id": 5,
+            "description": "Event informing about the video recording state.",
+            "arg": [
+              {
+                "name": "state",
+                "type": "enum",
+                "description": "State of device video recording.",
+                "values": [
+                  {
+                    "name": "stopped",
+                    "description": "Video is stopped.",
+                    "value": 0
+                  },
+                  {
+                    "name": "started",
+                    "description": "Video is started.",
+                    "value": 1
+                  },
+                  {
+                    "name": "notAvailable",
+                    "description": "The video recording is not available.",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "name": "error",
+                "type": "enum",
+                "description": "Error to explain the state.",
+                "values": [
+                  {
+                    "name": "ok",
+                    "description": "No Error.",
+                    "value": 0
+                  },
+                  {
+                    "name": "unknown",
+                    "description": "Unknown generic error.",
+                    "value": 1
+                  },
+                  {
+                    "name": "cameraKo",
+                    "description": "Video camera is out of order.",
+                    "value": 2
+                  },
+                  {
+                    "name": "memoryFull",
+                    "description": "Memory full ; cannot save one additional video.",
+                    "value": 3
+                  },
+                  {
+                    "name": "lowBattery",
+                    "description": "Battery is too low to start/keep recording.",
+                    "value": 4
+                  },
+                  {
+                    "name": "noSD",
+                    "description": "SD card doesn't exist.",
+                    "value": 5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "massStorageFormatChanged",
+            "id": 6,
+            "description": "Event informing that the mass storage has been formatted.",
+            "arg": {
+              "name": "state",
+              "type": "u8",
+              "description": "1 if Mass Storage has been formatted, 0 otherwise."
+            }
+          }
+        ]
+      },
+      {
+        "name": "videoSettings",
+        "id": "20",
+        "description": "Video settings.",
+        "cmd": [
+          {
+            "name": "autoRecord",
+            "id": 0,
+            "description": "Set video automatic recording state.",
+            "arg": {
+              "name": "enable",
+              "type": "u8",
+              "description": "0: disabled 1: enabled"
+            }
+          },
+          {
+            "name": "electricFrequency",
+            "id": 1,
+            "description": "Set the electric frequency (Anti-flickering).",
+            "arg": {
+              "name": "frequency",
+              "type": "enum",
+              "description": "Type of the electric frequency.",
+              "values": [
+                {
+                  "name": "fiftyHertz",
+                  "description": "Electric frequency of the country is 50hz.",
+                  "value": 0
+                },
+                {
+                  "name": "sixtyHertz",
+                  "description": "Electric frequency of the country is 60hz.",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "videoResolution",
+            "id": 2,
+            "description": "Set video streaming and recording resolution.",
+            "arg": {
+              "name": "type",
+              "type": "enum",
+              "description": "Video resolution type.",
+              "values": [
+                {
+                  "name": "vga",
+                  "description": "16/9 VGA streaming (640 x 360).",
+                  "value": 0
+                },
+                {
+                  "name": "hd",
+                  "description": "HD streaming (1280 x 720).",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "videoSettingsState",
+        "id": "21",
+        "description": "Video settings state.",
+        "cmd": [
+          {
+            "name": "autoRecordChanged",
+            "id": 0,
+            "description": "Event informing about the video automatic recording status.",
+            "arg": {
+              "name": "enabled",
+              "type": "u8",
+              "description": "0: disabled 1: enabled"
+            }
+          },
+          {
+            "name": "electricFrequencyChanged",
+            "id": 1,
+            "description": "Event informing about the electric frequency (Anti-flickering).",
+            "arg": {
+              "name": "frequency",
+              "type": "enum",
+              "description": "Type of the electric frequency.",
+              "values": [
+                {
+                  "name": "fiftyHertz",
+                  "description": "Electric frequency of the country is 50hz.",
+                  "value": 0
+                },
+                {
+                  "name": "sixtyHertz",
+                  "description": "Electric frequency of the country is 60hz.",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "videoResolutionChanged",
+            "id": 2,
+            "description": "Event informing about the streaming resolution.",
+            "arg": {
+              "name": "type",
+              "type": "enum",
+              "description": "Video resolution type.",
+              "values": [
+                {
+                  "name": "vga",
+                  "description": "16/9 VGA streaming (640 x 360).",
+                  "value": 0
+                },
+                {
+                  "name": "hd",
+                  "description": "HD streaming (1280 x 720).",
+                  "value": 1
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "minicam",
+        "id": "24",
+        "description": "Minicam related commands.",
+        "cmd": [
+          {
+            "name": "picture",
+            "id": 0,
+            "description": "Take picture."
+          },
+          {
+            "name": "video",
+            "id": 1,
+            "description": "Start/Stop video recording.",
+            "arg": {
+              "name": "record",
+              "type": "enum",
+              "description": "Command to record video.",
+              "values": [
+                {
+                  "name": "stop",
+                  "description": "Stop the video recording.",
+                  "value": 0
+                },
+                {
+                  "name": "start",
+                  "description": "Start the video recording.",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "massStorageFormat",
+            "id": 2,
+            "description": "Format mass storage."
+          }
+        ]
+      },
+      {
+        "name": "remoteControllerState",
+        "id": "25",
+        "description": "State changes related to the remote controller.",
+        "cmd": [
+          {
+            "name": "connectionChanged",
+            "id": 0,
+            "description": "State of the connection to the remote controller changed.",
+            "arg": {
+              "name": "state",
+              "type": "u8",
+              "description": "New connection state. 0=disconnected 1=connected"
+            }
           }
         ]
       }
