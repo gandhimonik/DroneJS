@@ -1,7 +1,8 @@
 import { MiniDroneController }     from '../controllers/MiniDroneController';
 import { Observable }              from 'rxjs/Observable';
-import { debug, startLogging }   from '../utils/debug';
+import { debug, startLogging }     from '../utils/debug';
 import { sleep }                   from '../utils/sleep';
+import { Tracker }                 from '../utils/Tracker';
 
 export class MiniDroneView {
 
@@ -13,6 +14,7 @@ export class MiniDroneView {
         this.cmdInterval = 0;
         this.dirName = null;
         this.device = null;
+        this.tracker = new Tracker();
     }
 
     enableLogging(dir) {
@@ -27,6 +29,8 @@ export class MiniDroneView {
     }
 
     connect(droneIdentifier) {
+        this.tracker.setCategory(droneIdentifier);
+        this.tracker.report('connect');
         return new Promise((resolve, reject) => {
             this.droneController.connect(droneIdentifier).then(peripheral => {
                 if (!peripheral) {
@@ -45,6 +49,7 @@ export class MiniDroneView {
     }
 
     checkAllStates() {
+        this.tracker.report('check-all-states');
         return new Promise((resolve, reject) => {
             this.droneController.checkAllStates().then(() => {
                 sleep(this.breathingTime).then(() => {
@@ -57,6 +62,7 @@ export class MiniDroneView {
     }
 
     flatTrim() {
+        this.tracker.report('flat-trim');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'flatTrim').then(() => {
                 sleep(this.breathingTime).then(() => {
@@ -69,6 +75,7 @@ export class MiniDroneView {
     }
 
     takeOff() {
+        this.tracker.report('take-off');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'takeOff').then(() => {
                 let callback = navObj => {
@@ -92,6 +99,7 @@ export class MiniDroneView {
     }
 
     turnLeft(intensity, frequency) {
+        this.tracker.report('turn-left');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -108,6 +116,7 @@ export class MiniDroneView {
     }
 
     turnRight(intensity, frequency) {
+        this.tracker.report('turn-right');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -123,6 +132,7 @@ export class MiniDroneView {
     }
 
     backward(intensity, frequency) {
+        this.tracker.report('backward');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -139,6 +149,7 @@ export class MiniDroneView {
     }
 
     forward(intensity, frequency) {
+        this.tracker.report('forward');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -154,6 +165,7 @@ export class MiniDroneView {
     }
 
     left(intensity, frequency) {
+        this.tracker.report('left');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -170,6 +182,7 @@ export class MiniDroneView {
     }
 
     right(intensity, frequency) {
+        this.tracker.report('right');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -185,6 +198,7 @@ export class MiniDroneView {
     }
 
     down(intensity, frequency) {
+        this.tracker.report('down');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -201,6 +215,7 @@ export class MiniDroneView {
     }
 
     up(intensity, frequency) {
+        this.tracker.report('up');
         return new Promise((resolve, reject) => {
             if (!this._isValid(intensity)) {
                 reject('Error: Value for intensity should be between 0 and 100');
@@ -216,6 +231,7 @@ export class MiniDroneView {
     }
 
     frontFlip() {
+        this.tracker.report('front-flip');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('animations', 'flip', [0, 0, 0, 0]).then(() => {
                 sleep(this.breathingTime + 1000).then(() => {
@@ -228,6 +244,7 @@ export class MiniDroneView {
     }
 
     backFlip() {
+        this.tracker.report('back-flip');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('animations', 'flip', [1, 0, 0, 0]).then(() => {
                 sleep(this.breathingTime + 1000).then(() => {
@@ -240,6 +257,7 @@ export class MiniDroneView {
     }
 
     rightFlip() {
+        this.tracker.report('right-flip');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('animations', 'flip', [2, 0, 0, 0]).then(() => {
                 sleep(this.breathingTime + 1000).then(() => {
@@ -252,6 +270,7 @@ export class MiniDroneView {
     }
 
     leftFlip() {
+        this.tracker.report('left-flip');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('animations', 'flip', [3, 0, 0, 0]).then(() => {
                 sleep(this.breathingTime + 1000).then(() => {
@@ -264,6 +283,7 @@ export class MiniDroneView {
     }
 
     takePicture() {
+        this.tracker.report('take-picture');
         return new Promise((resolve, reject) => {
             let cmd = (this.device.indexOf('RS') > -1) ? 'picture' : 'pictureV2',
                 args = (cmd === 'picture') ? [0] : null;
@@ -279,6 +299,7 @@ export class MiniDroneView {
     }
 
     listAllPictures() {
+        this.tracker.report('list-all-pictures');
         return new Promise((resolve, reject) => {
             let imgArr = [],
                 str = '',
@@ -326,6 +347,7 @@ export class MiniDroneView {
     }
 
     downloadPicture(name, downloadPath) {
+        this.tracker.report('download-picture');
         return new Promise((resolve, reject) => {
             let stream = this.fs.createWriteStream(downloadPath + '/' + name);
 
@@ -380,6 +402,7 @@ export class MiniDroneView {
     }
 
     deletePicture(name) {
+        this.tracker.report('delete-picture');
         return new Promise((resolve, reject) => {
             let confirmArr = [];
 
@@ -436,6 +459,7 @@ export class MiniDroneView {
     }
 
     land() {
+        this.tracker.report('land');
         return new Promise((resolve, reject) => {
             this.droneController.sendPilotingCommand('piloting', 'landing').then(() => {
                 let callback = navObj => {
@@ -457,6 +481,7 @@ export class MiniDroneView {
     }
 
     disconnect() {
+        this.tracker.report('disconnect');
         return new Promise((resolve, reject) => {
             this.droneController.disconnect().then(() => {
                 debug('Drone disconnected successfully');

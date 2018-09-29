@@ -1,8 +1,9 @@
 import { MiniDroneView }        from '../../src/views/MiniDroneView';
 import { debug }                from '../../src/utils/debug';
-import { assert, spy, stub }    from 'sinon';
+import { assert }    from 'sinon';
 
-let miniDroneView = null;
+let miniDroneView = null,
+    drone = 'RS_';
 
 before(() => {
     miniDroneView = new MiniDroneView();
@@ -20,12 +21,14 @@ describe("MiniDrone", () => {
                 err => debug(err),
                 () => debug('complete'));
 
-            miniDroneView.connect('RS_').then(value => {
+            miniDroneView.connect(drone).then(value => {
                 if (value === 'success') {
-                    miniDroneView.checkAllStates().then(value => {
-                        setTimeout(() => {
-                            done();
-                        }, 10000);
+                    miniDroneView.checkAllStates().then(() => {
+                        miniDroneView.disconnect().then(() => {
+                            setTimeout(() => {
+                                done();
+                            }, 5000);
+                        });
                     });
                 }
             }).catch(e => {
@@ -34,36 +37,10 @@ describe("MiniDrone", () => {
             });
         });
     });
-
-    describe("test navdata stream", () => {
-        it("test data", (done) => {
-
-            let stream = miniDroneView.getNavDataStream();
-            stream.subscribe((data) => {
-                    debug('Navdata: ', data);
-                },
-                err => debug(err),
-                () => debug('complete'));
-
-            miniDroneView.connect('Mars_').then(value => {
-                if (value === 'success') {
-                    miniDroneView.checkAllStates().then(value => {
-                        setTimeout(() => {
-                            done();
-                        }, 10000);
-                    });
-                }
-            }).catch(e => {
-                assert.fail(e);
-                done();
-            });
-        });
-    });
-
 
     describe("test listAllPictures", () => {
         it("test when method called", (done) => {
-            miniDroneView.connect('Mars_').then(value => {
+            miniDroneView.connect(drone).then(value => {
                 if (value === 'success') {
                     miniDroneView.listAllPictures().then(data => {
                         done();
@@ -85,7 +62,7 @@ describe("MiniDrone", () => {
                 err => debug(err),
                 () => debug('complete'));
 
-            miniDroneView.connect('Mars_')
+            miniDroneView.connect(drone)
                 .then(() => miniDroneView.flatTrim())
                 .then(() => miniDroneView.takePicture())
                 .then(() => {
@@ -106,13 +83,13 @@ describe("MiniDrone", () => {
 
             let stream = miniDroneView.getNavDataStream();
             stream.subscribe((data) => {
-                    // debug('Navdata: ', data);
+                    debug('Navdata: ', data);
                 },
                 err => debug(err),
                 () => debug('complete'));
 
             miniDroneView
-                .connect('RS_')
+                .connect(drone)
                 .then(() => miniDroneView.listAllPictures())
                 .then(pictures => {
                     picList = pictures;
@@ -142,49 +119,22 @@ describe("MiniDrone", () => {
         });
     });
 
-    describe("test setController", () => {
-        it("test when method called", (done) => {
-            let stream = miniDroneView.getNavDataStream();
-            stream.subscribe((data) => {
-                    // debug('Navdata: ', data);
-                },
-                err => debug(err),
-                () => debug('complete'));
-
-            miniDroneView
-                .connect('Mars_')
-                .then(() => miniDroneView._setController('MacPro', 'droneJS'))
-                .then(response => {
-                    if (response === 'success') {
-                        setTimeout(() => {
-                            console.log('controller set successfully...');
-                            done();
-                        }, 10000);
-                    }
-                })
-                .catch(e => {
-                    console.log('Error occurred: ' + e);
-                });
-        });
-    });
-
     describe("test deletePicture", () => {
         it("test when method called", (done) => {
             let picList = null;
             miniDroneView
-                .connect('Mars_')
+                .connect(drone)
                 .then(() => miniDroneView.listAllPictures())
                 .then(pictures => {
                     picList = pictures;
                     return miniDroneView.deletePicture(picList[0]);
                 })
-                // .then(response => {
-                //     console.log('first pic deleted');
-                //     return miniDroneView.deletePicture(picList[1]);
-                // })
-                // .then(response => {
-                //     return miniDroneView.deletePicture(picList[2]);
-                // })
+                .then(response => {
+                    return miniDroneView.deletePicture(picList[1]);
+                })
+                .then(response => {
+                    return miniDroneView.deletePicture(picList[2]);
+                })
                 .then(() => {
                     console.log('second pic deleted');
                     done();
@@ -196,34 +146,7 @@ describe("MiniDrone", () => {
         });
     });
 
-    describe("test logging", () => {
-        it("test data", (done) => {
-
-            miniDroneView.enableLogging();
-
-            let stream = miniDroneView.getNavDataStream();
-            stream.subscribe((data) => {
-                    debug('Navdata: ', data);
-                },
-                err => debug(err),
-                () => debug('complete'));
-
-            miniDroneView.connect('Mars_').then(value => {
-                if (value === 'success') {
-                    miniDroneView.checkAllStates().then(value => {
-                        setTimeout(() => {
-                            done();
-                        }, 10000);
-                    });
-                }
-            }).catch(e => {
-                assert.fail(e);
-                done();
-            });
-        });
-    });
-
-    describe("test logging", () => {
+    describe("test maneuvering", () => {
         it("test data", (done) => {
             let stream = miniDroneView.getNavDataStream();
             stream.subscribe((data) => {
@@ -231,13 +154,12 @@ describe("MiniDrone", () => {
                 err => debug(err),
                 () => debug('complete'));
 
-            miniDroneView.connect('Mars_')
+            miniDroneView.connect(drone)
                 .then(() => miniDroneView.flatTrim())
                 .then(() => miniDroneView.takeOff())
                 .then(() => miniDroneView.flatTrim())
-                // .then(() => minidrone.up(50, 8))
-                // .then(() => minidrone.flatTrim())
-                // .then(() => minidrone.leftFlip())
+                .then(() => miniDroneView.forward(50, 8))
+                .then(() => miniDroneView.flatTrim())
                 .then(() => miniDroneView.land())
                 .then(() => {
                     done();
